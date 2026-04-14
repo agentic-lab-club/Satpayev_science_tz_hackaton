@@ -8,7 +8,7 @@ Current target:
 - Docker Compose deployment from the monorepo root (docker-compose.prod.yml)
 - frontend available both on direct EC2 port `3000` and a generated CloudFront URL
 - backend API reached through the frontend reverse proxy path `/backend/*`
-- future AI service reached through the frontend reverse proxy path `/ai-service/*`
+- AI service is not exposed through the frontend; backend calls it over Docker-internal networking
 - runtime secrets rendered from AWS Secrets Manager into files on the host
 
 ## Quickstart
