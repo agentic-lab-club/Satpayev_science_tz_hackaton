@@ -12,7 +12,6 @@ Layout:
 - `modules/s3`
 - `modules/secrets`
 - `modules/cloudfront_frontend`
-- `modules/local_s3_access`
 
 Notes:
 
@@ -21,5 +20,7 @@ Notes:
   - root `.env.prod`
   - `backend/config/config.prod.yaml`
 - Terraform does not write real production secret values into those secrets.
+- Local development uses the MinIO service from the root local Docker Compose stack.
+- AWS EC2 deployment uses the Terraform-created AWS S3 bucket, configured through the `backend/config/config.prod.yaml` secret.
 - CloudFront uses the EC2 frontend service as the origin and returns a generic `*.cloudfront.net` URL.
 - This layer provisions infrastructure and deploy prerequisites; the actual container deploy is done by scripts in `infrastructure/scripts`.

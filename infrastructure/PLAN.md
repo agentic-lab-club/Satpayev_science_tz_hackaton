@@ -25,7 +25,9 @@ Terraform in `infrastructure/terraform` provisions:
 - Secrets Manager secret containers for:
   - root `.env.prod`
   - `backend/config/config.prod.yaml`
-- dev-only local S3 access secret for local backend development
+
+Local development keeps using MinIO from the root local Docker Compose stack.
+AWS EC2 uses the Terraform-created S3 bucket through the production backend config stored in Secrets Manager.
 
 ## Deployment Scope
 
@@ -33,7 +35,7 @@ Deployment from EC2 is handled by scripts in `infrastructure/scripts`:
 
 1. fetch `.env.prod` from Secrets Manager
 2. fetch `backend/config/config.prod.yaml` from Secrets Manager
-3. write both files into `/opt/satpayevtz-ats/runtime`
+3. write both files into `/opt/satpayevtz/runtime`
 4. run `docker compose -f docker-compose.prod.yml up -d --build`
 
 ## Accepted Risks

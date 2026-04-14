@@ -62,13 +62,3 @@ output "backend_config_secret_name" {
   description = "Secrets Manager secret name containing backend/config/config.prod.yaml."
   value       = module.secrets.backend_config_secret_name
 }
-
-output "local_s3_access_secret_name" {
-  description = "Secrets Manager secret name containing local backend S3 access credentials."
-  value       = module.local_s3_access.secret_name
-}
-
-output "local_s3_access_iam_username" {
-  description = "IAM username used to generate local backend S3 access credentials."
-  value       = module.local_s3_access.iam_username
-}

@@ -89,8 +89,3 @@ variable "backend_config_secret_name" {
   default     = "satpayevtz/dev/backend/config.prod.yaml"
 }
 
-variable "local_s3_access_secret_name" {
-  description = "Secrets Manager name for local backend S3 access credentials."
-  type        = string
-  default     = "satpayevtz/dev/local-s3-access"
-}
