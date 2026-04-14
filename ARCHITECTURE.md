@@ -407,15 +407,14 @@ cloud "AWS Account" {
 
     component "Internet Gateway" as igw
     component "Public Route Table" as rt
-    component "Security Group\nSSH allowlist\nFrontend 3000\nBackend 8080\nScraper legacy 9432" as sg
+    component "Security Group\nSSH 22 allowlist\nFrontend origin 3000 public\nBackend/AI not public" as sg
   }
 
-  component "Private S3 Uploads Bucket\nversioning + SSE + public block" as s3
+  component "Private S3 Uploads Bucket\nversioning + SSE-S3\npublic access blocked" as s3
 
   package "Secrets Manager" as secrets {
     component "root .env.prod secret" as env_secret
     component "backend config.prod.yaml secret" as backend_secret
-    component "local S3 access secret" as local_s3_secret
   }
 
   component "IAM Role + Instance Profile" as iam
@@ -428,14 +427,12 @@ actor "Developer" as dev
 package "Docker Compose Stack" as compose {
   component "frontend container\nNext.js :3000" as frontend
   component "backend container\nGo/Fiber :8080" as backend
-  database "postgres container\nlocal compose DB" as postgres
-  component "minio container\nlocal object storage" as minio
-  component "llm container\nplanned FastAPI service" as llm
+  component "ai-service container\nPython/FastAPI :8000\ninternal expose only" as ai
+  database "postgres container\nPostgreSQL 17\ncompose volume" as postgres
 }
 
 user --> cf : HTTPS frontend
 cf --> frontend : HTTP origin on EC2:3000
-user --> backend : HTTP API on EC2:8080
 dev --> ec2 : SSH
 
 igw --> rt
@@ -444,17 +441,18 @@ sg --> ec2
 eip --> ec2
 ec2 --> compose : runs
 
-backend --> postgres : SQL in local compose
-backend --> minio : S3 API locally
-backend --> s3 : S3 API in cloud config
-backend --> llm : HTTP / JSON
+frontend --> backend : /backend/* rewrite\nDocker network HTTP
+backend --> postgres : SQL
+backend --> s3 : S3 API\nAWS prod config
+backend --> ai : HTTP / JSON\nDocker network only
 
-ec2 --> secrets : render runtime files
+ec2 --> secrets : render .env.prod and config.prod.yaml
 iam --> ec2 : attached to
 iam --> secrets : read runtime secrets
 iam --> s3 : read/write uploads
 
-local_s3_secret --> s3 : local dev credentials
+env_secret --> ec2 : /opt/satpayevtz/runtime/env/.env.prod
+backend_secret --> ec2 : /opt/satpayevtz/runtime/config/config.prod.yaml
 
 note bottom of ec2
 Terraform provisions infrastructure and prerequisites.
@@ -464,6 +462,16 @@ end note
 note right of cf
 CloudFront uses the EC2 frontend service
 as an HTTP origin with default certificate.
+end note
+
+note right of frontend
+Frontend exposes backend through /backend/*.
+Frontend does not talk directly to AI Service.
+end note
+
+note bottom of ai
+AI Service has no public EC2 port.
+Only Backend should call it over the Compose network.
 end note
 
 @enduml
@@ -487,5 +495,6 @@ AWS demo deployment currently uses:
 - AWS Secrets Manager runtime files;
 - AWS S3 uploads bucket;
 - CloudFront for frontend access.
+- backend access through the frontend reverse proxy path `/backend/*`.
 
-The AI service container is planned and should be added only after the backend AI client and Python service are implemented.
+The AWS Compose stack includes the AI service as an internal Docker service. It is not exposed through Terraform security group rules, CloudFront, or frontend rewrites; Core Backend is the only service that should call it.
