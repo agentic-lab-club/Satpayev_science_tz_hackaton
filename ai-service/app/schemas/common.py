@@ -29,7 +29,7 @@ class ResponseEnvelope(BaseModel, Generic[T]):
         return cls(status="ok", data=data)
 
     @classmethod
-    def error(cls, error: ErrorDetail) -> "ResponseEnvelope[None]":
+    def failed(cls, error: ErrorDetail) -> "ResponseEnvelope[None]":
         return cls(status="error", error=error)
 
 

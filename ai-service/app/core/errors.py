@@ -16,12 +16,12 @@ class AIServiceError(Exception):
 def register_error_handlers(app: FastAPI) -> None:
     @app.exception_handler(AIServiceError)
     async def handle_service_error(_: Request, exc: AIServiceError) -> ORJSONResponse:
-        envelope = ResponseEnvelope.error(ErrorDetail(code=exc.code, message=exc.message))
+        envelope = ResponseEnvelope.failed(ErrorDetail(code=exc.code, message=exc.message))
         return ORJSONResponse(status_code=exc.status_code, content=envelope.model_dump(mode="json"))
 
     @app.exception_handler(RequestValidationError)
     async def handle_validation_error(_: Request, exc: RequestValidationError) -> ORJSONResponse:
-        envelope = ResponseEnvelope.error(
+        envelope = ResponseEnvelope.failed(
             ErrorDetail(code="validation_error", message="Invalid request payload", details=exc.errors())
         )
         return ORJSONResponse(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, content=envelope.model_dump(mode="json"))
