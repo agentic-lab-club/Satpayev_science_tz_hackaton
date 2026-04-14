@@ -1,0 +1,13 @@
+pandas>=2.2.2
+pydantic>=2.7.0
+python-docx>=1.1.2
+pypdf>=4.2.0
+ipywidgets>=8.1.2
+matplotlib>=3.8.4
+openai>=1.30.0
+pytest>=8.2.0
+nbformat>=5.10.4
+pdfplumber>=0.11.0
+pytesseract>=0.3.10
+Pillow>=10.3.0
+pdf2image>=1.17.0
