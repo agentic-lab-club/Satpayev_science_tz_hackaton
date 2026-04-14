@@ -19,7 +19,7 @@ export default function Home() {
     },
     {
       icon: Brain,
-      title: "AI-анализ",
+      title: "ИИ анализ",
       description: "Искусственный интеллект проанализирует качество и полноту ТЗ",
       gradient: "from-purple-500 to-pink-500",
     },
