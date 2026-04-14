@@ -1,0 +1,45 @@
+# Dependencies
+node_modules
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Testing
+coverage
+.nyc_output
+
+# Production
+.next
+build
+dist
+
+# Misc
+.DS_Store
+*.pem
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+.vim
+.eslintcache
+
+# Git
+.git
+.gitignore
+.github
+
+# CI/CD
+.github/workflows
+
+# Documentation
+*.md
+README.md
+
+# Project specific
+.turbo
