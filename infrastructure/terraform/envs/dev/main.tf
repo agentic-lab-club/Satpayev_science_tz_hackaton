@@ -23,13 +23,11 @@ module "vpc" {
 module "security_group" {
   source = "../../modules/security_group"
 
-  name_prefix         = local.name_prefix
-  vpc_id              = module.vpc.vpc_id
-  backend_port        = var.backend_port
-  frontend_port       = var.frontend_port
-  scraper_public_port = var.scraper_public_port
-  ssh_allowed_cidrs   = var.ssh_allowed_cidrs
-  tags                = local.common_tags
+  name_prefix       = local.name_prefix
+  vpc_id            = module.vpc.vpc_id
+  frontend_port     = var.frontend_port
+  ssh_allowed_cidrs = var.ssh_allowed_cidrs
+  tags              = local.common_tags
 }
 
 module "s3" {

@@ -7,8 +7,7 @@ This folder composes the AWS baseline for the single-host `dev` demo environment
 - VPC with one public subnet
 - security group with SSH allowlist and public ports:
   - frontend `3000`
-  - backend `8080`
-  - scraper `9432`
+  - SSH `22` for configured allowlist CIDRs
 - EC2 instance with Elastic IP
 - IAM role and instance profile
 - private S3 uploads bucket

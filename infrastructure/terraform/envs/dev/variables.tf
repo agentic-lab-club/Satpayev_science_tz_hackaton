@@ -39,7 +39,7 @@ variable "public_subnet_cidr" {
 }
 
 variable "backend_port" {
-  description = "Public backend port."
+  description = "Backend container and localhost host port."
   type        = number
   default     = 8080
 }
@@ -48,12 +48,6 @@ variable "frontend_port" {
   description = "Public frontend port and CloudFront origin port."
   type        = number
   default     = 3000
-}
-
-variable "scraper_public_port" {
-  description = "Public scraper port on the EC2 host."
-  type        = number
-  default     = 9432
 }
 
 variable "instance_type" {

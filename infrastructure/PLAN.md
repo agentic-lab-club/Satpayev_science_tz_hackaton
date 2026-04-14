@@ -9,6 +9,8 @@ This folder is the source of truth for the current AWS demo deployment shape.
 - The frontend is available through both:
   - direct EC2 access on port `3000`
   - a generated CloudFront URL
+- Backend routes are exposed through the frontend reverse proxy path `/backend/*`.
+- Future AI service routes are exposed through the frontend reverse proxy path `/ai-service/*`.
 - Runtime configuration is rendered from two Secrets Manager secrets into files on EC2.
 
 ## Provisioning Scope
