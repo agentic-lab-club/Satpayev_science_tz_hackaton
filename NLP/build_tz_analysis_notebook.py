@@ -58,6 +58,10 @@ NOTEBOOK_CELLS = [
         import json
         import logging
         import os
+os.environ.pop("http_proxy", None)
+os.environ.pop("https_proxy", None)
+os.environ.pop("HTTP_PROXY", None)
+os.environ.pop("HTTPS_PROXY", None)
         import re
         import textwrap
         import unicodedata
