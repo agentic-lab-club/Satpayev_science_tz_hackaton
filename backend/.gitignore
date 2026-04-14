@@ -5,6 +5,10 @@ config.prod.yaml
 config.local.yaml
 config.yaml
 
+config.prod.yml
+config.local.yml
+config.yml
+
 # Build artifacts
 *.exe
 *.dll
