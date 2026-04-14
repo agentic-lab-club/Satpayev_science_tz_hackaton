@@ -1,3 +1,5 @@
+docs/ai-sessions/
+
 .env
 .env.prod
 config.yaml

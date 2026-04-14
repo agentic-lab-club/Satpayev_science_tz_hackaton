@@ -314,3 +314,116 @@ In short:
 **Read the whole monorepo if needed.  
 Write only in the intended module.  
 Treat shared contracts and shared cross-module files as protected by default.**
+
+---
+
+## Satpayev Science TZ Project Rules
+
+These rules are specific to this repository and override older spike/session notes when they conflict.
+
+### Required Context Before Coding
+
+Before implementing product behavior, read:
+
+1. root `PLAN.md`
+2. root `ARCHITECTURE.md`
+3. `docs/README.md`
+4. the target module `AGENTS.md` or `README.md`
+
+For backend work, also read `backend/AGENTS.md`.
+
+For AI-service work, also read:
+- `NLP/README.md`
+- `docs/ТЗ_официальное (1).docx`
+- `docs/Шаблон для ТЗ рус.docx`
+- `docs/TZ_digital_polegon.docx`
+
+For frontend work, also read:
+- `frontend/README.md`
+- `frontend/agents/AGENTS.md`
+
+For infrastructure work, also read:
+- `infrastructure/README.md`
+- `infrastructure/terraform/envs/dev/main.tf`
+- root `docker-compose.yml`
+- root `docker-compose.prod.yml`
+
+### Product Architecture Contract
+
+- Core Backend is the system of record.
+- Core Backend owns auth, projects, document versions, analysis persistence, scorecards, chat history, admin review, and report exports.
+- AI Service is stateless.
+- AI Service does not read or write Core Postgres directly.
+- Frontend calls only Core Backend.
+- Object storage is accessed through Backend-controlled flows.
+- Report generation is a backend module unless a future explicit decision extracts it into a service.
+
+### Scoring Model Contract
+
+The project uses three scorecards:
+
+1. `ai_document_analysis_scorecard`
+   - diagnostic dimensions: `structure`, `completeness`, `clarity`, `kpi_results`, `consistency`
+   - each dimension is `0..100`
+   - total is computed
+
+2. `ai_preliminary_evaluation_scorecard`
+   - official Excel rubric draft from AI
+   - category max values: `20 + 10 + 15 + 20 + 15 + 10 + 10 = 100`
+   - visible to Client and Admin
+
+3. `final_reviewed_evaluation_scorecard`
+   - official Admin/Expert scorecard
+   - same categories as the Excel rubric
+   - used for approved XLSX export
+
+Do not collapse these into one score.
+
+Do not allow a manually typed total score. Totals must be computed from category scores.
+
+### Official Excel Rubric
+
+The official XLSX columns map to:
+
+- `strategic_relevance`: max `20`
+- `goals_and_tasks`: max `10`
+- `scientific_novelty`: max `15`
+- `practical_applicability`: max `20`
+- `expected_results`: max `15`
+- `socio_economic_effect`: max `10`
+- `feasibility`: max `10`
+
+The official approved export uses `final_reviewed_evaluation_scorecard`.
+
+AI preliminary scores may be used for draft previews, but not as final approved expert scores unless Admin explicitly accepts them into a final reviewed scorecard.
+
+### Chat Contract
+
+Chat is always bound to a project and document version.
+
+Backend must assemble chat context from:
+- project metadata
+- active document version
+- extracted document text
+- latest completed analysis
+- both AI scorecards
+- findings and recommendations
+- prior chat messages
+- optional admin feedback
+
+Chat may propose improvements, but it must not mutate stored document versions. A rewrite becomes official only through a separate upload/version action.
+
+### Documentation Contract
+
+Update root `ARCHITECTURE.md` when changing:
+- service boundaries
+- persisted entities
+- scoring model
+- deployment topology
+- chat ownership/data flow
+
+Update root `PLAN.md` when changing implementation order, scope, or acceptance criteria.
+
+Update `docs/README.md` when adding important documentation sources.
+
+Use PlantUML for architecture diagrams.
