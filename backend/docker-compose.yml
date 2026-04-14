@@ -1,0 +1,111 @@
+networks:
+  satpayev-science-network:
+    driver: bridge
+
+volumes:
+  postgres_dev_data: {} 
+  minio_dev_data: {}
+  go-mod-cache: {}
+  go-build-cache: {}
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: satpayev_science_postgres_dev
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_DATABASE}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    ports:
+      - "5432:5432"
+    networks:
+      - satpayev-science-network
+
+  minio:
+    image: quay.io/minio/minio:RELEASE.2025-02-28T09-55-16Z
+    container_name: satpayev_science_minio_dev
+    restart: unless-stopped
+    environment:
+      MINIO_ROOT_USER: ${STORAGE_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${STORAGE_SECRET_KEY}
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_dev_data:/data
+    ports:
+      - "9000:9000"
+      - "9002:9001"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:9000/minio/health/ready >/dev/null || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    networks:
+      - satpayev-science-network
+
+  minio-init:
+    image: quay.io/minio/mc:RELEASE.2025-02-21T16-00-46Z
+    container_name: satpayev_science_minio_init
+    depends_on:
+      minio:
+        condition: service_healthy
+    restart: "no"
+    entrypoint: >
+      /bin/sh -ec "
+      until /usr/bin/mc alias set local http://minio:9000 ${STORAGE_ACCESS_KEY} ${STORAGE_SECRET_KEY}; do
+        echo 'waiting for minio...';
+        sleep 2;
+      done;
+      /usr/bin/mc mb --ignore-existing local/${STORAGE_BUCKET:-application-files};
+      /usr/bin/mc anonymous set private local/${STORAGE_BUCKET:-application-files};
+      "
+    networks:
+      - satpayev-science-network
+
+  golang:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runner
+    container_name: satpayev_science_backend_dev
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    command: ["-config=local"]
+    volumes:
+      - ./config:/app/config:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio-init:
+        condition: service_completed_successfully
+    networks:
+      - satpayev-science-network
+
+  golang-test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: test
+    container_name: satpayev_science_backend_test
+    working_dir: /src
+    env_file:
+      - .env
+    volumes:
+      - .:/src
+      - go-mod-cache:/go/pkg/mod
+      - go-build-cache:/root/.cache/go-build
+    command: ["sh"]
+    networks:
+      - satpayev-science-network
