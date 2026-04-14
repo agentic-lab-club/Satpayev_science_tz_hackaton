@@ -10,7 +10,8 @@ interface MessageListProps {
 export function MessageList({ messages, isLoading }: MessageListProps) {
   return (
     <div className="flex-1 overflow-y-auto px-4 py-6 space-y-4">
-      {messages.map((message, idx) => (
+        <div className="space-y-8 max-w-4xl mx-auto">
+                  {messages.map((message, idx) => (
         <div
           key={idx}
           className={`flex ${message.role === "user" ? "justify-end" : "justify-start"} animate-fade-in`}
@@ -44,6 +45,7 @@ export function MessageList({ messages, isLoading }: MessageListProps) {
           </div>
         </div>
       )}
+        </div>
     </div>
   );
 }
