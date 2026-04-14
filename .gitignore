@@ -1,0 +1,16 @@
+.env
+.env.prod
+config.yaml
+config.local.yaml
+config.prod.yaml
+
+.idea
+.codex
+
+.vscode
+mlflow.db
+__pycache__
+
+.DS_Store
+.DS_Store
+*.zip
