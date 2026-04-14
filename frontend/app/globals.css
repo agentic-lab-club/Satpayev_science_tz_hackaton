@@ -3,12 +3,14 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  color-scheme: light;
 }
 
 /* Реагируем на класс dark на <html>, а не на системную тему */
 html.dark {
   --background: #080d14;
   --foreground: #ededed;
+  color-scheme: dark;
 }
 
 body {

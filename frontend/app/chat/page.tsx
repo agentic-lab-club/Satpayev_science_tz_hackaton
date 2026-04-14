@@ -103,7 +103,17 @@ export default function ChatPage() {
 
   // Локальное управление темой для чата
   const [isDark, setIsDark] = useState(true);
-  const toggleTheme = () => setIsDark(!isDark);
+  const toggleTheme = () => {
+    const newIsDark = !isDark;
+    setIsDark(newIsDark);
+    if (!newIsDark) {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.style.colorScheme = 'light';
+    } else {
+      document.documentElement.classList.add('dark');
+      document.documentElement.style.colorScheme = 'dark';
+    }
+  };
 
   // Управление боковым меню (история диалогов) - слева
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -169,7 +179,7 @@ export default function ChatPage() {
         </div>
         
         <div className="flex-1 overflow-y-auto p-2 space-y-1">
-          {MOCK_CHAT_HISTORY.map((chat) => {
+          {MOCK_CHAT_HISTORY.map((chat: any) => {
             const isActive = activeChatId === chat.id;
             return (
             <div 

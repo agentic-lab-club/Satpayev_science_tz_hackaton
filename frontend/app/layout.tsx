@@ -27,9 +27,29 @@ export default function RootLayout({
 <html
   lang="en"
   className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-  // ✅ Без "dark" — ThemeProvider сам добавит/уберёт этот класс
+  // Suppress hydration warning to allow ThemeProvider to safely mutate the class and style
+  suppressHydrationWarning
 >
-  <body className="min-h-full flex flex-col bg-white dark:bg-[#080d14] text-slate-900 dark:text-white transition-colors duration-300">
+  <head>
+    {/* Block rendering until initial theme is read to prevent scrollbar flash */}
+    <script
+      dangerouslySetInnerHTML={{
+        __html: `
+          try {
+            var theme = localStorage.getItem('app-theme') || 'dark';
+            if (theme === 'dark') {
+              document.documentElement.classList.add('dark');
+              document.documentElement.style.colorScheme = 'dark';
+            } else {
+              document.documentElement.classList.remove('dark');
+              document.documentElement.style.colorScheme = 'light';
+            }
+          } catch (e) {}
+        `,
+      }}
+    />
+  </head>
+  <body className="min-h-full flex flex-col">
     <ThemeProvider>{children}</ThemeProvider>
   </body>
 </html>
