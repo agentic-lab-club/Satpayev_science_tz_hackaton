@@ -128,9 +128,9 @@ Minimum API surface:
 
 ### Phase 2. AI Service
 
-Target module: `llm/` unless the user chooses a different name.
+Target module: `ai-service/`.
 
-Create a Python FastAPI service from the useful `NLP/` notebook logic.
+Create a Python FastAPI service. Use `NLP/` only as draft/sample reference space.
 
 Endpoints:
 

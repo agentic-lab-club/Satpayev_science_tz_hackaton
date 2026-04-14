@@ -75,7 +75,7 @@ Read first:
 
 Workflow:
 
-1. Create or update the deployable service under `llm/`.
+1. Create or update the deployable service under `ai-service/`.
 2. Keep the service stateless.
 3. Do not connect directly to Core Postgres.
 4. Accept text/context from backend.

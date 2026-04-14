@@ -32,7 +32,7 @@ Main modules:
 
 - `frontend/`: Frontend application.
 - `backend/`: Golang core backend service.
-- `llm/` or `[somename]/`: Python FastAPI LLM service.
+- `ai-service/`: Python FastAPI AI service. `NLP/` is draft/sample reference space only.
 - `infrastructure/`: Infrastructure and DevOps code, including IaC such as Terraform for AWS and related environment setup.
 - `docs/ai-sessions/`: stored AI chat sessions that may provide extended context, prior decisions, reasoning history, or implementation notes.
 - other top-level folders not listed above: do not assume they are product modules unless confirmed by their contents.
