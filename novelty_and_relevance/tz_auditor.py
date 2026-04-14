@@ -1,6 +1,8 @@
 import os
+import io
 import json
-import fitz # PyMuPDF
+import fitz  # PyMuPDF
+from docx import Document
 from fastapi import UploadFile, File
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field, ValidationError
@@ -147,6 +149,7 @@ async def evaluate_tz_endpoint(request: TZRequest, db: Session = Depends(get_db)
 
 @app.post("/api/v1/evaluate_file", response_model=TZEvaluationResponse)
 async def evaluate_file_endpoint(file: UploadFile = File(...), db: Session = Depends(get_db)):
+    """Загрузка и оценка файла (PDF, DOCX, TXT)."""
     text = ""
     try:
         content = await file.read()
@@ -156,8 +159,6 @@ async def evaluate_file_endpoint(file: UploadFile = File(...), db: Session = Dep
             for page in doc:
                 text += page.get_text("text") + "\n"
         elif filename_lower.endswith(".docx"):
-            import io
-            from docx import Document
             doc = Document(io.BytesIO(content))
             for para in doc.paragraphs:
                 text += para.text + "\n"
@@ -217,6 +218,7 @@ async def evaluate_file_endpoint(file: UploadFile = File(...), db: Session = Dep
         raise HTTPException(status_code=500, detail=f"Ошибка валидации Pydantic: {e.json()}")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Ошибка LLM API: {str(e)}")
+
 
 @app.get("/api/v1/statistics")
 def get_statistics(db: Session = Depends(get_db)):
