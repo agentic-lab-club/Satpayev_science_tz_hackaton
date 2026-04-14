@@ -4,6 +4,7 @@ import { TZDocument, AnalysisStatus } from "./types";
 import { StatusBadge, FormatIcon, ScoreRing } from "./shared-components";
 import { formatDate, scoreColor, scoreLabel } from "./helpers";
 import { useTheme } from "../../providers/ThemeProvider";
+import Link from "next/link";
 
 interface DocumentListProps {
   documents: TZDocument[];
@@ -79,7 +80,8 @@ export function DocumentList({
           </div>
         )}
         {documents.map((doc) => (
-          <div
+          <Link
+            href={`/projects/${doc.id}`}
             key={doc.id}
             className={`group/item relative flex flex-col sm:flex-row sm:items-center gap-4 rounded-xl border transition-all duration-300 p-4 sm:px-5 sm:py-4 cursor-pointer overflow-hidden backdrop-blur-sm ${isDark ? 'border-slate-800/50 bg-slate-950/30 hover:bg-slate-800/40 hover:border-slate-700/80' : 'border-slate-200/70 bg-white hover:bg-slate-50 hover:border-slate-300 shadow-sm hover:shadow'}`}
           >
@@ -163,7 +165,7 @@ export function DocumentList({
             {doc.score === undefined && (
                <div className="absolute left-0 top-0 bottom-0 w-1 opacity-0 group-hover/item:opacity-100 transition-opacity bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.5)] animate-pulse" />
             )}
-          </div>
+          </Link>
         ))}
       </div>
 

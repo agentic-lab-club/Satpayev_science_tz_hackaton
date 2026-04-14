@@ -20,25 +20,48 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    // Имитация загрузки и редирект (или логика авторизации)
-    setTimeout(() => {
+    
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+      const response = await fetch(`${apiUrl}/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Ошибка авторизации");
+      }
+
+      const data = await response.json();
+      
+      localStorage.setItem("access_token", data.access_token);
+      localStorage.setItem("refresh_token", data.refresh_token);
+      
+      if (data.user && !data.user.is_email_verified) {
+          window.location.href = `/auth/verify-email?email=${encodeURIComponent(email)}`;
+      } else {
+          window.location.href = "/dashboard";
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Неверный email или пароль");
+    } finally {
       setIsLoading(false);
-      window.location.href = "/chat";
-    }, 1000);
+    }
   };
 
   const { isDark } = useTheme();
 
   return (
     <div className={`min-h-screen flex flex-col transition-colors duration-300 ${isDark ? 'bg-[#080d14] text-white' : 'bg-slate-50 text-slate-900'}`}>
-      
-      {/* Декоративные фоновые элементы (похоже на /chat) */}
       <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
         <div className={`absolute top-0 left-1/4 w-[500px] h-[500px] ${isDark ? 'bg-indigo-500/10' : 'bg-indigo-500/5'} rounded-full blur-[100px] -translate-y-1/2`} />
         <div className={`absolute bottom-0 right-1/4 w-[500px] h-[500px] ${isDark ? 'bg-purple-500/10' : 'bg-purple-500/5'} rounded-full blur-[100px] translate-y-1/2`} />
       </div>
 
-      {/* Header, стилизованный как в /chat */}
       <div className={`backdrop-blur-xl sticky top-0 z-40 border-b transition-all duration-300 ${isDark ? 'border-slate-800/80 bg-[#080d14]/80 shadow-lg shadow-black/20' : 'border-slate-200 bg-white/80 shadow-sm'}`}>
         <div className="max-w-5xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
@@ -64,10 +87,10 @@ export default function LoginPage() {
             <div className="flex items-center gap-4">
               <ThemeToggle />
               <Link href="/registration" className={`px-4 h-10 rounded-xl font-medium text-sm transition-all duration-300 flex items-center justify-center hover:scale-105 active:scale-95 border shadow-sm ${
-                isDark
+                  isDark
                   ? "bg-slate-800/80 hover:bg-slate-700 text-slate-200 border-slate-700"
                   : "bg-white hover:bg-slate-50 text-slate-700 border-slate-200"
-              }`}>
+                }`}>
                 Регистрация
               </Link>
             </div>
@@ -75,14 +98,13 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* Main Content */}
       <main className="relative z-10 flex-1 flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-md">
           <div className="text-center mb-10">
             <div className="mx-auto w-20 h-20 mb-6 rounded-3xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-[3px] shadow-xl">
-               <div className={`w-full h-full rounded-[21px] flex items-center justify-center relative overflow-hidden ${isDark ? 'bg-slate-900' : 'bg-white'}`}>
-                 <Lock className={`w-10 h-10 ${isDark ? 'text-white' : 'text-indigo-600'}`} />
-               </div>
+              <div className={`w-full h-full rounded-[21px] flex items-center justify-center relative overflow-hidden ${isDark ? 'bg-slate-900' : 'bg-white'}`}>
+                <Lock className={`w-10 h-10 ${isDark ? 'text-white' : 'text-indigo-600'}`} />
+              </div>
             </div>
             <h2 className={`text-3xl font-bold mb-3 ${isDark ? 'text-white' : 'text-slate-900'}`}>
               С возвращением!
@@ -93,7 +115,7 @@ export default function LoginPage() {
           </div>
 
           <div className={`backdrop-blur-xl border rounded-2xl p-6 sm:p-8 shadow-2xl transition-colors duration-300 ${
-            isDark 
+              isDark 
               ? 'bg-slate-900/50 border-slate-800 shadow-black/50' 
               : 'bg-white/80 border-slate-200 shadow-slate-200/50'
           }`}>
@@ -110,7 +132,7 @@ export default function LoginPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="your@email.com"
                   className={`w-full px-4 py-3 border rounded-xl text-sm transition-all focus:outline-none focus:ring-2 ${
-                    isDark 
+                      isDark 
                       ? 'bg-slate-800/50 border-slate-700 text-white placeholder-slate-500 focus:border-indigo-500/50 focus:ring-indigo-500/20' 
                       : 'bg-white border-slate-200 text-slate-900 placeholder-slate-400 focus:border-indigo-400 focus:ring-indigo-400/20'
                   }`}
@@ -131,7 +153,7 @@ export default function LoginPage() {
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
                     className={`w-full px-4 py-3 border rounded-xl text-sm transition-all focus:outline-none focus:ring-2 pr-10 ${
-                      isDark 
+                        isDark 
                         ? 'bg-slate-800/50 border-slate-700 text-white placeholder-slate-500 focus:border-purple-500/50 focus:ring-purple-500/20' 
                         : 'bg-white border-slate-200 text-slate-900 placeholder-slate-400 focus:border-purple-400 focus:ring-purple-400/20'
                     }`}
@@ -141,7 +163,7 @@ export default function LoginPage() {
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className={`absolute right-3 top-1/2 -translate-y-1/2 transition-colors ${
-                      isDark ? 'text-slate-400 hover:text-slate-300' : 'text-slate-400 hover:text-slate-600'
+                           isDark ? 'text-slate-400 hover:text-slate-300' : 'text-slate-400 hover:text-slate-600'
                     }`}
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}

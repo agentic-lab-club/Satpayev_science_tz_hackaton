@@ -42,7 +42,7 @@ export default function Home() {
   const steps = [
     { number: 1, title: "Загрузите ТЗ", description: "Выберите файл с техническим заданием" },
     { number: 2, title: "Анализ", description: "AI проанализирует документ за несколько секунд" },
-    { number: 3, title: "Получите отчет", description: "Детальный отчет с рекомендациями" },
+    { number: 3, title: "Получите результат", description: "Детальный результат и оценку с рекомендациями" },
   ];
 
   const benefits = [
@@ -50,7 +50,7 @@ export default function Home() {
     "Экономия времени на проверку",
     "Консистентность требований",
     "Минимизация конфликтов в проекте",
-    "Лучшее взаимопонимание с разработчиками",
+    "Лучшее взаимопонимание с экспертами",
     "Профессиональный подход",
   ];
 
@@ -196,7 +196,7 @@ export default function Home() {
                      </svg>
                      <div className={`absolute -bottom-2 -right-2 bg-emerald-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full border-2 ${isDark ? 'border-slate-900' : 'border-white'}`}>85/100</div>
                    </div>
-                   <p className={`font-medium text-lg ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>Проект "E-commerce App.pdf"</p>
+                   <p className={`font-medium text-lg ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>Science-project.pdf</p>
                    <div className="flex items-center gap-2">
                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                      <span className={`text-sm font-medium ${isDark ? 'text-emerald-400' : 'text-emerald-600'}`}>Анализ успешно завершен</span>
