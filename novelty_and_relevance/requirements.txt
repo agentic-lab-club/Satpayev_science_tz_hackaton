@@ -4,6 +4,9 @@ pydantic
 sqlalchemy
 python-dotenv
 openai
+PyMuPDF
+python-docx
 chromadb
 sentence-transformers
 scikit-learn
+python-multipart

@@ -1,5 +1,9 @@
 import os
+import io
 import json
+import fitz  # PyMuPDF
+from docx import Document
+from fastapi import UploadFile, File
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field, ValidationError
 from fastapi import FastAPI, HTTPException, Depends
@@ -143,46 +147,31 @@ async def evaluate_tz_endpoint(request: TZRequest, db: Session = Depends(get_db)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Ошибка API: {str(e)}")
 
-@app.post("/api/v1/evaluate_json", response_model=TZEvaluationResponse)
-async def evaluate_json_endpoint(db: Session = Depends(get_db)):
-    """Читает JSON из txt.txt и оценивает ТЗ на основе структурированных секций."""
-    json_path = os.path.join(os.path.dirname(__file__), "txt.txt")
-    
-    # Чтение и парсинг JSON из txt.txt
+@app.post("/api/v1/evaluate_file", response_model=TZEvaluationResponse)
+async def evaluate_file_endpoint(file: UploadFile = File(...), db: Session = Depends(get_db)):
+    """Загрузка и оценка файла (PDF, DOCX, TXT)."""
+    text = ""
     try:
-        with open(json_path, "r", encoding="utf-8") as f:
-            raw_content = f.read().strip()
-            # Оборачиваем в валидный JSON если начинается без {
-            if not raw_content.startswith("{"):
-                raw_content = "{" + raw_content
-            if not raw_content.endswith("}"):
-                raw_content = raw_content.rstrip(",") + "}"
-            data = json.loads(raw_content)
-    except FileNotFoundError:
-        raise HTTPException(status_code=404, detail="Файл txt.txt не найден рядом с сервером.")
-    except json.JSONDecodeError as e:
-        raise HTTPException(status_code=400, detail=f"Ошибка парсинга JSON в txt.txt: {e}")
-    
-    # Извлекаем секции и собираем текст ТЗ
-    sections = data.get("structure", {}).get("sections", [])
-    if not sections:
-        raise HTTPException(status_code=400, detail="JSON не содержит секций (structure.sections).")
-    
-    # Собираем полный текст из всех секций
-    text_parts = []
-    for section in sections:
-        title = section.get("title", "")
-        content = section.get("content", "")
-        if title:
-            text_parts.append(f"## {title}")
-        if content:
-            text_parts.append(content)
-    
-    text = "\n\n".join(text_parts).strip()
+        content = await file.read()
+        filename_lower = file.filename.lower()
+        if filename_lower.endswith(".pdf"):
+            doc = fitz.open(stream=content, filetype="pdf")
+            for page in doc:
+                text += page.get_text("text") + "\n"
+        elif filename_lower.endswith(".docx"):
+            doc = Document(io.BytesIO(content))
+            for para in doc.paragraphs:
+                text += para.text + "\n"
+        else:
+            text = content.decode("utf-8", errors="ignore")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Ошибка чтения файла: {e}")
+        
+    text = text.strip()
     if not text:
-        raise HTTPException(status_code=400, detail="Секции JSON пусты — нет текста для анализа.")
-    
-    # Точечный ВЕКТОРНЫЙ RAG ПОИСК (сжимаем длинный текст до выжимки)
+        raise HTTPException(status_code=400, detail="Файл пуст или не удалось извлечь текст.")
+
+    # Точечный ВЕКТОРНЫЙ RAG ПОИСК (сжимаем 100 страниц до 10к символов выжимки)
     filtered_text = extract_key_information(text)
     
     try:
@@ -212,7 +201,7 @@ async def evaluate_json_endpoint(db: Session = Depends(get_db)):
 
         # Сохранение лога в БД
         audit_record = AuditLog(
-            original_text=f"[JSON: txt.txt]\n\n{text[:5000]}",
+            original_text=f"[ФАЙЛ: {file.filename}]\n\n{text[:5000]}",
             is_scientific_document=str(result.is_scientific_document).lower(),
             rejection_reason=result.rejection_reason,
             scientific_novelty_score=result.scientific_novelty.score if result.is_scientific_document else 0,
@@ -229,6 +218,7 @@ async def evaluate_json_endpoint(db: Session = Depends(get_db)):
         raise HTTPException(status_code=500, detail=f"Ошибка валидации Pydantic: {e.json()}")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Ошибка LLM API: {str(e)}")
+
 
 @app.get("/api/v1/statistics")
 def get_statistics(db: Session = Depends(get_db)):
