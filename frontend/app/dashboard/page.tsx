@@ -10,6 +10,7 @@ import { DocumentList } from "./components/DocumentList";
 import { QuickTips } from "./components/QuickTips";
 import { ChatWidget } from "./components/ChatWidget";
 import { UploadModal } from "./components/UploadModal";
+import { useTheme } from "../providers/ThemeProvider";
 
 export default function Dashboard() {
   const [chatOpen, setChatOpen] = useState(false);
@@ -28,12 +29,14 @@ export default function Dashboard() {
     return matchStatus && matchSearch;
   });
 
+  const { isDark } = useTheme();
+
   return (
-    <div className="min-h-screen bg-[#080d14] text-white font-sans">
+    <div className={`min-h-screen transition-colors duration-300 font-sans ${isDark ? 'bg-[#080d14] text-white' : 'bg-slate-50 text-slate-900'}`}>
       {/* Ambient glow */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute -top-32 -left-32 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 -right-40 w-80 h-80 bg-blue-500/5 rounded-full blur-3xl" />
+        <div className={`absolute -top-32 -left-32 w-96 h-96 rounded-full blur-3xl transition-colors duration-300 ${isDark ? 'bg-amber-500/5' : 'bg-amber-300/20'}`} />
+        <div className={`absolute top-1/2 -right-40 w-80 h-80 rounded-full blur-3xl transition-colors duration-300 ${isDark ? 'bg-blue-500/5' : 'bg-blue-300/20'}`} />
       </div>
 
       <div className="relative max-w-6xl mx-auto px-4 py-8 space-y-8">
@@ -83,7 +86,7 @@ export default function Dashboard() {
 
       {/* Notification dot on chat button */}
       {!chatOpen && (
-        <span className="fixed bottom-[62px] right-5 z-50 w-3 h-3 rounded-full bg-emerald-400 border-2 border-[#080d14] animate-pulse" />
+        <span className={`fixed bottom-[62px] right-5 z-50 w-3 h-3 rounded-full bg-emerald-400 border-2 animate-pulse transition-colors duration-300 ${isDark ? 'border-[#080d14]' : 'border-slate-50'}`} />
       )}
     </div>
   );
