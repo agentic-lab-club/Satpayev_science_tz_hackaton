@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Zap, MessageSquare, Upload, Zap as AnalyzeIcon, AlertCircle, BarChart3, Lightbulb, Bot, X } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useTheme } from "../../providers/ThemeProvider";
+import { fetchApi } from "../../utils/fetchApi";
 
 const ThemeToggle = dynamic(() => import("../../components/ThemeToggle").then(mod => ({ default: mod.ThemeToggle })), {
   ssr: false,
@@ -17,7 +18,33 @@ interface HeaderProps {
 
 export function DashboardHeader({ onUploadClick }: HeaderProps) {
   const [isBannerVisible, setIsBannerVisible] = useState(true);
+  const [userName, setUserName] = useState<string | null>(null);
+  const [userInitials, setUserInitials] = useState<string>("U");
   const { isDark } = useTheme();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await fetchApi("/auth/me");
+        if (response && response.user) {
+          const { first_name, last_name, email } = response.user;
+          if (first_name && last_name) {
+            setUserName(`${last_name} ${first_name.charAt(0)}.`);
+            setUserInitials(first_name.charAt(0).toUpperCase());
+          } else {
+            setUserName(email);
+            setUserInitials(email.charAt(0).toUpperCase());
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch user data:", error);
+        // Fallback for visual fidelity when api fails
+        setUserName("Асанов С.");
+        setUserInitials("А");
+      }
+    };
+    fetchUser();
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -38,8 +65,8 @@ export function DashboardHeader({ onUploadClick }: HeaderProps) {
             Ассистент
           </Link>
           <div className={`hidden sm:flex items-center gap-2 border rounded-full px-3 py-1.5 transition-colors ${isDark ? 'bg-slate-900/60 border-slate-800 hover:border-slate-700' : 'bg-white border-slate-200 hover:border-slate-300 shadow-sm'}`}>
-            <div className={`w-6 h-6 rounded-full border text-xs flex items-center justify-center font-bold ${isDark ? 'bg-indigo-400/20 border-indigo-400/30 text-indigo-300' : 'bg-indigo-100 border-indigo-200 text-indigo-700'}`}>А</div>
-            <span className={`text-xs ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>Алимбеков Д.</span>
+            <div className={`w-6 h-6 rounded-full border text-xs flex items-center justify-center font-bold ${isDark ? 'bg-indigo-400/20 border-indigo-400/30 text-indigo-300' : 'bg-indigo-100 border-indigo-200 text-indigo-700'}`}>{userInitials}</div>
+            <span className={`text-xs ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>{userName || 'Загрузка...'}</span>
           </div>
           <ThemeToggle />
         </div>

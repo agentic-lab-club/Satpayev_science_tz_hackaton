@@ -12,6 +12,8 @@ import {
 import { formatBytes, getExt, isAllowed } from "./helpers";
 import { CheckIcon, ProjectTypeSelect } from "./UploadComponents";
 import { useTheme } from "../../providers/ThemeProvider";
+import { useRouter } from "next/navigation";
+import { fetchApi, API_BASE_URL } from "../../utils/fetchApi";
 
 interface UploadModalProps {
   isOpen: boolean;
@@ -20,6 +22,7 @@ interface UploadModalProps {
 
 export function UploadModal({ isOpen, onClose }: UploadModalProps) {
   const { isDark } = useTheme();
+  const router = useRouter();
   const [dragOver, setDragOver] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
@@ -364,7 +367,7 @@ export function UploadModal({ isOpen, onClose }: UploadModalProps) {
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
-                  <button className={`flex-1 text-xs font-bold rounded-xl py-2.5 transition-all active:scale-95 ${isDark ? 'bg-amber-400 hover:bg-amber-300 text-slate-900' : 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-sm shadow-indigo-600/20'}`}>
+                  <button onClick={() => { closeModal(); router.push('/projects/1'); }} className={`flex-1 text-xs font-bold rounded-xl py-2.5 transition-all active:scale-95 ${isDark ? 'bg-amber-400 hover:bg-amber-300 text-slate-900' : 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-sm shadow-indigo-600/20'}`}>
                     Посмотреть результаты →
                   </button>
                   <button onClick={reset} className={`flex-1 text-xs font-semibold rounded-xl py-2.5 transition-all ${isDark ? 'bg-slate-800 hover:bg-slate-700 text-slate-300' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'}`}>

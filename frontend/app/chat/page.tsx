@@ -97,15 +97,21 @@ export default function ChatPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isHistoryLoading, setIsHistoryLoading] = useState(false);
   const [activeChatId, setActiveChatId] = useState<number>(1);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const { isDark, toggleTheme } = useTheme();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    const token = localStorage.getItem("access_token");
+    if (!token) {
+      window.location.href = "/login";
+    }
+  }, []);
+
+  // Автоскролл вниз при новых сообщениях
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, isLoading]);
 
   const handleSendMessage = async (text: string) => {
     if (!text.trim()) return;
@@ -175,10 +181,9 @@ export default function ChatPage() {
   };
 
   // Получаем тему из глобального контекста вместо локального
-  const { isDark, toggleTheme } = useTheme();
+  const { isDark: isDarkFromContext, toggleTheme: toggleThemeFromContext } = useTheme();
 
   // Управление боковым меню (история диалогов) - слева
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
   // Управление правым модульным окном (приветствие/информация)
   const [isInfoSidebarOpen, setIsInfoSidebarOpen] = useState(false);

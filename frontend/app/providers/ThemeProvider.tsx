@@ -17,6 +17,18 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>("dark");
   const [mounted, setMounted] = useState(false);
 
+  const applyTheme = (newTheme: Theme) => {
+    const root = document.documentElement;
+    if (newTheme === "dark") {
+      root.classList.add("dark");
+      root.style.colorScheme = "dark";
+    } else {
+      root.classList.remove("dark");
+      root.style.colorScheme = "light";
+    }
+    localStorage.setItem("theme", newTheme);
+  };
+
   // Инициализация темы из localStorage и системных предпочтений
   useEffect(() => {
     // Безопасно читаем из localStorage только на клиенте
@@ -33,18 +45,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     applyTheme(initialTheme);
     setMounted(true);
   }, []);
-
-  const applyTheme = (newTheme: Theme) => {
-    const root = document.documentElement;
-    if (newTheme === "dark") {
-      root.classList.add("dark");
-      root.style.colorScheme = "dark";
-    } else {
-      root.classList.remove("dark");
-      root.style.colorScheme = "light";
-    }
-    localStorage.setItem("theme", newTheme);
-  };
 
   const toggleTheme = () => {
     const newTheme = theme === "dark" ? "light" : "dark";

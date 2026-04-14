@@ -44,7 +44,7 @@ export function ProjectTypeSelect({
     <div>
       <div className="flex items-center justify-between mb-3">
         <div>
-          <p className={`text-sm font-semibold ${isDark ? 'text-white' : 'text-slate-800'}`}>Тип проекта</p>
+          <p className={`text-sm font-semibold ${isDark ? 'text-white' : 'text-slate-800'}`}>Сфера науки</p>
           <p className={`text-xs mt-0.5 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Улучшает точность AI-анализа</p>
         </div>
         <span className={`text-[10px] rounded-full px-2 py-0.5 border ${isDark ? 'text-amber-400 bg-amber-400/10 border-amber-400/20' : 'text-indigo-600 bg-indigo-50 border-indigo-100'}`}>

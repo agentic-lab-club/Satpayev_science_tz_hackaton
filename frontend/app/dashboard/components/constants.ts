@@ -10,8 +10,8 @@ export const mockDocuments: TZDocument[] = [
     size: "248 КБ",
     format: "DOCX",
     status: "completed",
-    score: 82,
-    issuesFound: 5,
+    score: 82, // Matches totalScore of project 1
+    issuesFound: 2, // Matches findings length of project 1
   },
   {
     id: "2",
@@ -20,8 +20,8 @@ export const mockDocuments: TZDocument[] = [
     size: "1.2 МБ",
     format: "PDF",
     status: "completed",
-    score: 61,
-    issuesFound: 14,
+    score: 61, // Matches totalScore of project 2
+    issuesFound: 2, // Matches findings length of project 2
   },
   {
     id: "3",
@@ -38,8 +38,8 @@ export const mockDocuments: TZDocument[] = [
     size: "32 КБ",
     format: "TXT",
     status: "completed",
-    score: 45,
-    issuesFound: 22,
+    score: 45, // Matches totalScore of project 4
+    issuesFound: 3, // Matches findings length of project 4
   },
   {
     id: "5",
@@ -57,7 +57,7 @@ export const mockDocuments: TZDocument[] = [
     format: "DOCX",
     status: "completed",
     score: 91,
-    issuesFound: 2,
+    issuesFound: 1, // Matches finding: "Положительная рекомендация..."
   },
 ];
 
