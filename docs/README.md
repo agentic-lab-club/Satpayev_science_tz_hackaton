@@ -21,8 +21,8 @@ If older spike text conflicts with `PLAN.md`, prefer `PLAN.md`.
 
 ## Hackathon Documents
 
-- `docs/ТЗ_официальное (1).docx` - official hackathon technical requirement.
-- `docs/Шаблон для ТЗ рус.docx` - scientific technical specification template to analyze against.
+- `docs/ТЗ_официальное.docx` - official hackathon technical requirement.
+- `docs/Шаблон_для_ТЗ_рус.docx` - scientific technical specification template to analyze against.
 - `docs/TZ_digital_polegon.docx` - example scientific TZ for demos and tests.
 - `docs/Оценка_ТЗ_шаблон.xlsx` - official evaluation table template.
 

@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile
     container_name: satpayevtz_ai_service
     env_file:
-      - .env.example
+      - .env
     ports:
       - "${AI_SERVICE_HOST_PORT:-8000}:8000"
     healthcheck:

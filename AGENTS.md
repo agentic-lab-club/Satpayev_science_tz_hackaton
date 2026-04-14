@@ -267,6 +267,47 @@ Always check the module’s own files first.
 
 ---
 
+## Search Tooling: ripgrep (`rg`)
+
+Agents should use `rg` (`ripgrep`) as the default search tool for repository inspection.
+
+Use `rg` before slower alternatives such as `grep`, `find`, or broad editor search when:
+- searching file contents;
+- listing files by pattern;
+- finding symbols, routes, config keys, Docker services, environment variables, or TODOs;
+- checking whether a string already exists before editing.
+
+Recommended commands:
+
+```bash
+rg "search text"
+rg --files
+rg --files -g 'AGENTS.md' -g 'README.md'
+rg "AI_SERVICE" backend ai-service docker-compose.yml
+```
+
+If `rg` is not installed, install it before doing broad repository search when package installation is available.
+
+Linux install commands:
+
+```bash
+# Debian / Ubuntu
+sudo apt-get update && sudo apt-get install -y ripgrep
+
+# Fedora
+sudo dnf install -y ripgrep
+
+# Arch Linux
+sudo pacman -S --noconfirm ripgrep
+
+# Alpine
+sudo apk add ripgrep
+```
+
+If installation is not available in the current environment, fall back to standard tools such as `grep -R` and `find`, and mention the fallback when relevant.
+
+---
+
 ## Change Discipline
 
 The agent must keep changes disciplined.

@@ -2,6 +2,47 @@
 
 This file defines reusable workflows for agents working in this repository. It is not a replacement for `AGENTS.md`; it is a task playbook.
 
+## Skill: Repository Search With ripgrep
+
+Use when inspecting the monorepo, tracing references, finding files, or checking whether a config key, route, symbol, or string already exists.
+
+Tool preference:
+
+- use `rg` for file-content search;
+- use `rg --files` for fast file listing;
+- use `grep -R` or `find` only when `rg` is unavailable and cannot be installed.
+
+Install `rg` on Linux when package installation is available:
+
+```bash
+# Debian / Ubuntu
+sudo apt-get update && sudo apt-get install -y ripgrep
+
+# Fedora
+sudo dnf install -y ripgrep
+
+# Arch Linux
+sudo pacman -S --noconfirm ripgrep
+
+# Alpine
+sudo apk add ripgrep
+```
+
+Common commands:
+
+```bash
+rg "search text"
+rg --files
+rg --files -g 'AGENTS.md' -g 'README.md'
+rg "AI_SERVICE" backend ai-service docker-compose.yml
+```
+
+Definition of done:
+
+- broad repository searches use `rg` where available;
+- fallback searches are limited and called out when relevant;
+- search commands respect the current task's read scope and write scope.
+
 ## Skill: Spike To Implementation Plan
 
 Use when turning research or chat notes into implementation work.
