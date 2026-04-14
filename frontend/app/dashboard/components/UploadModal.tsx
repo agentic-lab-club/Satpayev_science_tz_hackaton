@@ -34,8 +34,9 @@ export function UploadModal({ isOpen, onClose }: UploadModalProps) {
   // ── File handling ──
   const handleFile = useCallback((incoming: File) => {
     setFileError(null);
-    if (!isAllowed(incoming)) {
-      setFileError(`Формат .${getExt(incoming.name)} не поддерживается. Используйте PDF, DOC, DOCX или TXT.`);
+    const ext = getExt(incoming.name);
+    if (!["pdf", "doc", "docx"].includes(ext)) {
+      setFileError(`Формат .${ext} не поддерживается. Разрешены только PDF и DOC/DOCX.`);
       return;
     }
     if (incoming.size > 20 * 1024 * 1024) {
@@ -122,15 +123,15 @@ export function UploadModal({ isOpen, onClose }: UploadModalProps) {
       {/* Modal backdrop with fade animation */}
       <div
         className={`fixed inset-0 z-40 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${
-          isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+          isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
         onClick={closeModal}
       />
 
       {/* Modal with scale and fade animation */}
       <div
-        className={`fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none transition-all duration-300 ${
-          isOpen ? "opacity-100 pointer-events-auto" : "opacity-0"
+        className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-all duration-300 ${
+          isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none hidden"
         }`}
         onClick={(e) => e.target === e.currentTarget && closeModal()}
       >
@@ -190,7 +191,7 @@ export function UploadModal({ isOpen, onClose }: UploadModalProps) {
                 <input
                   ref={inputRef}
                   type="file"
-                  accept=".pdf,.doc,.docx,.txt"
+                  accept=".pdf,.doc,.docx"
                   className="hidden"
                   onChange={onInputChange}
                 />
@@ -220,7 +221,7 @@ export function UploadModal({ isOpen, onClose }: UploadModalProps) {
                     </button>
                     {/* Supported formats */}
                     <div className="flex items-center gap-2 mt-5">
-                      {["PDF", "DOC", "DOCX", "TXT"].map((fmt) => (
+                      {["PDF", "DOC", "DOCX"].map((fmt) => (
                         <span key={fmt} className={`text-[10px] font-bold px-2 py-0.5 rounded border ${FORMAT_META[fmt.toLowerCase()]?.bg ?? "bg-slate-700 border-slate-600"} ${FORMAT_META[fmt.toLowerCase()]?.color ?? "text-slate-400"}`}>
                           {fmt}
                         </span>

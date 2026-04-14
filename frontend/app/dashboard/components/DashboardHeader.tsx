@@ -1,7 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
-import { Zap, MessageSquare, Upload, Zap as AnalyzeIcon, AlertCircle, BarChart3, Lightbulb, Bot } from "lucide-react";
+import { Zap, MessageSquare, Upload, Zap as AnalyzeIcon, AlertCircle, BarChart3, Lightbulb, Bot, X } from "lucide-react";
 import dynamic from "next/dynamic";
 
 const ThemeToggle = dynamic(() => import("../../components/ThemeToggle").then(mod => ({ default: mod.ThemeToggle })), {
@@ -14,8 +15,10 @@ interface HeaderProps {
 }
 
 export function DashboardHeader({ onUploadClick }: HeaderProps) {
+  const [isBannerVisible, setIsBannerVisible] = useState(true);
+
   return (
-    <>
+    <div className="space-y-6">
       {/* Top Nav */}
       <header className="flex items-center justify-between dark:bg-slate-900/40 light:bg-white/40 p-4 rounded-lg border dark:border-slate-700/30 light:border-slate-200/30">
         <div className="flex items-center gap-3">
@@ -40,48 +43,73 @@ export function DashboardHeader({ onUploadClick }: HeaderProps) {
         </div>
       </header>
 
-      {/* Hero / Welcome */}
-      <section className="relative rounded-3xl border border-slate-800 bg-slate-900/40 backdrop-blur-sm overflow-hidden p-8 hover:border-slate-700 transition-colors">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/4 pointer-events-none" />
-        <div className="relative">
-          <div className="inline-flex items-center gap-2 bg-amber-400/10 border border-amber-400/25 rounded-full px-3 py-1 text-xs text-amber-400 font-medium mb-4">
-            <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-            AI-система активна
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight mb-3">
-            Анализ технических<br />
-            <span className="text-amber-400">заданий</span> с помощью ИИ
-          </h2>
-          <p className="text-slate-400 text-sm max-w-lg leading-relaxed mb-6">
-            Загрузите ТЗ в формате PDF, DOCX или TXT — система автоматически выявит ошибки,
-            оценит качество по 100-балльной шкале и сформирует рекомендации по улучшению.
-          </p>
-
-          {/* Capability pills */}
-          <div className="flex flex-wrap gap-2 mb-7">
-            {[
-              { icon: AnalyzeIcon, label: "Анализ структуры" },
-              { icon: AlertCircle, label: "Выявление ошибок" },
-              { icon: BarChart3, label: "Оценка качества" },
-              { icon: Lightbulb, label: "Рекомендации" },
-              { icon: Bot, label: "AI-ассистент" }
-            ].map((cap) => (
-              <div key={cap.label} className="flex items-center gap-1.5 text-xs text-slate-400 bg-slate-800/70 border border-slate-700 rounded-full px-3 py-1 hover:border-slate-600 transition-colors">
-                <cap.icon className="w-3 h-3" />
-                {cap.label}
-              </div>
-            ))}
-          </div>
-
-          <button
-            onClick={onUploadClick}
-            className="inline-flex items-center gap-2.5 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 active:scale-95 text-white font-bold text-sm rounded-xl px-6 py-3 transition-all duration-150 shadow-lg shadow-blue-500/20 hover:shadow-lg hover:shadow-blue-500/40"
+      {/* Hero / Welcome Banner */}
+      {isBannerVisible && (
+        <section className="relative rounded-3xl border border-indigo-500/20 bg-gradient-to-br from-indigo-900/40 via-slate-900/40 to-slate-900/40 backdrop-blur-sm overflow-hidden p-8">
+          <button 
+            onClick={() => setIsBannerVisible(false)}
+            className="absolute top-4 right-4 text-slate-400 hover:text-white bg-slate-800/50 hover:bg-slate-700/50 rounded-full p-1.5 transition-colors z-10"
+            title="Закрыть интро"
           >
-            <Upload className="w-4 h-4" />
-            Загрузить новое ТЗ
+            <X className="w-5 h-5" />
           </button>
+          
+          <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 pointer-events-none" />
+          <div className="relative">
+            <div className="inline-flex items-center gap-2 bg-indigo-500/10 border border-indigo-500/20 rounded-full px-3 py-1 text-xs text-indigo-400 font-medium mb-4">
+              <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />
+              AI-система активна
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight mb-3">
+              Анализ технических<br />
+              <span className="text-yellow-400">заданий</span> с помощью ИИ
+            </h2>
+            <p className="text-slate-400 text-sm max-w-lg leading-relaxed mb-6">
+              Загрузите ТЗ в формате PDF, DOCX или TXT — система автоматически выявит ошибки,
+              оценит качество по 100-балльной шкале и сформирует рекомендации по улучшению.
+            </p>
+
+            {/* Capability pills */}
+            <div className="flex flex-wrap gap-2">
+              {[
+                { icon: AnalyzeIcon, label: "Анализ структуры" },
+                { icon: AlertCircle, label: "Выявление ошибок" },
+                { icon: BarChart3, label: "Оценка качества" },
+                { icon: Lightbulb, label: "Рекомендации" },
+                { icon: Bot, label: "AI-ассистент" }
+              ].map((cap, i) => (
+                <div key={i} className="flex items-center gap-1.5 text-xs text-slate-400 bg-slate-800/50 border border-slate-700/50 rounded-full px-3 py-1.5">
+                  <cap.icon className="w-3.5 h-3.5 text-indigo-400" />
+                  {cap.label}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Upload Block */}
+      <section className="flex flex-col sm:flex-row items-center justify-between gap-6 bg-slate-900/40 backdrop-blur-xl border border-slate-800/60 rounded-2xl p-6 shadow-xl relative overflow-hidden group">
+        <div className="absolute -left-20 -top-20 w-40 h-40 bg-indigo-500/10 rounded-full blur-[50px] pointer-events-none group-hover:bg-indigo-500/20 transition-colors duration-500" />
+        
+        <div className="relative flex items-center gap-5">
+          <div className="w-14 h-14 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
+            <Upload className="w-6 h-6 text-indigo-400" />
+          </div>
+          <div>
+            <h3 className="text-lg font-bold text-white mb-1">Проверить новое ТЗ</h3>
+            <p className="text-sm text-slate-400">Загрузите документ или перетащите его сюда</p>
+          </div>
         </div>
+        
+        <button
+          onClick={onUploadClick}
+          className="relative shrink-0 w-full sm:w-auto inline-flex justify-center items-center gap-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 text-white font-medium text-sm rounded-xl px-8 py-3.5 transition-all duration-300 shadow-[0_0_20px_rgba(99,102,241,0.2)] hover:shadow-[0_0_25px_rgba(99,102,241,0.4)] hover:-translate-y-0.5"
+        >
+          <Upload className="w-4 h-4" />
+          Загрузить документ
+        </button>
       </section>
-    </>
+    </div>
   );
 }
