@@ -16,11 +16,7 @@ COPY . .
 RUN npm run build
 
 # Runtime stage
-<<<<<<< HEAD
 FROM node:22-alpine
-=======
-FROM node:20-alpine
->>>>>>> 067a770d97d14a9e28a7ff2c307860c5cfa2ba30
 
 WORKDIR /app
 
