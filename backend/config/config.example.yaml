@@ -34,12 +34,28 @@ auth:
 
 storage:
   provider: "s3"
+
+  # credential_source controls how the S3-compatible client authenticates:
+  # - "static": use access_key and secret_key from this config. Required for local MinIO.
+  # - "iam": use AWS EC2 instance profile credentials. Use this on AWS EC2 for real S3.
+  #
+  # Local Docker Compose / MinIO example:
   endpoint: "minio:9000"
   region: "us-east-1"
   bucket: "application-files"
+  credential_source: "static"
   access_key: "minioadmin"
   secret_key: "minioadmin"
   use_ssl: false
+
+  # AWS EC2 / S3 example:
+  # endpoint: "your-bucket.s3.your-region.amazonaws.com"
+  # region: "eu-north-1"
+  # bucket: "your-terraform-uploads-bucket"
+  # credential_source: "iam"
+  # access_key: ""
+  # secret_key: ""
+  # use_ssl: true
 
 email:
   enabled: false  # when false, registration auto-verifies users and disables verification codes

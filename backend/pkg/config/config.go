@@ -76,13 +76,14 @@ type AuthConfig struct {
 }
 
 type StorageConfig struct {
-	Provider  string `mapstructure:"provider"`
-	Endpoint  string `mapstructure:"endpoint"`
-	Region    string `mapstructure:"region"`
-	Bucket    string `mapstructure:"bucket"`
-	AccessKey string `mapstructure:"access_key"`
-	SecretKey string `mapstructure:"secret_key"`
-	UseSSL    bool   `mapstructure:"use_ssl"`
+	Provider         string `mapstructure:"provider"`
+	Endpoint         string `mapstructure:"endpoint"`
+	Region           string `mapstructure:"region"`
+	Bucket           string `mapstructure:"bucket"`
+	CredentialSource string `mapstructure:"credential_source"`
+	AccessKey        string `mapstructure:"access_key"`
+	SecretKey        string `mapstructure:"secret_key"`
+	UseSSL           bool   `mapstructure:"use_ssl"`
 }
 
 type MessagingConfig struct {
@@ -231,6 +232,9 @@ func Load() (cfg *Config, err error) {
 	}
 	if cfg.Storage.Region == "" {
 		cfg.Storage.Region = "us-east-1"
+	}
+	if cfg.Storage.CredentialSource == "" {
+		cfg.Storage.CredentialSource = "static"
 	}
 	if cfg.Messaging.Mode == "" {
 		cfg.Messaging.Mode = "stub"
@@ -390,6 +394,9 @@ func overrideFromEnv(cfg *Config) {
 	}
 	if value := os.Getenv("STORAGE_BUCKET"); value != "" {
 		cfg.Storage.Bucket = value
+	}
+	if value := os.Getenv("STORAGE_CREDENTIAL_SOURCE"); value != "" {
+		cfg.Storage.CredentialSource = value
 	}
 	if value := os.Getenv("STORAGE_ACCESS_KEY"); value != "" {
 		cfg.Storage.AccessKey = value

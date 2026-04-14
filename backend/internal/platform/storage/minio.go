@@ -30,8 +30,13 @@ type MinIOStorage struct {
 }
 
 func NewMinIOStorage(cfg config.StorageConfig) (*MinIOStorage, error) {
+	creds, err := storageCredentials(cfg)
+	if err != nil {
+		return nil, err
+	}
+
 	client, err := minio.New(cfg.Endpoint, &minio.Options{
-		Creds:  credentials.NewStaticV4(cfg.AccessKey, cfg.SecretKey, ""),
+		Creds:  creds,
 		Secure: cfg.UseSSL,
 		Region: cfg.Region,
 	})
@@ -44,6 +49,20 @@ func NewMinIOStorage(cfg config.StorageConfig) (*MinIOStorage, error) {
 		bucket: cfg.Bucket,
 		region: cfg.Region,
 	}, nil
+}
+
+func storageCredentials(cfg config.StorageConfig) (*credentials.Credentials, error) {
+	switch strings.ToLower(strings.TrimSpace(cfg.CredentialSource)) {
+	case "", "static":
+		if strings.TrimSpace(cfg.AccessKey) == "" || strings.TrimSpace(cfg.SecretKey) == "" {
+			return nil, fmt.Errorf("storage credential_source static requires access_key and secret_key")
+		}
+		return credentials.NewStaticV4(cfg.AccessKey, cfg.SecretKey, ""), nil
+	case "iam":
+		return credentials.NewIAM(""), nil
+	default:
+		return nil, fmt.Errorf("unsupported storage credential_source %q; expected static or iam", cfg.CredentialSource)
+	}
 }
 
 func (s *MinIOStorage) EnsureBucket(ctx context.Context) error {

@@ -43,12 +43,13 @@ func (f *fakeMinIOClient) PresignedGetObject(context.Context, string, string, ti
 
 func TestNewMinIOStorageBuildsClient(t *testing.T) {
 	storage, err := NewMinIOStorage(config.StorageConfig{
-		Endpoint:  "minio:9000",
-		Region:    "us-east-1",
-		Bucket:    "application-files",
-		AccessKey: "minioadmin",
-		SecretKey: "minioadmin",
-		UseSSL:    false,
+		Endpoint:         "minio:9000",
+		Region:           "us-east-1",
+		Bucket:           "application-files",
+		CredentialSource: "static",
+		AccessKey:        "minioadmin",
+		SecretKey:        "minioadmin",
+		UseSSL:           false,
 	})
 	if err != nil {
 		t.Fatalf("NewMinIOStorage returned error: %v", err)
@@ -60,12 +61,13 @@ func TestNewMinIOStorageBuildsClient(t *testing.T) {
 
 func TestMinIOStoragePresignGetReturnsURL(t *testing.T) {
 	storage, err := NewMinIOStorage(config.StorageConfig{
-		Endpoint:  "minio:9000",
-		Region:    "us-east-1",
-		Bucket:    "application-files",
-		AccessKey: "minioadmin",
-		SecretKey: "minioadmin",
-		UseSSL:    false,
+		Endpoint:         "minio:9000",
+		Region:           "us-east-1",
+		Bucket:           "application-files",
+		CredentialSource: "static",
+		AccessKey:        "minioadmin",
+		SecretKey:        "minioadmin",
+		UseSSL:           false,
 	})
 	if err != nil {
 		t.Fatalf("NewMinIOStorage returned error: %v", err)
@@ -77,6 +79,35 @@ func TestMinIOStoragePresignGetReturnsURL(t *testing.T) {
 	}
 	if presignedURL == "" {
 		t.Fatal("expected non-empty presigned URL")
+	}
+}
+
+func TestNewMinIOStorageRejectsStaticWithoutKeys(t *testing.T) {
+	_, err := NewMinIOStorage(config.StorageConfig{
+		Endpoint:         "s3.eu-north-1.amazonaws.com",
+		Region:           "eu-north-1",
+		Bucket:           "application-files",
+		CredentialSource: "static",
+		UseSSL:           true,
+	})
+	if err == nil {
+		t.Fatal("expected static credential source without keys to fail")
+	}
+}
+
+func TestNewMinIOStorageAcceptsIAMCredentialSourceWithoutKeys(t *testing.T) {
+	storage, err := NewMinIOStorage(config.StorageConfig{
+		Endpoint:         "s3.eu-north-1.amazonaws.com",
+		Region:           "eu-north-1",
+		Bucket:           "application-files",
+		CredentialSource: "iam",
+		UseSSL:           true,
+	})
+	if err != nil {
+		t.Fatalf("NewMinIOStorage returned error: %v", err)
+	}
+	if storage.bucket != "application-files" {
+		t.Fatalf("expected bucket to be preserved, got %q", storage.bucket)
 	}
 }
 

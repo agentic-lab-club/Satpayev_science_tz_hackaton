@@ -87,7 +87,9 @@ PresignGet(ctx context.Context, bucket string, objectKey string, expiry time.Dur
 
 - This module does not validate file type, MIME type, or size policy.
 - Caller must provide `size_bytes`.
-- Constructor assumes storage config is valid.
+- `credential_source` must be either `static` or `iam`.
+- `credential_source: static` requires both `access_key` and `secret_key`; use this for local MinIO.
+- `credential_source: iam` uses the AWS EC2 instance profile; use this for AWS S3 on EC2 and leave `access_key` / `secret_key` empty.
 
 ## Lifecycle / State Transitions
 
@@ -108,7 +110,8 @@ On download stat failure, opened object reader is closed before returning the er
 
 ## Security Notes
 
-- Access credentials come from backend config.
+- Local MinIO credentials come from backend config with `credential_source: static`.
+- AWS S3 credentials should not be stored in config on EC2. Use `credential_source: iam` so the MinIO/S3 client reads temporary credentials from the EC2 instance profile.
 - Object keys are randomized UUID-based names rather than raw user filenames.
 - Original filename is not used as storage key, only its extension is preserved.
 - Presigned URLs are generated server-side and remain time-limited.

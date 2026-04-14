@@ -40,7 +40,8 @@ terraform apply -var-file="terraform.tfvars"
    - set `storage.bucket` = `uploads_bucket_name`
    - set `storage.endpoint` = `uploads_bucket_endpoint`
    - set `storage.region` = your Terraform AWS region
-   - set `storage.access_key` and `storage.secret_key` to credentials that can access the uploads bucket
+   - set `storage.credential_source` = `iam`
+   - keep `storage.access_key` and `storage.secret_key` empty
    - set `storage.use_ssl` = `true`
 5. In AWS Secrets Manager, add the runtime file secret values:
    - `compose_env_secret_name`: full contents of root `.env.prod`
@@ -150,13 +151,15 @@ Order:
 1. run Terraform and save the S3 outputs
 2. prepare the real `backend/config/config.prod.yaml` content for AWS S3
 3. use the Terraform outputs for `storage.bucket`, `storage.endpoint`, and `storage.region`
-4. set `storage.access_key` and `storage.secret_key` to credentials that can access the uploads bucket
+4. set `storage.credential_source` to `iam` and keep `storage.access_key` / `storage.secret_key` empty
 5. upload that final YAML file content into `backend_config_secret_name`
 
 Important:
 
 - the actual backend config file in this repo is `backend/config/config.prod.yaml`
 - if you were thinking of `config.prod.env`, use the YAML file instead because that is what the backend currently loads
+- local MinIO uses `credential_source: static` and requires `access_key` / `secret_key`
+- AWS EC2 uses `credential_source: iam`; the backend gets temporary credentials from the EC2 instance profile
 
 ## Scripts
 
