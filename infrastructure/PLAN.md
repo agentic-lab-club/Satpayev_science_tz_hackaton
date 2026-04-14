@@ -9,6 +9,8 @@ This folder is the source of truth for the current AWS demo deployment shape.
 - The frontend is available through both:
   - direct EC2 access on port `3000`
   - a generated CloudFront URL
+- Backend routes are exposed through the frontend reverse proxy path `/backend/*`.
+- Future AI service routes are exposed through the frontend reverse proxy path `/ai-service/*`.
 - Runtime configuration is rendered from two Secrets Manager secrets into files on EC2.
 
 ## Provisioning Scope
@@ -25,7 +27,9 @@ Terraform in `infrastructure/terraform` provisions:
 - Secrets Manager secret containers for:
   - root `.env.prod`
   - `backend/config/config.prod.yaml`
-- dev-only local S3 access secret for local backend development
+
+Local development keeps using MinIO from the root local Docker Compose stack.
+AWS EC2 uses the Terraform-created S3 bucket through the production backend config stored in Secrets Manager.
 
 ## Deployment Scope
 
@@ -33,7 +37,7 @@ Deployment from EC2 is handled by scripts in `infrastructure/scripts`:
 
 1. fetch `.env.prod` from Secrets Manager
 2. fetch `backend/config/config.prod.yaml` from Secrets Manager
-3. write both files into `/opt/satpayevtz-ats/runtime`
+3. write both files into `/opt/satpayevtz/runtime`
 4. run `docker compose -f docker-compose.prod.yml up -d --build`
 
 ## Accepted Risks

@@ -1,7 +1,7 @@
 "use client";
 
 import { BookOpen, CheckCircle, Target, Settings, Bug, Lightbulb, Sparkles } from "lucide-react";
-import { EXAMPLE_PROMPTS } from "../constants";
+import { EXAMPLE_PROMPTS, ExamplePrompt } from "@/app/chat/constants";
 
 interface ExamplePromptsProps {
   onSelect: (prompt: string) => void;
@@ -21,8 +21,8 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 export function ExamplePrompts({ onSelect, visible, isDark = true }: ExamplePromptsProps) {
   if (!visible) return null;
 
-  const rulesPrompts = EXAMPLE_PROMPTS.filter((p) => p.category === "rules");
-  const improvePrompts = EXAMPLE_PROMPTS.filter((p) => p.category === "improve");
+  const rulesPrompts = EXAMPLE_PROMPTS.filter((p: ExamplePrompt) => p.category === "rules");
+  const improvePrompts = EXAMPLE_PROMPTS.filter((p: ExamplePrompt) => p.category === "improve");
 
   return (
     <div className="max-w-4xl mx-auto w-full animate-fade-in space-y-8">
@@ -49,7 +49,7 @@ export function ExamplePrompts({ onSelect, visible, isDark = true }: ExampleProm
           </div>
           
           <div className="space-y-2">
-            {rulesPrompts.map((prompt, idx) => (
+            {rulesPrompts.map((prompt: ExamplePrompt, idx: number) => (
               <button
                 key={idx}
                 onClick={() => onSelect(prompt.description)}
@@ -85,7 +85,7 @@ export function ExamplePrompts({ onSelect, visible, isDark = true }: ExampleProm
           </div>
           
           <div className="space-y-2">
-            {improvePrompts.map((prompt, idx) => (
+            {improvePrompts.map((prompt: ExamplePrompt, idx: number) => (
               <button
                 key={idx}
                 onClick={() => onSelect(prompt.description)}

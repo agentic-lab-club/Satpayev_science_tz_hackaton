@@ -19,32 +19,32 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   // Инициализация темы из localStorage и системных предпочтений
   useEffect(() => {
-    setMounted(true);
-
-    // Проверяем localStorage
+    // Безопасно читаем из localStorage только на клиенте
     const savedTheme = localStorage.getItem("theme") as Theme | null;
+    let initialTheme: Theme = "dark";
 
     if (savedTheme) {
-      setTheme(savedTheme);
-      applyTheme(savedTheme);
-    } else {
-      // Проверяем системные предпочтения
-      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      const initialTheme = prefersDark ? "dark" : "light";
-      setTheme(initialTheme);
-      applyTheme(initialTheme);
+      initialTheme = savedTheme;
+    } else if (window.matchMedia("(prefers-color-scheme: light)").matches) {
+      initialTheme = "light";
     }
+
+    setTheme(initialTheme);
+    applyTheme(initialTheme);
+    setMounted(true);
   }, []);
 
-const applyTheme = (newTheme: Theme) => {
-  const root = document.documentElement;
-  if (newTheme === "dark") {
-    root.classList.add("dark");
-  } else {
-    root.classList.remove("dark");
-  }
-  localStorage.setItem("theme", newTheme);
-};
+  const applyTheme = (newTheme: Theme) => {
+    const root = document.documentElement;
+    if (newTheme === "dark") {
+      root.classList.add("dark");
+      root.style.colorScheme = "dark";
+    } else {
+      root.classList.remove("dark");
+      root.style.colorScheme = "light";
+    }
+    localStorage.setItem("theme", newTheme);
+  };
 
   const toggleTheme = () => {
     const newTheme = theme === "dark" ? "light" : "dark";
@@ -52,9 +52,11 @@ const applyTheme = (newTheme: Theme) => {
     applyTheme(newTheme);
   };
 
-  // Не рендерим контент до монтирования, чтобы избежать мигания
+  // Чтобы на 100% заблокировать моргание FOUC (кадры с темной или белой темой до загрузки), 
+  // мы не рендерим ничего, пока клиент не прочитает localStorage и не выставит верное состояние.
+  // Это также избавляет от ошибок гидратации React.
   if (!mounted) {
-    return <>{children}</>;
+    return null;
   }
 
   return (

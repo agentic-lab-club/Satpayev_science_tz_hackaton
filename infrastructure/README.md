@@ -7,8 +7,8 @@ Current target:
 - one Ubuntu EC2 host for the full demo stack
 - Docker Compose deployment from the monorepo root (docker-compose.prod.yml)
 - frontend available both on direct EC2 port `3000` and a generated CloudFront URL
-- backend API on direct EC2 port `8080`
-- scraper API on direct EC2 port `9432`
+- backend API reached through the frontend reverse proxy path `/backend/*`
+- future AI service reached through the frontend reverse proxy path `/ai-service/*`
 - runtime secrets rendered from AWS Secrets Manager into files on the host
 
 ## Quickstart
@@ -33,19 +33,15 @@ terraform apply -var-file="terraform.tfvars"
    - `uploads_bucket_name`
    - `uploads_bucket_endpoint`
    - `uploads_bucket_regional_domain_name`
-   - `local_s3_access_secret_name`
    - `compose_env_secret_name`
    - `backend_config_secret_name`
-4. Open AWS Console Management and go to AWS Secrets Manager:
-   - open `local_s3_access_secret_name`
-   - copy the generated S3 credentials from that secret
-   - paste them into the `storage` section of [`backend/config/config.prod.yaml`](/workspaces/Satpayev_science_tz_hackaton/backend/config/config.prod.yaml)
-   - use the Terraform outputs for:
-     - `storage.bucket` = `uploads_bucket_name`
-     - `storage.endpoint` = `uploads_bucket_endpoint`
-     - `storage.region` = your Terraform AWS region
-     - `storage.access_key` and `storage.secret_key` = values from the AWS Secrets Manager secret
-     - `storage.use_ssl` = `true`
+4. Prepare the production backend YAML for AWS S3:
+   - start from [`backend/config/config.prod.yaml`](/workspaces/Satpayev_science_tz_hackaton/backend/config/config.prod.yaml)
+   - set `storage.bucket` = `uploads_bucket_name`
+   - set `storage.endpoint` = `uploads_bucket_endpoint`
+   - set `storage.region` = your Terraform AWS region
+   - set `storage.access_key` and `storage.secret_key` to credentials that can access the uploads bucket
+   - set `storage.use_ssl` = `true`
 5. In AWS Secrets Manager, add the runtime file secret values:
    - `compose_env_secret_name`: full contents of root `.env.prod`
    - `backend_config_secret_name`: full contents of `backend/config/config.prod.yaml`
@@ -66,6 +62,19 @@ cd /opt/satpayevtz/app
 ```
 
 9. To destroy the Infrastructure: `terraform destroy`
+
+## SSH Key Pair
+
+Terraform currently expects an existing AWS EC2 key pair via `key_pair_name`.
+It does not generate a `.pem` file in this repository.
+
+To connect:
+
+```bash
+ssh -i /path/to/your-existing-keypair.pem ubuntu@<ec2_public_ip>
+```
+
+If you created the key pair in AWS Console, AWS only lets you download the `.pem` at creation time. If that file is lost, create a new key pair and update `key_pair_name` in `terraform.tfvars`.
 
 ## If User Data Did Not Run On An Existing EC2
 
@@ -105,14 +114,15 @@ This recreates the EC2 instance and reruns `user_data` on first boot. The Terraf
 
 - VPC with one public subnet
 - Internet Gateway and public route table
-- security group with SSH allowlist and public ports for frontend, backend, and scraper
+- security group with SSH allowlist and public frontend origin port
 - EC2 instance with Elastic IP
 - EC2 bootstrap via `user_data`
 - IAM role and instance profile
 - private S3 uploads bucket
 - two runtime Secrets Manager containers
 - CloudFront distribution for the frontend origin on EC2
-- dev-only local S3 access secret for local backend development
+
+Local development uses MinIO from the local Docker Compose stack. AWS EC2 uses the Terraform-created S3 bucket through the production backend YAML stored in Secrets Manager.
 
 ## Runtime Secret Model
 
@@ -120,7 +130,7 @@ The AWS runtime now uses two deploy-time secrets:
 
 - `satpayevtz/dev/.env.prod`
   - one file for `docker-compose.prod.yml`
-  - shared by ATS, RAG bot, and scraper stack variables
+  - shared by the frontend/backend Compose stack variables
 - `satpayevtz/dev/backend/config.prod.yaml`
   - one file for the backend production YAML config
 
@@ -128,45 +138,25 @@ Terraform creates the secret containers only. It does not write the real product
 
 ## S3 Backend Config Wiring
 
-Before you deploy the backend, make sure the backend production config is updated with the S3 values created by Terraform.
+Local development and AWS deployment intentionally use different object storage:
+
+- Local development: MinIO from the root local Docker Compose stack.
+- AWS EC2: the Terraform-created AWS S3 bucket.
+
+Before you deploy the backend to EC2, make sure the backend production config secret contains AWS S3 values.
 
 Order:
 
 1. run Terraform and save the S3 outputs
-2. open `local_s3_access_secret_name` in AWS Secrets Manager
-3. copy the generated access key and secret key
-4. paste those values into [`backend/config/config.prod.yaml`](/workspaces/Satpayev_science_tz_hackaton/backend/config/config.prod.yaml)
-5. then upload that final YAML file content into `backend_config_secret_name`
+2. prepare the real `backend/config/config.prod.yaml` content for AWS S3
+3. use the Terraform outputs for `storage.bucket`, `storage.endpoint`, and `storage.region`
+4. set `storage.access_key` and `storage.secret_key` to credentials that can access the uploads bucket
+5. upload that final YAML file content into `backend_config_secret_name`
 
 Important:
 
 - the actual backend config file in this repo is `backend/config/config.prod.yaml`
 - if you were thinking of `config.prod.env`, use the YAML file instead because that is what the backend currently loads
-
-### Regenerate S3 Credentials
-
-If you need to rotate or regenerate the local S3 credentials stored in AWS Secrets Manager, run this from `infrastructure/terraform/envs/dev`:
-
-```bash
-terraform apply -replace="module.local_s3_access.aws_iam_access_key.this" -var-file="terraform.tfvars"
-```
-
-Then:
-
-1. note `local_s3_access_secret_name`
-2. open that secret in AWS Secrets Manager
-3. copy the new `access_key_id` and `secret_access_key`
-4. paste them into [`backend/config/config.prod.yaml`](/workspaces/Satpayev_science_tz_hackaton/backend/config/config.prod.yaml)
-5. update the runtime secret `backend_config_secret_name` with the new YAML content
-
-If you want to recreate the whole IAM user too, run:
-
-```bash
-terraform apply \
-  -replace="module.local_s3_access.aws_iam_user.this" \
-  -replace="module.local_s3_access.aws_iam_access_key.this" \
-  -var-file="terraform.tfvars"
-```
 
 ## Scripts
 

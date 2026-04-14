@@ -8,18 +8,8 @@ variable "vpc_id" {
   type        = string
 }
 
-variable "backend_port" {
-  description = "Public backend port."
-  type        = number
-}
-
 variable "frontend_port" {
   description = "Public frontend port."
-  type        = number
-}
-
-variable "scraper_public_port" {
-  description = "Public scraper port."
   type        = number
 }
 

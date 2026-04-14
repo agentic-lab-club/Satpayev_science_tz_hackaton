@@ -23,13 +23,11 @@ module "vpc" {
 module "security_group" {
   source = "../../modules/security_group"
 
-  name_prefix         = local.name_prefix
-  vpc_id              = module.vpc.vpc_id
-  backend_port        = var.backend_port
-  frontend_port       = var.frontend_port
-  scraper_public_port = var.scraper_public_port
-  ssh_allowed_cidrs   = var.ssh_allowed_cidrs
-  tags                = local.common_tags
+  name_prefix       = local.name_prefix
+  vpc_id            = module.vpc.vpc_id
+  frontend_port     = var.frontend_port
+  ssh_allowed_cidrs = var.ssh_allowed_cidrs
+  tags              = local.common_tags
 }
 
 module "s3" {
@@ -58,17 +56,6 @@ module "iam" {
     module.secrets.backend_config_secret_arn,
   ]
   tags = local.common_tags
-}
-
-module "local_s3_access" {
-  source = "../../modules/local_s3_access"
-
-  name_prefix = local.name_prefix
-  bucket_name = module.s3.bucket_name
-  bucket_arn  = module.s3.bucket_arn
-  aws_region  = var.aws_region
-  secret_name = var.local_s3_access_secret_name
-  tags        = local.common_tags
 }
 
 module "ec2" {

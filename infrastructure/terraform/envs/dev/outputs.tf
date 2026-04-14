@@ -13,11 +13,6 @@ output "ec2_public_dns" {
   value       = module.ec2.public_dns
 }
 
-output "backend_public_url" {
-  description = "Public backend endpoint."
-  value       = "http://${module.ec2.public_ip}:${var.backend_port}"
-}
-
 output "frontend_origin_public_url" {
   description = "Direct frontend origin on the EC2 host."
   value       = "http://${module.ec2.public_ip}:${var.frontend_port}"
@@ -31,11 +26,6 @@ output "frontend_cloudfront_domain_name" {
 output "frontend_cloudfront_url" {
   description = "CloudFront URL for the frontend."
   value       = "https://${module.cloudfront_frontend.domain_name}"
-}
-
-output "scraper_public_url" {
-  description = "Public scraper endpoint on the EC2 host."
-  value       = "http://${module.ec2.public_ip}:${var.scraper_public_port}"
 }
 
 output "uploads_bucket_name" {
@@ -61,14 +51,4 @@ output "compose_env_secret_name" {
 output "backend_config_secret_name" {
   description = "Secrets Manager secret name containing backend/config/config.prod.yaml."
   value       = module.secrets.backend_config_secret_name
-}
-
-output "local_s3_access_secret_name" {
-  description = "Secrets Manager secret name containing local backend S3 access credentials."
-  value       = module.local_s3_access.secret_name
-}
-
-output "local_s3_access_iam_username" {
-  description = "IAM username used to generate local backend S3 access credentials."
-  value       = module.local_s3_access.iam_username
 }
