@@ -8,6 +8,7 @@ interface ChatInputProps {
   onSend: () => void;
   onClear: () => void;
   isLoading?: boolean;
+  isDark?: boolean;
 }
 
 export function ChatInput({
@@ -16,6 +17,7 @@ export function ChatInput({
   onSend,
   onClear,
   isLoading,
+  isDark = true,
 }: ChatInputProps) {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey && !isLoading) {
@@ -25,7 +27,13 @@ export function ChatInput({
   };
 
   return (
-    <div className="border-t border-slate-700/30 bg-slate-900/50 p-4 hover:border-slate-700/50 transition-colors">
+    <div
+      className={`border-t transition-colors p-4 ${
+        isDark
+          ? "border-slate-700/30 bg-slate-900/50 hover:border-slate-700/50"
+          : "border-slate-200/30 bg-white/50 hover:border-slate-300/50"
+      }`}
+    >
       <div className="max-w-4xl mx-auto space-y-3">
         {/* Input Area */}
         <div className="flex gap-3">
@@ -34,7 +42,11 @@ export function ChatInput({
             onChange={(e) => onInputChange(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Напишите ваш вопрос... (Shift+Enter для новой строки)"
-            className="flex-1 bg-slate-800/70 text-white placeholder-slate-500 text-sm rounded-xl px-4 py-3 border border-slate-700 focus:outline-none focus:border-purple-400/50 focus:ring-1 focus:ring-purple-400/20 resize-none max-h-24 hover:border-slate-600 transition-colors"
+            className={`flex-1 text-sm rounded-xl px-4 py-3 border focus:outline-none focus:ring-1 resize-none max-h-11 transition-colors ${
+              isDark
+                ? "bg-slate-800/70 text-white placeholder-slate-500 border-slate-700 focus:border-purple-400/50 focus:ring-purple-400/20 hover:border-slate-600"
+                : "bg-slate-100 text-slate-900 placeholder-slate-500 border-slate-300 focus:border-purple-500/50 focus:ring-purple-500/20 hover:border-slate-400"
+            }`}
             rows={3}
             disabled={isLoading}
           />
@@ -55,16 +67,9 @@ export function ChatInput({
         </div>
 
         {/* Action Buttons */}
-        <div className="flex gap-2 justify-between items-center">
-          <button
-            onClick={onClear}
-            className="flex items-center gap-2 px-3 py-1.5 text-xs bg-slate-800/60 hover:bg-slate-800 text-slate-400 hover:text-rose-400 rounded-lg transition-colors border border-slate-700 hover:border-rose-400/30"
-          >
-            <Trash2 className="w-3.5 h-3.5" />
-            Очистить диалог
-          </button>
-          <p className="text-xs text-slate-500">
-            {input.length}/2000
+        <div className="flex gap-2 text-center justify-center items-center">
+          <p className={`text-xs ${isDark ? "text-slate-500" : "text-slate-500"}`}>
+            ИИ чатбот может допускать ошибки. Рекомендуем проверять важную информацию
           </p>
         </div>
       </div>

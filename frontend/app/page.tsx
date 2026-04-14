@@ -53,15 +53,15 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#080d14] text-white overflow-hidden">
-      {/* Background animated elements */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 right-10 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-20 left-10 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl animate-pulse" />
+    <div className="min-h-screen bg-slate-50 dark:bg-[#080d14] text-slate-900 dark:text-white flex flex-col font-sans relative overflow-hidden">
+      {/* Animated Background */}
+      <div className="fixed inset-0 z-0 opacity-50 dark:opacity-100">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-[100px] -translate-y-1/2" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-[100px] translate-y-1/2" />
       </div>
 
-      {/* Header/Navigation */}
-      <header className="sticky top-0 z-50 border-b border-slate-700/30 bg-slate-900/40 backdrop-blur-xl dark:bg-slate-900/40 dark:border-slate-700/30 light:bg-white/40 light:border-slate-200/30">
+      {/* Header */}
+      <header className="sticky top-0 z-50 border-b border-slate-200/50 dark:border-slate-700/30 bg-white/80 dark:bg-slate-900/40 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600">
@@ -71,18 +71,19 @@ export default function Home() {
               TZ·AI
             </h1>
           </div>
-          <nav className="hidden md:flex gap-6 items-center">
-            <Link href="/dashboard" className="flex items-center gap-2 text-sm dark:hover:text-amber-400 light:hover:text-blue-600 transition-colors dark:text-slate-300 light:text-slate-700">
-              <BarChart3 className="w-4 h-4" /> Дашборд
+          <div className="flex items-center gap-3 md:gap-6">
+            <Link href="/dashboard" className="hidden md:flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-amber-400 transition-colors">
+              Панель управления
             </Link>
-            <Link href="/chat" className="flex items-center gap-2 text-sm dark:hover:text-amber-400 light:hover:text-blue-600 transition-colors dark:text-slate-300 light:text-slate-700">
-              <MessageSquare className="w-4 h-4" /> Чат
+            <Link href="/chat" className="hidden md:flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-amber-400 transition-colors">
+              <MessageSquare className="w-4 h-4" />
+              AI-Ассистент
             </Link>
-            <Link href="/login" className="px-4 py-2 rounded-lg dark:bg-slate-700 dark:hover:bg-slate-600 light:bg-slate-200 light:hover:bg-slate-300 transition-colors text-sm">
-              Вход
+            <Link href="/login" className="px-4 py-2 rounded-lg bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-white transition-colors text-sm font-medium">
+              Войти
             </Link>
             <ThemeToggle />
-          </nav>
+          </div>
         </div>
       </header>
 
