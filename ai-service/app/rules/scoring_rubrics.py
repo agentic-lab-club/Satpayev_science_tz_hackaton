@@ -1,11 +1,11 @@
-"""Scorecard rubrics reserved for future scoring implementation."""
+"""Scorecard rubrics used by the AI-service heuristics."""
 
 DIAGNOSTIC_RUBRIC: dict[str, int] = {
-    "structure": 100,
-    "completeness": 100,
-    "clarity": 100,
-    "kpi_results": 100,
-    "consistency": 100,
+    "structure": 20,
+    "completeness": 20,
+    "clarity": 20,
+    "kpi_results": 20,
+    "consistency": 20,
 }
 
 OFFICIAL_EVALUATION_RUBRIC: dict[str, int] = {
@@ -32,4 +32,3 @@ RUBRIC_LABELS: dict[str, str] = {
     "socio_economic_effect": "Socio-economic effect",
     "feasibility": "Feasibility",
 }
-

@@ -1,6 +1,18 @@
 from pydantic import BaseModel, Field, model_validator
 
-from app.schemas.common import DocumentMetadata, Finding, ModelMetadata, Recommendation, Scorecard, Section
+from app.schemas.common import (
+    DocumentMetadata,
+    Finding,
+    ModelMetadata,
+    NotebookEntityBundle,
+    NotebookImprovedTZ,
+    NotebookScore,
+    NotebookSemantic,
+    NotebookStructure,
+    Recommendation,
+    Scorecard,
+    Section,
+)
 
 
 class AnalyzeRequest(BaseModel):
@@ -19,13 +31,21 @@ class AnalyzeRequest(BaseModel):
 
 
 class AnalyzeResponse(BaseModel):
-    analysis_status: str = "template_only"
+    analysis_status: str = "completed"
     document: DocumentMetadata
+    raw_text_preview: str = ""
+    structure: NotebookStructure
+    semantic: NotebookSemantic
+    score: NotebookScore
+    recommendations: list[Recommendation]
+    generate_improved_tz: NotebookImprovedTZ
+    improved_tz: str
+    extracted_entities: NotebookEntityBundle
+    confirmed_entities: NotebookEntityBundle
     detected_sections: list[Section]
     missing_required_sections: list[str]
     weak_sections: list[str]
     findings: list[Finding]
-    recommendations: list[Recommendation]
     suggested_structure: str
     improved_text: str
     ai_document_analysis_scorecard: Scorecard

@@ -40,7 +40,65 @@ class HealthData(BaseModel):
     llm_enabled: bool
 
 
+class NotebookStructureSection(BaseModel):
+    title: str
+    content: str = ""
+    length: int = 0
+
+
+class NotebookStructure(BaseModel):
+    sections: list[NotebookStructureSection] = Field(default_factory=list)
+    found_sections: list[str] = Field(default_factory=list)
+    missing_sections: list[str] = Field(default_factory=list)
+    weak_sections: list[str] = Field(default_factory=list)
+    empty_sections: list[str] = Field(default_factory=list)
+    matched_required_sections: dict[str, str] = Field(default_factory=dict)
+
+
+class NotebookSemanticIssue(BaseModel):
+    issue_type: str = "issue"
+    section: str = ""
+    quote: str = ""
+    explanation: str = ""
+    recommendation: str = ""
+
+
+class NotebookSemantic(BaseModel):
+    ambiguities: list[NotebookSemanticIssue] = Field(default_factory=list)
+    contradictions: list[NotebookSemanticIssue] = Field(default_factory=list)
+    missing_elements: list[NotebookSemanticIssue] = Field(default_factory=list)
+    requirements: list[NotebookSemanticIssue] = Field(default_factory=list)
+    deadlines: list[NotebookSemanticIssue] = Field(default_factory=list)
+    kpis: list[NotebookSemanticIssue] = Field(default_factory=list)
+    expected_results: list[NotebookSemanticIssue] = Field(default_factory=list)
+
+
+class NotebookScore(BaseModel):
+    total_score: float = Field(ge=0)
+    breakdown: dict[str, float] = Field(default_factory=dict)
+    explanation: list[str] = Field(default_factory=list)
+
+
+class NotebookImprovedTZ(BaseModel):
+    summary_of_changes: list[str] = Field(default_factory=list)
+    improved_text: str = ""
+
+
+class NotebookEntity(BaseModel):
+    value: str
+    section: str = ""
+    confidence: float = Field(default=0.0, ge=0.0, le=1.0)
+
+
+class NotebookEntityBundle(BaseModel):
+    requirements: list[NotebookEntity] = Field(default_factory=list)
+    deadlines: list[NotebookEntity] = Field(default_factory=list)
+    kpis: list[NotebookEntity] = Field(default_factory=list)
+    expected_results: list[NotebookEntity] = Field(default_factory=list)
+
+
 class DocumentMetadata(BaseModel):
+    file_path: str | None = None
     filename: str
     content_type: str
     character_count: int

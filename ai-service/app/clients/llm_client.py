@@ -1,17 +1,56 @@
+from __future__ import annotations
+
+import json
+from typing import Any
+
+import httpx
+
+from app.core.config import get_settings
 from app.core.errors import AIServiceError
 
 
 class LLMClient:
-    """Template LLM client.
+    """Minimal OpenAI-compatible client used only when LLM mode is enabled."""
 
-    Real provider calls are intentionally not implemented in the service
-    scaffold. Add them only in the AI implementation task.
-    """
+    def __init__(self) -> None:
+        self.settings = get_settings()
 
-    def complete(self, _: str) -> str:
-        raise AIServiceError(
-            code="not_implemented",
-            message="LLM client is template-only and has no provider implementation yet.",
-            status_code=501,
-        )
+    @property
+    def enabled(self) -> bool:
+        return bool(self.settings.llm_enabled and self.settings.llm_api_key and self.settings.llm_base_url and self.settings.llm_model)
 
+    def complete(self, prompt: str, system_prompt: str | None = None) -> str:
+        if not self.enabled:
+            raise AIServiceError(
+                code="llm_disabled",
+                message="LLM integration is disabled. Heuristic fallback should be used instead.",
+                status_code=503,
+            )
+
+        payload: dict[str, Any] = {
+            "model": self.settings.llm_model,
+            "messages": self._messages(prompt=prompt, system_prompt=system_prompt),
+            "temperature": 0.0,
+        }
+        url = f"{self.settings.llm_base_url.rstrip('/')}/v1/chat/completions"
+        headers = {
+            "Authorization": f"Bearer {self.settings.llm_api_key}",
+            "Content-Type": "application/json",
+        }
+
+        with httpx.Client(timeout=self.settings.request_timeout_seconds) as client:
+            response = client.post(url, headers=headers, content=json.dumps(payload))
+            response.raise_for_status()
+            data = response.json()
+
+        try:
+            return data["choices"][0]["message"]["content"]
+        except (KeyError, IndexError, TypeError) as exc:  # pragma: no cover - defensive remote shape handling
+            raise AIServiceError(code="llm_response_invalid", message="LLM provider returned an invalid payload") from exc
+
+    def _messages(self, prompt: str, system_prompt: str | None) -> list[dict[str, str]]:
+        messages = []
+        if system_prompt:
+            messages.append({"role": "system", "content": system_prompt})
+        messages.append({"role": "user", "content": prompt})
+        return messages

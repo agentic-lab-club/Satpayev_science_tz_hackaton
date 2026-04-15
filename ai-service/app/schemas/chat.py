@@ -26,7 +26,7 @@ class ChatRequest(BaseModel):
 
 
 class ChatResponse(BaseModel):
-    response_status: str = "template_only"
+    response_status: str = "completed"
     answer: str
     referenced_sections: list[str] = Field(default_factory=list)
     referenced_findings: list[str] = Field(default_factory=list)

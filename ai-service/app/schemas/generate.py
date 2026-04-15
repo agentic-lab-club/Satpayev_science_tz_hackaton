@@ -13,7 +13,7 @@ class GenerateRequest(BaseModel):
 
 
 class GenerateResponse(BaseModel):
-    generation_status: str = "template_only"
+    generation_status: str = "completed"
     mode: str
     title: str
     content: str

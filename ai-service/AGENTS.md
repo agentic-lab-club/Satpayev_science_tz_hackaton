@@ -2,7 +2,7 @@
 
 This module is the Python FastAPI AI service for Satpayev Science TZ.
 
-Current status: **template-only**.
+Current status: **heuristic notebook contract with optional LLM integration**.
 
 ## Required Read Order
 
@@ -12,9 +12,11 @@ Before editing this module, read:
 2. root `ARCHITECTURE.md`
 3. root `AGENTS.md`
 4. `ai-service/README.md`
-5. relevant source docs in `docs/`
+5. `NLP/README.md`
+6. `novelty_and_relevance/README.md`
+7. relevant source docs in `docs/`
 
-Use `NLP/` only as reference/sample material. Do not import from it.
+Use `NLP/` and `novelty_and_relevance/` as context/reference material. Do not treat them as runtime package boundaries unless a later task explicitly promotes them.
 
 ## Module Boundaries
 
@@ -23,7 +25,8 @@ The AI service:
 - is stateless;
 - exposes HTTP endpoints for Core Backend;
 - owns parsing, analysis, recommendation, generation, and chat reasoning once implemented;
-- returns strict Pydantic response models.
+- returns strict Pydantic response models;
+- preserves the notebook-shaped analysis contract.
 
 The AI service must not:
 
@@ -32,18 +35,33 @@ The AI service must not:
 - own user/project/review/report workflow;
 - generate `final_reviewed_evaluation_scorecard`;
 - run notebooks at runtime;
-- hide placeholder behavior as real AI results.
+- hide placeholder behavior as real AI results;
+- generate the final reviewed Excel scorecard, which belongs to Core Backend.
 
-## Template Rules
+## Contract Rules
 
-Until real implementation is requested:
+The notebook-shaped analysis response is the service-facing contract.
 
-- keep endpoints wired;
+The service should:
+
+- return real heuristic analysis by default;
 - keep schemas stable;
-- return explicit `template_only` responses;
-- mark placeholder scorecards with `is_placeholder=true`;
-- avoid fake realistic scores;
-- keep service files ready for later real logic.
+- preserve the notebook keys and the three-score model;
+- use `is_placeholder=true` only for explicit template helpers;
+- avoid fake realistic scores.
+
+The notebook output keys are the service-facing analysis contract:
+
+- `file_path`
+- `raw_text_preview`
+- `structure`
+- `semantic`
+- `score`
+- `recommendations`
+- `generate_improved_tz`
+- `improved_tz`
+- `extracted_entities`
+- `confirmed_entities`
 
 ## Implementation Rules For Later Tasks
 
@@ -65,4 +83,3 @@ docker compose config
 ```
 
 If `uv` is unavailable locally, use `python -m compileall app tests` for syntax validation and report that dependency-based tests were not run.
-
