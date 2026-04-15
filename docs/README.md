@@ -9,7 +9,7 @@ Use this order when documents overlap:
 1. Current user request.
 2. Root `PLAN.md`.
 3. Root `ARCHITECTURE.md`.
-4. Official hackathon requirement: `docs/ТЗ_официальное (1).docx`.
+4. Official hackathon requirement: `docs/ТЗ_официальное.docx`.
 5. Scientific TZ template: `docs/Шаблон для ТЗ рус.docx`.
 6. Excel evaluation template: `docs/Оценка_ТЗ_шаблон.xlsx`.
 7. Final business spike: `docs/spikes/001-draft-final-user-story-and-business-logic.md`.
@@ -32,6 +32,7 @@ If older spike text conflicts with `PLAN.md`, prefer `PLAN.md`.
 - `docs/spikes/002-draft-final-technical-specification-and-architecture.md` - engineering architecture spike.
 - `docs/spikes/ChatGPT-Разбор-Технического-Задания.md` - full source conversation and reasoning history.
 - `docs/spikes/demo_tz_problematic.txt` - weak/problematic sample text for tests.
+- `backend/internal/tzworkflow/README.md` - backend scientific TZ workflow module contract.
 
 ## AI Session Notes
 

@@ -55,6 +55,7 @@
 |---|---|---|
 | `frontend/` |  | Next.js, React |
 | `backend/` |  | Go, PostgreSQL |
+| `ai-service/` | AI/NLP анализ и генерация улучшений ТЗ | Python, FastAPI |
 | `infrastructure/` | IaC и облачная инфраструктура | Terraform, AWS, DevOps stack |
 
 Namings:

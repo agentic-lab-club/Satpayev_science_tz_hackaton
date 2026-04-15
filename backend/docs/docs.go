@@ -25,6 +25,119 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/v1/admin/reports/exports": {
+            "post": {
+                "security": [
+                    {
+                        "BearerToken": []
+                    }
+                ],
+                "description": "Queue an export for approved submissions",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "@tzworkflow"
+                ],
+                "summary": "Create report export",
+                "parameters": [
+                    {
+                        "description": "Export payload",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.CreateReportExportRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.ReportExport"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/admin/review-submissions": {
+            "get": {
+                "security": [
+                    {
+                        "BearerToken": []
+                    }
+                ],
+                "description": "List all pending and processed review submissions",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "@tzworkflow"
+                ],
+                "summary": "List review submissions",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.ReviewSubmission"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/admin/review-submissions/{submission_id}/decision": {
+            "post": {
+                "security": [
+                    {
+                        "BearerToken": []
+                    }
+                ],
+                "description": "Save an admin decision and final scorecard for a submission",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "@tzworkflow"
+                ],
+                "summary": "Record review decision",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Submission ID",
+                        "name": "submission_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Decision payload",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.ReviewDecisionRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.AdminReview"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/healthcheck": {
             "get": {
                 "description": "Returns the application health status and dependency checks.",
@@ -39,7 +152,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/healthcheck.HealthCheckResponse"
+                            "$ref": "#/definitions/internal_healthcheck.HealthCheckResponse"
                         }
                     },
                     "500": {
@@ -54,7 +167,7 @@ const docTemplate = `{
                     "503": {
                         "description": "Service Unavailable",
                         "schema": {
-                            "$ref": "#/definitions/healthcheck.HealthCheckResponse"
+                            "$ref": "#/definitions/internal_healthcheck.HealthCheckResponse"
                         }
                     }
                 }
@@ -74,7 +187,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/healthcheck.LivenessResponse"
+                            "$ref": "#/definitions/internal_healthcheck.LivenessResponse"
                         }
                     }
                 }
@@ -94,7 +207,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/healthcheck.ReadinessResponse"
+                            "$ref": "#/definitions/internal_healthcheck.ReadinessResponse"
                         }
                     },
                     "503": {
@@ -109,41 +222,40 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/programs": {
+        "/api/v1/projects": {
             "get": {
-                "description": "Returns active programs sorted for the applicant program selection form.",
+                "security": [
+                    {
+                        "BearerToken": []
+                    }
+                ],
+                "description": "List projects visible to the current user",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "@programs"
+                    "@tzworkflow"
                 ],
-                "summary": "List active programs",
+                "summary": "List projects",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/programs.ListResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.Project"
+                            }
                         }
                     }
                 }
-            }
-        },
-        "/applications": {
+            },
             "post": {
                 "security": [
                     {
                         "BearerToken": []
                     }
                 ],
-                "description": "Creates a new ATS application for the authenticated applicant and publishes the submission event.",
+                "description": "Create a new scientific TZ project",
                 "consumes": [
                     "application/json"
                 ],
@@ -151,17 +263,17 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "@applications"
+                    "@tzworkflow"
                 ],
-                "summary": "Submit application",
+                "summary": "Create project",
                 "parameters": [
                     {
-                        "description": "Application submission payload",
+                        "description": "Project payload",
                         "name": "request",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/applications.CreateRequest"
+                            "$ref": "#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.CreateProjectRequest"
                         }
                     }
                 ],
@@ -169,7 +281,393 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/applications.CreateResponse"
+                            "$ref": "#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.Project"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/projects/{project_id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerToken": []
+                    }
+                ],
+                "description": "Get project by id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "@tzworkflow"
+                ],
+                "summary": "Get project",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Project ID",
+                        "name": "project_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.Project"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/projects/{project_id}/chat-sessions": {
+            "post": {
+                "security": [
+                    {
+                        "BearerToken": []
+                    }
+                ],
+                "description": "Create a project-bound chat session",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "@tzworkflow"
+                ],
+                "summary": "Create chat session",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Project ID",
+                        "name": "project_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Chat session payload",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.CreateChatSessionRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.ChatSession"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/projects/{project_id}/chat-sessions/{session_id}/messages": {
+            "post": {
+                "security": [
+                    {
+                        "BearerToken": []
+                    }
+                ],
+                "description": "Send a chat message and store the AI response",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "@tzworkflow"
+                ],
+                "summary": "Send chat message",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Project ID",
+                        "name": "project_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Session ID",
+                        "name": "session_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Chat message payload",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.SendChatMessageRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.SendChatMessageResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/projects/{project_id}/submit-for-review": {
+            "post": {
+                "security": [
+                    {
+                        "BearerToken": []
+                    }
+                ],
+                "description": "Create a review submission for a project version",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "@tzworkflow"
+                ],
+                "summary": "Submit for review",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Project ID",
+                        "name": "project_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Review submission payload",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.SubmitForReviewRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.ReviewSubmission"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/projects/{project_id}/versions": {
+            "get": {
+                "security": [
+                    {
+                        "BearerToken": []
+                    }
+                ],
+                "description": "List document versions for a project",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "@tzworkflow"
+                ],
+                "summary": "List versions",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Project ID",
+                        "name": "project_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.DocumentVersion"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerToken": []
+                    }
+                ],
+                "description": "Create a new document version from an uploaded file asset",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "@tzworkflow"
+                ],
+                "summary": "Create version",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Project ID",
+                        "name": "project_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Version payload",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.CreateVersionRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.DocumentVersion"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/projects/{project_id}/versions/{version_id}/analysis/latest": {
+            "get": {
+                "security": [
+                    {
+                        "BearerToken": []
+                    }
+                ],
+                "description": "Get the latest stored analysis for a document version",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "@tzworkflow"
+                ],
+                "summary": "Latest analysis",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Project ID",
+                        "name": "project_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Version ID",
+                        "name": "version_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.LatestAnalysisResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/projects/{project_id}/versions/{version_id}/analyze": {
+            "post": {
+                "security": [
+                    {
+                        "BearerToken": []
+                    }
+                ],
+                "description": "Send a document version to AI-service and persist the analysis",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "@tzworkflow"
+                ],
+                "summary": "Analyze version",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Project ID",
+                        "name": "project_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Version ID",
+                        "name": "version_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.LatestAnalysisResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/assets": {
+            "post": {
+                "security": [
+                    {
+                        "BearerToken": []
+                    }
+                ],
+                "description": "Uploads a file for the authenticated applicant and creates an unattached application file record.",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "@assets"
+                ],
+                "summary": "Upload asset",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "File type",
+                        "name": "file_type",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Binary file payload",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_assets.Response"
                         }
                     },
                     "400": {
@@ -189,30 +687,53 @@ const docTemplate = `{
                 }
             }
         },
-        "/applications/status": {
+        "/assets/{id}": {
             "get": {
                 "security": [
                     {
                         "BearerToken": []
                     }
                 ],
-                "description": "Returns the latest application status for the authenticated applicant.",
+                "description": "Returns the uploaded asset binary payload for the owning applicant or admin reviewer.",
                 "produces": [
-                    "application/json"
+                    "application/octet-stream"
                 ],
                 "tags": [
-                    "@applications"
+                    "@assets"
                 ],
-                "summary": "Get current application status",
+                "summary": "Get uploaded asset by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Asset ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/applications.StatusResponse"
+                            "type": "file"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
@@ -224,20 +745,13 @@ const docTemplate = `{
                             "type": "object",
                             "additionalProperties": true
                         }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
                     }
                 }
             }
         },
         "/auth/login": {
             "post": {
-                "description": "Authenticates a verified user and returns access and refresh tokens.",
+                "description": "Authenticates a user and returns access and refresh tokens. When email verification is enabled, the user must be verified.",
                 "consumes": [
                     "application/json"
                 ],
@@ -255,7 +769,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/auth.LoginRequest"
+                            "$ref": "#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.LoginRequest"
                         }
                     }
                 ],
@@ -263,7 +777,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/auth.TokenResponse"
+                            "$ref": "#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.TokenResponse"
                         }
                     },
                     "401": {
@@ -296,7 +810,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/auth.LogoutRequest"
+                            "$ref": "#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.LogoutRequest"
                         }
                     }
                 ],
@@ -304,7 +818,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/auth.MessageResponse"
+                            "$ref": "#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.MessageResponse"
                         }
                     },
                     "400": {
@@ -336,7 +850,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/auth.meResponse"
+                            "$ref": "#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.meResponse"
                         }
                     },
                     "401": {
@@ -376,7 +890,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/auth.RefreshRequest"
+                            "$ref": "#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.RefreshRequest"
                         }
                     }
                 ],
@@ -384,7 +898,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/auth.TokenResponse"
+                            "$ref": "#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.TokenResponse"
                         }
                     },
                     "401": {
@@ -399,7 +913,7 @@ const docTemplate = `{
         },
         "/auth/register": {
             "post": {
-                "description": "Creates a new user account and issues an email verification code.",
+                "description": "Creates a new user account and conditionally issues an email verification code.",
                 "consumes": [
                     "application/json"
                 ],
@@ -417,7 +931,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/auth.RegisterRequest"
+                            "$ref": "#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.RegisterRequest"
                         }
                     }
                 ],
@@ -425,7 +939,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/auth.MessageResponse"
+                            "$ref": "#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.RegisterResponse"
                         }
                     },
                     "400": {
@@ -458,7 +972,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/auth.ResendCodeRequest"
+                            "$ref": "#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.ResendCodeRequest"
                         }
                     }
                 ],
@@ -466,7 +980,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/auth.MessageResponse"
+                            "$ref": "#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.MessageResponse"
                         }
                     },
                     "400": {
@@ -499,7 +1013,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/auth.VerifyEmailRequest"
+                            "$ref": "#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.VerifyEmailRequest"
                         }
                     }
                 ],
@@ -507,198 +1021,11 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/auth.MessageResponse"
+                            "$ref": "#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.MessageResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    }
-                }
-            }
-        },
-        "/candidates": {
-            "get": {
-                "security": [
-                    {
-                        "BearerToken": []
-                    }
-                ],
-                "description": "Returns candidate applications with optional admin filters.",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "@candidates"
-                ],
-                "summary": "List candidates for admin review",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Filter by program code",
-                        "name": "program_code",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Filter by review stage",
-                        "name": "review_stage",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Filter by decision",
-                        "name": "decision",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Search by applicant name or email",
-                        "name": "search",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/candidates.ListResponse"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    }
-                }
-            }
-        },
-        "/candidates/{applicationId}": {
-            "get": {
-                "security": [
-                    {
-                        "BearerToken": []
-                    }
-                ],
-                "description": "Returns the full admin review view for a candidate application.",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "@candidates"
-                ],
-                "summary": "Get candidate detail",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Application ID",
-                        "name": "applicationId",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/candidates.Detail"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    }
-                }
-            }
-        },
-        "/candidates/{applicationId}/stage": {
-            "patch": {
-                "security": [
-                    {
-                        "BearerToken": []
-                    }
-                ],
-                "description": "Updates the admin review stage and optional decision for a candidate application.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "@candidates"
-                ],
-                "summary": "Update candidate review stage",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Application ID",
-                        "name": "applicationId",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Stage update payload",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/candidates.UpdateStageRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/candidates.MessageResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
@@ -721,7 +1048,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/healthcheck.HealthCheckResponse"
+                            "$ref": "#/definitions/internal_healthcheck.HealthCheckResponse"
                         }
                     },
                     "500": {
@@ -736,7 +1063,7 @@ const docTemplate = `{
                     "503": {
                         "description": "Service Unavailable",
                         "schema": {
-                            "$ref": "#/definitions/healthcheck.HealthCheckResponse"
+                            "$ref": "#/definitions/internal_healthcheck.HealthCheckResponse"
                         }
                     }
                 }
@@ -756,7 +1083,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/healthcheck.LivenessResponse"
+                            "$ref": "#/definitions/internal_healthcheck.LivenessResponse"
                         }
                     }
                 }
@@ -776,7 +1103,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/healthcheck.ReadinessResponse"
+                            "$ref": "#/definitions/internal_healthcheck.ReadinessResponse"
                         }
                     },
                     "503": {
@@ -790,190 +1117,475 @@ const docTemplate = `{
                     }
                 }
             }
-        },
-        "/tests/personality/current": {
-            "get": {
-                "description": "Returns the active personality test with questions and options for the application form.",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "@personalitytest"
-                ],
-                "summary": "Get current active personality test",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/personalitytest.Test"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    }
-                }
-            }
-        },
-        "/uploads": {
-            "post": {
-                "security": [
-                    {
-                        "BearerToken": []
-                    }
-                ],
-                "description": "Uploads a file for the authenticated applicant and creates an unattached application file record.",
-                "consumes": [
-                    "multipart/form-data"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "@uploads"
-                ],
-                "summary": "Upload application file",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "File type",
-                        "name": "file_type",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "file",
-                        "description": "Binary file payload",
-                        "name": "file",
-                        "in": "formData",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/uploads.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    }
-                }
-            }
         }
     },
     "definitions": {
-        "applications.AnswerInput": {
+        "ai.AnalyzeResponse": {
             "type": "object",
-            "required": [
-                "option_id",
-                "question_id"
-            ],
             "properties": {
-                "option_id": {
+                "ai_document_analysis_scorecard": {
+                    "$ref": "#/definitions/ai.Scorecard"
+                },
+                "ai_preliminary_evaluation_scorecard": {
+                    "$ref": "#/definitions/ai.Scorecard"
+                },
+                "analysis_status": {
                     "type": "string"
                 },
-                "question_id": {
-                    "type": "string"
-                }
-            }
-        },
-        "applications.CreateRequest": {
-            "type": "object",
-            "required": [
-                "first_name",
-                "last_name",
-                "phone_number",
-                "program_code",
-                "video_file_id"
-            ],
-            "properties": {
-                "certificate_file_id": {
-                    "type": "string"
+                "confirmed_entities": {
+                    "$ref": "#/definitions/ai.NotebookEntityBundle"
                 },
-                "english_result_file_id": {
-                    "type": "string"
-                },
-                "first_name": {
-                    "type": "string",
-                    "maxLength": 255,
-                    "minLength": 1
-                },
-                "last_name": {
-                    "type": "string",
-                    "maxLength": 255,
-                    "minLength": 1
-                },
-                "personality_test_answers": {
+                "detected_sections": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/applications.AnswerInput"
+                        "$ref": "#/definitions/ai.Section"
                     }
                 },
-                "phone_number": {
-                    "type": "string",
-                    "maxLength": 64,
-                    "minLength": 3
+                "document": {
+                    "$ref": "#/definitions/ai.DocumentMetadata"
                 },
-                "portfolio_file_id": {
+                "extracted_entities": {
+                    "$ref": "#/definitions/ai.NotebookEntityBundle"
+                },
+                "findings": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ai.Finding"
+                    }
+                },
+                "generate_improved_tz": {
+                    "$ref": "#/definitions/ai.NotebookImprovedTZ"
+                },
+                "improved_text": {
                     "type": "string"
                 },
-                "program_code": {
+                "improved_tz": {
                     "type": "string"
                 },
-                "video_file_id": {
+                "missing_required_sections": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "model_metadata": {
+                    "$ref": "#/definitions/ai.ModelMetadata"
+                },
+                "raw_text_preview": {
                     "type": "string"
+                },
+                "recommendations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ai.Recommendation"
+                    }
+                },
+                "score": {
+                    "$ref": "#/definitions/ai.NotebookScore"
+                },
+                "semantic": {
+                    "$ref": "#/definitions/ai.NotebookSemantic"
+                },
+                "structure": {
+                    "$ref": "#/definitions/ai.NotebookStructure"
+                },
+                "suggested_structure": {
+                    "type": "string"
+                },
+                "weak_sections": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         },
-        "applications.CreateResponse": {
+        "ai.ChatResponse": {
             "type": "object",
             "properties": {
-                "application_id": {
+                "answer": {
                     "type": "string"
+                },
+                "referenced_findings": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "referenced_sections": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "response_status": {
+                    "type": "string"
+                },
+                "suggested_next_actions": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         },
-        "applications.StatusResponse": {
+        "ai.DocumentMetadata": {
             "type": "object",
             "properties": {
-                "application_id": {
+                "character_count": {
+                    "type": "integer"
+                },
+                "content_type": {
                     "type": "string"
                 },
-                "decision": {
+                "file_path": {
                     "type": "string"
                 },
-                "review_stage": {
+                "filename": {
                     "type": "string"
                 },
-                "screening_error": {
+                "parser": {
                     "type": "string"
                 }
             }
         },
-        "auth.LoginRequest": {
+        "ai.Finding": {
+            "type": "object",
+            "properties": {
+                "explanation": {
+                    "type": "string"
+                },
+                "finding_type": {
+                    "type": "string"
+                },
+                "quote": {
+                    "type": "string"
+                },
+                "recommendation": {
+                    "type": "string"
+                },
+                "section_key": {
+                    "type": "string"
+                },
+                "severity": {
+                    "type": "string"
+                }
+            }
+        },
+        "ai.ModelMetadata": {
+            "type": "object",
+            "properties": {
+                "mode": {
+                    "type": "string"
+                },
+                "model": {
+                    "type": "string"
+                },
+                "prompt_version": {
+                    "type": "string"
+                },
+                "provider": {
+                    "type": "string"
+                }
+            }
+        },
+        "ai.NotebookEntity": {
+            "type": "object",
+            "properties": {
+                "confidence": {
+                    "type": "number"
+                },
+                "section": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
+        },
+        "ai.NotebookEntityBundle": {
+            "type": "object",
+            "properties": {
+                "deadlines": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ai.NotebookEntity"
+                    }
+                },
+                "expected_results": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ai.NotebookEntity"
+                    }
+                },
+                "kpis": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ai.NotebookEntity"
+                    }
+                },
+                "requirements": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ai.NotebookEntity"
+                    }
+                }
+            }
+        },
+        "ai.NotebookImprovedTZ": {
+            "type": "object",
+            "properties": {
+                "improved_text": {
+                    "type": "string"
+                },
+                "summary_of_changes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "ai.NotebookScore": {
+            "type": "object",
+            "properties": {
+                "breakdown": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "number"
+                    }
+                },
+                "explanation": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "total_score": {
+                    "type": "number"
+                }
+            }
+        },
+        "ai.NotebookSemantic": {
+            "type": "object",
+            "properties": {
+                "ambiguities": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ai.NotebookSemanticIssue"
+                    }
+                },
+                "contradictions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ai.NotebookSemanticIssue"
+                    }
+                },
+                "deadlines": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ai.NotebookSemanticIssue"
+                    }
+                },
+                "expected_results": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ai.NotebookSemanticIssue"
+                    }
+                },
+                "kpis": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ai.NotebookSemanticIssue"
+                    }
+                },
+                "missing_elements": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ai.NotebookSemanticIssue"
+                    }
+                },
+                "requirements": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ai.NotebookSemanticIssue"
+                    }
+                }
+            }
+        },
+        "ai.NotebookSemanticIssue": {
+            "type": "object",
+            "properties": {
+                "explanation": {
+                    "type": "string"
+                },
+                "issue_type": {
+                    "type": "string"
+                },
+                "quote": {
+                    "type": "string"
+                },
+                "recommendation": {
+                    "type": "string"
+                },
+                "section": {
+                    "type": "string"
+                }
+            }
+        },
+        "ai.NotebookStructure": {
+            "type": "object",
+            "properties": {
+                "empty_sections": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "found_sections": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "matched_required_sections": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "missing_sections": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "sections": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ai.NotebookStructureSection"
+                    }
+                },
+                "weak_sections": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "ai.NotebookStructureSection": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "length": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "ai.Recommendation": {
+            "type": "object",
+            "properties": {
+                "category": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "priority": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "ai.Scorecard": {
+            "type": "object",
+            "properties": {
+                "is_placeholder": {
+                    "type": "boolean"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ai.ScorecardItem"
+                    }
+                },
+                "max_total_score": {
+                    "type": "number"
+                },
+                "score_type": {
+                    "type": "string"
+                },
+                "total_score": {
+                    "type": "number"
+                }
+            }
+        },
+        "ai.ScorecardItem": {
+            "type": "object",
+            "properties": {
+                "explanation": {
+                    "type": "string"
+                },
+                "key": {
+                    "type": "string"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "max_score": {
+                    "type": "number"
+                },
+                "score": {
+                    "type": "number"
+                }
+            }
+        },
+        "ai.Section": {
+            "type": "object",
+            "properties": {
+                "confidence": {
+                    "type": "number"
+                },
+                "content_excerpt": {
+                    "type": "string"
+                },
+                "end_index": {
+                    "type": "integer"
+                },
+                "key": {
+                    "type": "string"
+                },
+                "start_index": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_assets.Response": {
+            "type": "object",
+            "properties": {
+                "file_id": {
+                    "type": "string"
+                },
+                "file_type": {
+                    "type": "string"
+                },
+                "original_filename": {
+                    "type": "string"
+                }
+            }
+        },
+        "github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.LoginRequest": {
             "type": "object",
             "required": [
                 "email",
@@ -990,7 +1602,7 @@ const docTemplate = `{
                 }
             }
         },
-        "auth.LogoutRequest": {
+        "github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.LogoutRequest": {
             "type": "object",
             "required": [
                 "refresh_token"
@@ -1001,7 +1613,7 @@ const docTemplate = `{
                 }
             }
         },
-        "auth.MessageResponse": {
+        "github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.MessageResponse": {
             "type": "object",
             "properties": {
                 "message": {
@@ -1009,7 +1621,7 @@ const docTemplate = `{
                 }
             }
         },
-        "auth.RefreshRequest": {
+        "github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.RefreshRequest": {
             "type": "object",
             "required": [
                 "refresh_token"
@@ -1020,7 +1632,7 @@ const docTemplate = `{
                 }
             }
         },
-        "auth.RegisterRequest": {
+        "github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.RegisterRequest": {
             "type": "object",
             "required": [
                 "email",
@@ -1037,7 +1649,18 @@ const docTemplate = `{
                 }
             }
         },
-        "auth.ResendCodeRequest": {
+        "github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.RegisterResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "requires_email_verification": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.ResendCodeRequest": {
             "type": "object",
             "required": [
                 "email"
@@ -1048,7 +1671,7 @@ const docTemplate = `{
                 }
             }
         },
-        "auth.ResponseUser": {
+        "github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.ResponseUser": {
             "type": "object",
             "properties": {
                 "email": {
@@ -1074,7 +1697,7 @@ const docTemplate = `{
                 }
             }
         },
-        "auth.TokenResponse": {
+        "github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.TokenResponse": {
             "type": "object",
             "properties": {
                 "access_token": {
@@ -1090,11 +1713,11 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "user": {
-                    "$ref": "#/definitions/auth.ResponseUser"
+                    "$ref": "#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.ResponseUser"
                 }
             }
         },
-        "auth.VerifyEmailRequest": {
+        "github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.VerifyEmailRequest": {
             "type": "object",
             "required": [
                 "code",
@@ -1109,168 +1732,15 @@ const docTemplate = `{
                 }
             }
         },
-        "auth.meResponse": {
+        "github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.meResponse": {
             "type": "object",
             "properties": {
                 "user": {
-                    "$ref": "#/definitions/auth.ResponseUser"
+                    "$ref": "#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.ResponseUser"
                 }
             }
         },
-        "candidates.Detail": {
-            "type": "object",
-            "properties": {
-                "application_id": {
-                    "type": "string"
-                },
-                "decision": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "files": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/candidates.DetailFile"
-                    }
-                },
-                "first_name": {
-                    "type": "string"
-                },
-                "last_name": {
-                    "type": "string"
-                },
-                "latest_scoring_run": {
-                    "$ref": "#/definitions/candidates.ScoringResult"
-                },
-                "phone_number": {
-                    "type": "string"
-                },
-                "program_name": {
-                    "type": "string"
-                },
-                "review_stage": {
-                    "type": "string"
-                },
-                "screening_error": {
-                    "type": "string"
-                },
-                "video_transcript": {
-                    "type": "string"
-                }
-            }
-        },
-        "candidates.DetailFile": {
-            "type": "object",
-            "properties": {
-                "content_type": {
-                    "type": "string"
-                },
-                "file_type": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "original_filename": {
-                    "type": "string"
-                },
-                "size_bytes": {
-                    "type": "integer"
-                }
-            }
-        },
-        "candidates.ListItem": {
-            "type": "object",
-            "properties": {
-                "application_id": {
-                    "type": "string"
-                },
-                "decision": {
-                    "type": "string"
-                },
-                "full_name": {
-                    "type": "string"
-                },
-                "program_name": {
-                    "type": "string"
-                },
-                "recommendation": {
-                    "type": "string"
-                },
-                "review_stage": {
-                    "type": "string"
-                }
-            }
-        },
-        "candidates.ListResponse": {
-            "type": "object",
-            "properties": {
-                "items": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/candidates.ListItem"
-                    }
-                }
-            }
-        },
-        "candidates.MessageResponse": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string"
-                }
-            }
-        },
-        "candidates.ScoringResult": {
-            "type": "object",
-            "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "model_name": {
-                    "type": "string"
-                },
-                "recommendation": {
-                    "type": "string"
-                },
-                "result_json": {
-                    "type": "array",
-                    "items": {
-                        "type": "integer"
-                    }
-                }
-            }
-        },
-        "candidates.UpdateStageRequest": {
-            "type": "object",
-            "required": [
-                "review_stage"
-            ],
-            "properties": {
-                "decision": {
-                    "type": "string",
-                    "enum": [
-                        "pending",
-                        "accepted",
-                        "rejected"
-                    ]
-                },
-                "review_stage": {
-                    "type": "string",
-                    "enum": [
-                        "initial_screening",
-                        "application_review",
-                        "decision"
-                    ]
-                }
-            }
-        },
-        "healthcheck.CheckResult": {
+        "github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_healthcheck.CheckResult": {
             "type": "object",
             "properties": {
                 "latency": {
@@ -1284,13 +1754,13 @@ const docTemplate = `{
                 }
             }
         },
-        "healthcheck.HealthCheckResponse": {
+        "github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_healthcheck.HealthCheckResponse": {
             "type": "object",
             "properties": {
                 "checks": {
                     "type": "object",
                     "additionalProperties": {
-                        "$ref": "#/definitions/healthcheck.CheckResult"
+                        "$ref": "#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_healthcheck.CheckResult"
                     }
                 },
                 "status": {
@@ -1301,7 +1771,7 @@ const docTemplate = `{
                 }
             }
         },
-        "healthcheck.LivenessResponse": {
+        "github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_healthcheck.LivenessResponse": {
             "type": "object",
             "properties": {
                 "status": {
@@ -1309,7 +1779,7 @@ const docTemplate = `{
                 }
             }
         },
-        "healthcheck.ReadinessResponse": {
+        "github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_healthcheck.ReadinessResponse": {
             "type": "object",
             "properties": {
                 "status": {
@@ -1317,53 +1787,80 @@ const docTemplate = `{
                 }
             }
         },
-        "personalitytest.Option": {
+        "github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.AdminReview": {
             "type": "object",
             "properties": {
+                "decision": {
+                    "type": "string"
+                },
+                "expert_report_comment": {
+                    "type": "string"
+                },
+                "final_scorecard_id": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "string"
                 },
-                "key": {
+                "review_feedback": {
                     "type": "string"
                 },
-                "text": {
+                "review_submission_id": {
+                    "type": "string"
+                },
+                "reviewed_at": {
+                    "type": "string"
+                },
+                "reviewed_by_user_id": {
                     "type": "string"
                 }
             }
         },
-        "personalitytest.Question": {
+        "github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.ChatMessage": {
             "type": "object",
             "properties": {
+                "chat_session_id": {
+                    "type": "string"
+                },
+                "content": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "string"
                 },
-                "options": {
+                "metadata_json": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/personalitytest.Option"
+                        "type": "integer"
                     }
                 },
-                "order": {
-                    "type": "integer"
-                },
-                "text": {
+                "role": {
                     "type": "string"
                 }
             }
         },
-        "personalitytest.Test": {
+        "github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.ChatSession": {
             "type": "object",
             "properties": {
-                "code": {
+                "analysis_run_id": {
                     "type": "string"
                 },
-                "questions": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/personalitytest.Question"
-                    }
+                "created_at": {
+                    "type": "string"
                 },
-                "test_id": {
+                "created_by_user_id": {
+                    "type": "string"
+                },
+                "document_version_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "project_id": {
                     "type": "string"
                 },
                 "title": {
@@ -1371,35 +1868,262 @@ const docTemplate = `{
                 }
             }
         },
-        "programs.ListResponse": {
+        "github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.CreateChatSessionRequest": {
             "type": "object",
+            "required": [
+                "title"
+            ],
             "properties": {
-                "items": {
+                "title": {
+                    "type": "string",
+                    "minLength": 2
+                }
+            }
+        },
+        "github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.CreateProjectRequest": {
+            "type": "object",
+            "required": [
+                "title"
+            ],
+            "properties": {
+                "organization_name": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string",
+                    "minLength": 2
+                }
+            }
+        },
+        "github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.CreateReportExportRequest": {
+            "type": "object",
+            "required": [
+                "export_type",
+                "review_submission_ids"
+            ],
+            "properties": {
+                "export_type": {
+                    "type": "string"
+                },
+                "review_submission_ids": {
                     "type": "array",
+                    "minItems": 1,
                     "items": {
-                        "$ref": "#/definitions/programs.Program"
+                        "type": "string"
                     }
                 }
             }
         },
-        "programs.Program": {
+        "github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.CreateVersionRequest": {
             "type": "object",
+            "required": [
+                "file_id"
+            ],
             "properties": {
-                "code": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "level": {
-                    "type": "string"
-                },
-                "name": {
+                "file_id": {
                     "type": "string"
                 }
             }
         },
-        "uploads.Response": {
+        "github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.DocumentVersion": {
+            "type": "object",
+            "properties": {
+                "analysis_run_id": {
+                    "type": "string"
+                },
+                "analysis_status": {
+                    "type": "string"
+                },
+                "content_type": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "extraction_status": {
+                    "type": "string"
+                },
+                "file_size_bytes": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "original_file_id": {
+                    "type": "string"
+                },
+                "original_filename": {
+                    "type": "string"
+                },
+                "project_id": {
+                    "type": "string"
+                },
+                "raw_text_preview": {
+                    "type": "string"
+                },
+                "uploaded_by_user_id": {
+                    "type": "string"
+                },
+                "version_number": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.LatestAnalysisResponse": {
+            "type": "object",
+            "properties": {
+                "analysis": {
+                    "$ref": "#/definitions/ai.AnalyzeResponse"
+                },
+                "analysis_run_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.Project": {
+            "type": "object",
+            "properties": {
+                "active_version_id": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "final_version_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "organization_name": {
+                    "type": "string"
+                },
+                "owner_user_id": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.ReportExport": {
+            "type": "object",
+            "properties": {
+                "completed_at": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "created_by_user_id": {
+                    "type": "string"
+                },
+                "export_type": {
+                    "type": "string"
+                },
+                "file_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.ReviewDecisionRequest": {
+            "type": "object",
+            "required": [
+                "decision"
+            ],
+            "properties": {
+                "decision": {
+                    "type": "string",
+                    "enum": [
+                        "approved",
+                        "rejected",
+                        "needs_revision"
+                    ]
+                },
+                "expert_report_comment": {
+                    "type": "string"
+                },
+                "final_scorecard": {
+                    "$ref": "#/definitions/ai.Scorecard"
+                },
+                "review_feedback": {
+                    "type": "string"
+                }
+            }
+        },
+        "github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.ReviewSubmission": {
+            "type": "object",
+            "properties": {
+                "document_version_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "project_id": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "submitted_at": {
+                    "type": "string"
+                },
+                "submitted_by_user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.SendChatMessageRequest": {
+            "type": "object",
+            "required": [
+                "user_message"
+            ],
+            "properties": {
+                "user_message": {
+                    "type": "string",
+                    "minLength": 1
+                }
+            }
+        },
+        "github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.SendChatMessageResponse": {
+            "type": "object",
+            "properties": {
+                "ai_response": {
+                    "$ref": "#/definitions/ai.ChatResponse"
+                },
+                "assistant_message": {
+                    "$ref": "#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.ChatMessage"
+                },
+                "session_id": {
+                    "type": "string"
+                },
+                "user_message": {
+                    "$ref": "#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.ChatMessage"
+                }
+            }
+        },
+        "github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.SubmitForReviewRequest": {
+            "type": "object",
+            "properties": {
+                "document_version_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_assets.Response": {
             "type": "object",
             "properties": {
                 "file_id": {
@@ -1409,6 +2133,544 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "original_filename": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_auth.LoginRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string",
+                    "maxLength": 72,
+                    "minLength": 8
+                }
+            }
+        },
+        "internal_auth.LogoutRequest": {
+            "type": "object",
+            "required": [
+                "refresh_token"
+            ],
+            "properties": {
+                "refresh_token": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_auth.MessageResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_auth.RefreshRequest": {
+            "type": "object",
+            "required": [
+                "refresh_token"
+            ],
+            "properties": {
+                "refresh_token": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_auth.RegisterRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string",
+                    "maxLength": 72,
+                    "minLength": 8
+                }
+            }
+        },
+        "internal_auth.RegisterResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "requires_email_verification": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "internal_auth.ResendCodeRequest": {
+            "type": "object",
+            "required": [
+                "email"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_auth.ResponseUser": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "is_email_verified": {
+                    "type": "boolean"
+                },
+                "last_name": {
+                    "type": "string"
+                },
+                "phone_number": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_auth.TokenResponse": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string"
+                },
+                "expires_in_seconds": {
+                    "type": "integer"
+                },
+                "refresh_token": {
+                    "type": "string"
+                },
+                "token_type": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/internal_auth.ResponseUser"
+                }
+            }
+        },
+        "internal_auth.VerifyEmailRequest": {
+            "type": "object",
+            "required": [
+                "code",
+                "email"
+            ],
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_auth.meResponse": {
+            "type": "object",
+            "properties": {
+                "user": {
+                    "$ref": "#/definitions/internal_auth.ResponseUser"
+                }
+            }
+        },
+        "internal_healthcheck.CheckResult": {
+            "type": "object",
+            "properties": {
+                "latency": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_healthcheck.HealthCheckResponse": {
+            "type": "object",
+            "properties": {
+                "checks": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/internal_healthcheck.CheckResult"
+                    }
+                },
+                "status": {
+                    "type": "string"
+                },
+                "timestamp": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_healthcheck.LivenessResponse": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_healthcheck.ReadinessResponse": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_tzworkflow.AdminReview": {
+            "type": "object",
+            "properties": {
+                "decision": {
+                    "type": "string"
+                },
+                "expert_report_comment": {
+                    "type": "string"
+                },
+                "final_scorecard_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "review_feedback": {
+                    "type": "string"
+                },
+                "review_submission_id": {
+                    "type": "string"
+                },
+                "reviewed_at": {
+                    "type": "string"
+                },
+                "reviewed_by_user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_tzworkflow.ChatMessage": {
+            "type": "object",
+            "properties": {
+                "chat_session_id": {
+                    "type": "string"
+                },
+                "content": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "metadata_json": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "role": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_tzworkflow.ChatSession": {
+            "type": "object",
+            "properties": {
+                "analysis_run_id": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "created_by_user_id": {
+                    "type": "string"
+                },
+                "document_version_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "project_id": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_tzworkflow.CreateChatSessionRequest": {
+            "type": "object",
+            "required": [
+                "title"
+            ],
+            "properties": {
+                "title": {
+                    "type": "string",
+                    "minLength": 2
+                }
+            }
+        },
+        "internal_tzworkflow.CreateProjectRequest": {
+            "type": "object",
+            "required": [
+                "title"
+            ],
+            "properties": {
+                "organization_name": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string",
+                    "minLength": 2
+                }
+            }
+        },
+        "internal_tzworkflow.CreateReportExportRequest": {
+            "type": "object",
+            "required": [
+                "export_type",
+                "review_submission_ids"
+            ],
+            "properties": {
+                "export_type": {
+                    "type": "string"
+                },
+                "review_submission_ids": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "internal_tzworkflow.CreateVersionRequest": {
+            "type": "object",
+            "required": [
+                "file_id"
+            ],
+            "properties": {
+                "file_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_tzworkflow.DocumentVersion": {
+            "type": "object",
+            "properties": {
+                "analysis_run_id": {
+                    "type": "string"
+                },
+                "analysis_status": {
+                    "type": "string"
+                },
+                "content_type": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "extraction_status": {
+                    "type": "string"
+                },
+                "file_size_bytes": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "original_file_id": {
+                    "type": "string"
+                },
+                "original_filename": {
+                    "type": "string"
+                },
+                "project_id": {
+                    "type": "string"
+                },
+                "raw_text_preview": {
+                    "type": "string"
+                },
+                "uploaded_by_user_id": {
+                    "type": "string"
+                },
+                "version_number": {
+                    "type": "integer"
+                }
+            }
+        },
+        "internal_tzworkflow.LatestAnalysisResponse": {
+            "type": "object",
+            "properties": {
+                "analysis": {
+                    "$ref": "#/definitions/ai.AnalyzeResponse"
+                },
+                "analysis_run_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_tzworkflow.Project": {
+            "type": "object",
+            "properties": {
+                "active_version_id": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "final_version_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "organization_name": {
+                    "type": "string"
+                },
+                "owner_user_id": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_tzworkflow.ReportExport": {
+            "type": "object",
+            "properties": {
+                "completed_at": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "created_by_user_id": {
+                    "type": "string"
+                },
+                "export_type": {
+                    "type": "string"
+                },
+                "file_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_tzworkflow.ReviewDecisionRequest": {
+            "type": "object",
+            "required": [
+                "decision"
+            ],
+            "properties": {
+                "decision": {
+                    "type": "string",
+                    "enum": [
+                        "approved",
+                        "rejected",
+                        "needs_revision"
+                    ]
+                },
+                "expert_report_comment": {
+                    "type": "string"
+                },
+                "final_scorecard": {
+                    "$ref": "#/definitions/ai.Scorecard"
+                },
+                "review_feedback": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_tzworkflow.ReviewSubmission": {
+            "type": "object",
+            "properties": {
+                "document_version_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "project_id": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "submitted_at": {
+                    "type": "string"
+                },
+                "submitted_by_user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_tzworkflow.SendChatMessageRequest": {
+            "type": "object",
+            "required": [
+                "user_message"
+            ],
+            "properties": {
+                "user_message": {
+                    "type": "string",
+                    "minLength": 1
+                }
+            }
+        },
+        "internal_tzworkflow.SendChatMessageResponse": {
+            "type": "object",
+            "properties": {
+                "ai_response": {
+                    "$ref": "#/definitions/ai.ChatResponse"
+                },
+                "assistant_message": {
+                    "$ref": "#/definitions/internal_tzworkflow.ChatMessage"
+                },
+                "session_id": {
+                    "type": "string"
+                },
+                "user_message": {
+                    "$ref": "#/definitions/internal_tzworkflow.ChatMessage"
+                }
+            }
+        },
+        "internal_tzworkflow.SubmitForReviewRequest": {
+            "type": "object",
+            "properties": {
+                "document_version_id": {
                     "type": "string"
                 }
             }

@@ -1,114 +1,183 @@
 # Satpayev Science TZ Implementation Plan
 
-This plan turns the hackathon technical requirement, product spike, and current monorepo into an implementation sequence that agents can execute without re-deciding product scope.
+This plan turns the hackathon requirements, the notebook pipeline in `NLP/tz_analysis_mvp.ipynb`, the sample output in `NLP/notebook_outputs/tz_analysis_report.json`, and the `novelty_and_relevance/` context into a build order that agents can execute without re-deciding scope.
 
-## 1. Product Target
+## 1. Product Shape
 
-Build an AI system for analyzing and improving technical specifications for scientific projects.
+Build an AI system for analyzing and improving scientific technical specifications.
 
-The product must support:
+The MVP must support:
 
-- user registration and authorization;
+- auth and project history;
 - upload of `PDF`, `DOCX`, and `TXT` technical specifications;
-- document text extraction and structure analysis;
-- required-section completeness checks;
-- AI/NLP analysis of vague wording, missing requirements, contradictions, missing KPI, and expected results;
-- recommendations and improved text generation;
+- document extraction and structure analysis;
+- semantic checks for contradictions, missing elements, deadlines, KPI, and expected results;
+- AI-generated recommendations and improved TZ text;
+- notebook-shaped analysis output;
 - score `0..100`;
+- document-aware chat;
 - report download;
-- project/document history;
-- document-aware AI chat;
-- optional expert/admin review and XLSX export.
+- expert/admin review and XLSX export.
 
-## 2. Scoring Model
+## 2. AI Contract
 
-The system has three related but separate scorecards.
+The AI service should reproduce the notebook pipeline as a FastAPI service.
 
-### 2.1. AI Document Analysis Scorecard
+### 2.1 Notebook-shaped analysis output
 
-Purpose: diagnostic quality score for Client and Admin.
+`POST /v1/analyze` should preserve the notebook response contract:
 
-Fields:
+- `file_path`
+- `raw_text_preview`
+- `structure`
+  - `sections`
+  - `found_sections`
+  - `missing_sections`
+  - `weak_sections`
+  - `empty_sections`
+  - `matched_required_sections`
+- `semantic`
+  - `ambiguities`
+  - `contradictions`
+  - `missing_elements`
+  - `requirements`
+  - `deadlines`
+  - `kpis`
+  - `expected_results`
+- `score`
+  - `total_score`
+  - `breakdown`
+  - `explanation`
+- `recommendations`
+- `generate_improved_tz`
+  - `summary_of_changes`
+  - `improved_text`
+- `improved_tz`
+- `extracted_entities`
+- `confirmed_entities`
 
-- `structure`: `0..100`
-- `completeness`: `0..100`
-- `clarity`: `0..100`
-- `kpi_results`: `0..100`
-- `consistency`: `0..100`
+The notebook pipeline is the implementation reference:
 
-`ai_document_analysis_total_score` is the rounded average of these fields unless a later document explicitly defines weights.
+- `run_pipeline(...)` = orchestration model;
+- `calculate_score(...)` = explainable diagnostic scoring;
+- `generate_improved_tz(...)` = improvement flow;
+- entity extraction and confirmation = first-class pipeline outputs.
 
-This score explains document health. It does not fill the official Excel evaluation columns.
+### 2.2 `novelty_and_relevance/` context
 
-### 2.2. AI Preliminary Evaluation Scorecard
+The `novelty_and_relevance/README.md` module is the domain reference for:
 
-Purpose: AI draft using the official Excel rubric.
+- scientific novelty evaluation;
+- relevance / socio-economic reasoning;
+- retrieval-grounded analysis;
+- recommendation logic for scientific project quality.
 
-Fields:
+It should be integrated into `ai-service/` as context, prompts, and rules, not as a separate runtime dependency in the MVP.
 
-- `strategic_relevance`: `0..20`
-- `goals_and_tasks`: `0..10`
-- `scientific_novelty`: `0..15`
-- `practical_applicability`: `0..20`
-- `expected_results`: `0..15`
-- `socio_economic_effect`: `0..10`
-- `feasibility`: `0..10`
+## 3. Scoring Model
 
-`ai_preliminary_total_score` is the sum of these fields and must be `0..100`.
+Keep the three-score model and make the distinction explicit.
 
-Client and Admin can both view this scorecard.
+### 3.1 AI document analysis scorecard
 
-### 2.3. Final Reviewed Evaluation Scorecard
+Diagnostic quality score derived from the notebook pipeline.
 
-Purpose: official expert/admin score used for approved XLSX export.
+Use this as the AI health score for Client and Admin:
 
-It uses the same fields and max values as the AI preliminary evaluation scorecard.
+- `structure`
+- `completeness`
+- `clarity`
+- `kpi_results`
+- `consistency`
 
-Admin edits category scores. The backend computes `final_reviewed_total_score`; the UI must not allow manual total override.
+The total is computed from the diagnostic breakdown.
 
-### 2.4. Excel Mapping
+### 3.2 AI preliminary evaluation scorecard
 
-The official Excel sheet maps to `final_reviewed_evaluation_scorecard`.
+AI draft using the official Excel rubric:
 
-If the Admin has not submitted a final reviewed scorecard, the system may show a draft XLSX preview from `ai_preliminary_evaluation_scorecard`, but it must not treat it as the official approved export.
+- `strategic_relevance` = 20
+- `goals_and_tasks` = 10
+- `scientific_novelty` = 15
+- `practical_applicability` = 20
+- `expected_results` = 15
+- `socio_economic_effect` = 10
+- `feasibility` = 10
 
-`ai_document_analysis_scorecard` belongs in the UI and may be exported as a second sheet named `AI Analysis` later.
+The total is the sum of the rubric categories.
 
-## 3. Implementation Sequence
+### 3.3 Final reviewed evaluation scorecard
 
-### Phase 0. Documentation Foundation
+Official Admin/Expert scorecard.
 
-Files:
+- uses the same rubric categories and max values as the preliminary scorecard;
+- Admin edits category values, not the total;
+- backend computes the final total;
+- official XLSX export uses this scorecard only.
+
+Do not collapse the diagnostic notebook score into the Excel rubric.
+
+## 4. Implementation Order
+
+### Phase 0. Documentation foundation
+
+Update and align:
 
 - `PLAN.md`
-- `SKILLS.md`
-- `AGENTS.md`
 - `ARCHITECTURE.md`
-- `docs/AGENTS.md`
+- root `AGENTS.md`
 - `docs/README.md`
+- `ai-service/AGENTS.md`
+- `ai-service/README.md`
 
 Acceptance:
 
-- architecture diagrams describe this project, not the older ATS domain;
-- scoring model is explicit;
-- agent context retrieval rules are explicit;
-- implementation order is clear.
+- the notebook contract is first-class;
+- the three-score model is explicit;
+- `ai-service/` reads like a service contract, not a notebook dump;
+- backend, AI-service, and frontend boundaries are clear.
 
-### Phase 1. Backend
+### Phase 1. AI service
+
+Target module: `ai-service/`.
+
+Make the FastAPI service reflect the notebook and novelty/relevance context:
+
+- `POST /v1/analyze`
+- `POST /v1/generate`
+- `POST /v1/chat/respond`
+- `GET /health`
+
+Requirements:
+
+- stateless;
+- strict Pydantic schemas;
+- heuristic fallback when no LLM key exists;
+- no direct Core Postgres or object storage access;
+- no notebook runtime execution;
+- response shape must preserve the notebook contract.
+
+### Phase 2. Backend
 
 Target module: `backend/`.
 
-Implement:
+Implement the system of record:
 
-- database migrations for projects, document versions, analysis runs, analysis outputs, scorecards, chat, reviews, and report exports;
-- TZ document/project module following the local Go modular-monolith pattern;
-- scorecard validation and total recomputation;
-- upload and document extraction orchestration;
-- AI service client interface;
-- synchronous MVP analysis endpoint;
-- chat endpoint;
-- report download endpoint;
-- admin review and XLSX export after the client analysis flow works.
+- projects and document versions;
+- upload and extraction orchestration;
+- analysis persistence;
+- both AI scorecards;
+- final reviewed scorecard;
+- chat history;
+- review workflow;
+- report export;
+- API calls to `ai-service`.
+
+The first backend implementation slice is the scientific TZ workflow module:
+
+- `internal/tzworkflow`
+- persisted project/version/analysis/chat/review/report entities
+- typed AI-service HTTP client integration
 
 Minimum API surface:
 
@@ -126,125 +195,85 @@ Minimum API surface:
 - `POST /api/v1/admin/review-submissions/{submission_id}/decision`
 - `POST /api/v1/admin/reports/exports`
 
-### Phase 2. AI Service
-
-Target module: `ai-service/`.
-
-Create a Python FastAPI service. Use `NLP/` only as draft/sample reference space.
-
-Endpoints:
-
-- `POST /v1/analyze`
-- `POST /v1/chat/respond`
-- `GET /health`
-
-Requirements:
-
-- stateless service;
-- no direct Core Postgres access;
-- strict structured JSON responses;
-- heuristic fallback when no LLM key exists;
-- both scorecards returned by `/v1/analyze`;
-- chat answers grounded in backend-supplied document and analysis context.
-
 ### Phase 3. Frontend
 
 Target module: `frontend/`.
 
-Replace mock dashboard/chat flows with real backend calls.
+Replace mock flows with real backend calls and render the notebook-shaped output:
 
-Client UI:
-
-- project/document history;
-- upload;
-- analysis detail;
-- diagnostic score panel;
-- official-rubric preliminary score panel;
-- findings/recommendations;
-- improved text preview;
-- document-aware chat;
-- report download.
-
-Admin UI:
-
-- review queue;
-- review detail;
-- editable final reviewed scorecard;
-- `review_feedback`;
-- `expert_report_comment`;
-- approved XLSX export.
+- upload and history;
+- structure analysis;
+- semantic findings;
+- extracted and confirmed entities;
+- recommendations;
+- improved TZ preview;
+- notebook-style diagnostic score;
+- official rubric preview;
+- admin final review and export;
+- document-aware chat.
 
 ### Phase 4. Infrastructure
 
-Target module: `infrastructure/` and root compose files.
+After backend and AI service stabilize:
 
-Only after backend and AI service are stable:
+- wire `ai-service` into local and production compose;
+- add backend `AI_SERVICE_URL`;
+- update Terraform docs only if the deployment contract changes.
 
-- add `llm` service to local and prod Docker Compose;
-- add backend `AI_SERVICE_URL` config;
-- update Terraform docs only if ports, secrets, or resources change.
+## 5. Chat Contract
 
-## 4. Chat Logic
+Chat must be bound to a project and document version.
 
-Chat is always bound to a project and document version.
-
-Backend context for each AI chat call:
+Backend chat context:
 
 - project metadata;
-- active document version metadata;
-- extracted document text snapshot;
-- latest completed analysis;
+- active document version;
+- extracted text snapshot;
+- latest analysis;
 - `ai_document_analysis_scorecard`;
 - `ai_preliminary_evaluation_scorecard`;
-- relevant findings and recommendations;
+- findings and recommendations;
 - previous chat messages;
-- optional latest admin feedback.
+- optional admin feedback.
 
 Rules:
 
-- chat may explain low scores;
-- chat may propose rewritten sections;
-- chat may suggest next actions;
-- chat must not mutate document versions;
-- saving a rewrite requires a separate explicit version/upload action.
+- chat may explain low scores and suggest rewrites;
+- chat must not mutate stored document versions;
+- saving rewritten text requires a new version or explicit update flow.
 
-## 5. Test Plan
-
-Backend:
-
-- scorecard range validation;
-- total recomputation;
-- upload format validation;
-- analysis persistence success and failure;
-- chat context assembly;
-- admin final score override and approved export behavior.
+## 6. Test Plan
 
 AI service:
 
-- `DOCX` sample analysis using `docs/TZ_digital_polegon.docx`;
-- weak/problematic text analysis using `docs/spikes/demo_tz_problematic.txt`;
-- strict JSON schema validation;
+- notebook-shaped response contract validation;
+- required keys present in `structure`, `semantic`, `score`, and `improved_tz`;
 - heuristic fallback without API key;
-- chat response from supplied context.
+- analysis on `docs/TZ_digital_polegon.docx`;
+- novelty/relevance prompts and rules load correctly.
+
+Backend:
+
+- score range validation;
+- total recomputation;
+- upload and extraction flow;
+- persistence of notebook-shaped AI output;
+- chat context assembly;
+- admin final score override;
+- approved XLSX export uses the final reviewed rubric.
 
 Frontend:
 
 - build/lint;
-- manual client flow: login, create project, upload, analyze, inspect scores, chat, download report;
-- manual admin flow: open review queue, edit final scorecard, approve, export XLSX.
+- upload -> analyze -> inspect scores -> chat -> download report;
+- admin review flow with editable final rubric.
 
-Infrastructure:
+## 7. Implementation Discipline
 
-- local Docker Compose starts frontend, backend, Postgres, MinIO, and AI service;
-- prod compose includes AI service after backend integration;
-- Terraform docs match current AWS resources.
-
-## 6. Implementation Discipline
-
-- Read broadly; write only in the current target module unless the task explicitly targets root/shared docs.
-- Do not change shared contracts silently.
+- Read broadly; write narrowly in the target module.
+- Keep `NLP/` as reference/sample space only.
+- Integrate `novelty_and_relevance/` as AI-service context, not as a separate runtime service in v1.
 - Backend owns business data and workflow.
 - AI service owns analysis and generation only.
 - Frontend talks only to backend.
-- Score totals are computed, not user-entered.
-- Root docs must be updated when architecture, scoring, or module boundaries change.
+- Totals are computed, not manually typed.

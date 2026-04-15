@@ -1,67 +1,310 @@
 basePath: /
 definitions:
-  applications.AnswerInput:
+  ai.AnalyzeResponse:
     properties:
-      option_id:
+      ai_document_analysis_scorecard:
+        $ref: '#/definitions/ai.Scorecard'
+      ai_preliminary_evaluation_scorecard:
+        $ref: '#/definitions/ai.Scorecard'
+      analysis_status:
         type: string
-      question_id:
-        type: string
-    required:
-    - option_id
-    - question_id
-    type: object
-  applications.CreateRequest:
-    properties:
-      certificate_file_id:
-        type: string
-      english_result_file_id:
-        type: string
-      first_name:
-        maxLength: 255
-        minLength: 1
-        type: string
-      last_name:
-        maxLength: 255
-        minLength: 1
-        type: string
-      personality_test_answers:
+      confirmed_entities:
+        $ref: '#/definitions/ai.NotebookEntityBundle'
+      detected_sections:
         items:
-          $ref: '#/definitions/applications.AnswerInput'
+          $ref: '#/definitions/ai.Section'
         type: array
-      phone_number:
-        maxLength: 64
-        minLength: 3
+      document:
+        $ref: '#/definitions/ai.DocumentMetadata'
+      extracted_entities:
+        $ref: '#/definitions/ai.NotebookEntityBundle'
+      findings:
+        items:
+          $ref: '#/definitions/ai.Finding'
+        type: array
+      generate_improved_tz:
+        $ref: '#/definitions/ai.NotebookImprovedTZ'
+      improved_text:
         type: string
-      portfolio_file_id:
+      improved_tz:
         type: string
-      program_code:
+      missing_required_sections:
+        items:
+          type: string
+        type: array
+      model_metadata:
+        $ref: '#/definitions/ai.ModelMetadata'
+      raw_text_preview:
         type: string
-      video_file_id:
+      recommendations:
+        items:
+          $ref: '#/definitions/ai.Recommendation'
+        type: array
+      score:
+        $ref: '#/definitions/ai.NotebookScore'
+      semantic:
+        $ref: '#/definitions/ai.NotebookSemantic'
+      structure:
+        $ref: '#/definitions/ai.NotebookStructure'
+      suggested_structure:
         type: string
-    required:
-    - first_name
-    - last_name
-    - phone_number
-    - program_code
-    - video_file_id
+      weak_sections:
+        items:
+          type: string
+        type: array
     type: object
-  applications.CreateResponse:
+  ai.ChatResponse:
     properties:
-      application_id:
+      answer:
         type: string
+      referenced_findings:
+        items:
+          type: string
+        type: array
+      referenced_sections:
+        items:
+          type: string
+        type: array
+      response_status:
+        type: string
+      suggested_next_actions:
+        items:
+          type: string
+        type: array
     type: object
-  applications.StatusResponse:
+  ai.DocumentMetadata:
     properties:
-      application_id:
+      character_count:
+        type: integer
+      content_type:
         type: string
-      decision:
+      file_path:
         type: string
-      review_stage:
+      filename:
         type: string
-      screening_error:
+      parser:
         type: string
     type: object
-  auth.LoginRequest:
+  ai.Finding:
+    properties:
+      explanation:
+        type: string
+      finding_type:
+        type: string
+      quote:
+        type: string
+      recommendation:
+        type: string
+      section_key:
+        type: string
+      severity:
+        type: string
+    type: object
+  ai.ModelMetadata:
+    properties:
+      mode:
+        type: string
+      model:
+        type: string
+      prompt_version:
+        type: string
+      provider:
+        type: string
+    type: object
+  ai.NotebookEntity:
+    properties:
+      confidence:
+        type: number
+      section:
+        type: string
+      value:
+        type: string
+    type: object
+  ai.NotebookEntityBundle:
+    properties:
+      deadlines:
+        items:
+          $ref: '#/definitions/ai.NotebookEntity'
+        type: array
+      expected_results:
+        items:
+          $ref: '#/definitions/ai.NotebookEntity'
+        type: array
+      kpis:
+        items:
+          $ref: '#/definitions/ai.NotebookEntity'
+        type: array
+      requirements:
+        items:
+          $ref: '#/definitions/ai.NotebookEntity'
+        type: array
+    type: object
+  ai.NotebookImprovedTZ:
+    properties:
+      improved_text:
+        type: string
+      summary_of_changes:
+        items:
+          type: string
+        type: array
+    type: object
+  ai.NotebookScore:
+    properties:
+      breakdown:
+        additionalProperties:
+          type: number
+        type: object
+      explanation:
+        items:
+          type: string
+        type: array
+      total_score:
+        type: number
+    type: object
+  ai.NotebookSemantic:
+    properties:
+      ambiguities:
+        items:
+          $ref: '#/definitions/ai.NotebookSemanticIssue'
+        type: array
+      contradictions:
+        items:
+          $ref: '#/definitions/ai.NotebookSemanticIssue'
+        type: array
+      deadlines:
+        items:
+          $ref: '#/definitions/ai.NotebookSemanticIssue'
+        type: array
+      expected_results:
+        items:
+          $ref: '#/definitions/ai.NotebookSemanticIssue'
+        type: array
+      kpis:
+        items:
+          $ref: '#/definitions/ai.NotebookSemanticIssue'
+        type: array
+      missing_elements:
+        items:
+          $ref: '#/definitions/ai.NotebookSemanticIssue'
+        type: array
+      requirements:
+        items:
+          $ref: '#/definitions/ai.NotebookSemanticIssue'
+        type: array
+    type: object
+  ai.NotebookSemanticIssue:
+    properties:
+      explanation:
+        type: string
+      issue_type:
+        type: string
+      quote:
+        type: string
+      recommendation:
+        type: string
+      section:
+        type: string
+    type: object
+  ai.NotebookStructure:
+    properties:
+      empty_sections:
+        items:
+          type: string
+        type: array
+      found_sections:
+        items:
+          type: string
+        type: array
+      matched_required_sections:
+        additionalProperties:
+          type: string
+        type: object
+      missing_sections:
+        items:
+          type: string
+        type: array
+      sections:
+        items:
+          $ref: '#/definitions/ai.NotebookStructureSection'
+        type: array
+      weak_sections:
+        items:
+          type: string
+        type: array
+    type: object
+  ai.NotebookStructureSection:
+    properties:
+      content:
+        type: string
+      length:
+        type: integer
+      title:
+        type: string
+    type: object
+  ai.Recommendation:
+    properties:
+      category:
+        type: string
+      description:
+        type: string
+      priority:
+        type: integer
+      title:
+        type: string
+    type: object
+  ai.Scorecard:
+    properties:
+      is_placeholder:
+        type: boolean
+      items:
+        items:
+          $ref: '#/definitions/ai.ScorecardItem'
+        type: array
+      max_total_score:
+        type: number
+      score_type:
+        type: string
+      total_score:
+        type: number
+    type: object
+  ai.ScorecardItem:
+    properties:
+      explanation:
+        type: string
+      key:
+        type: string
+      label:
+        type: string
+      max_score:
+        type: number
+      score:
+        type: number
+    type: object
+  ai.Section:
+    properties:
+      confidence:
+        type: number
+      content_excerpt:
+        type: string
+      end_index:
+        type: integer
+      key:
+        type: string
+      start_index:
+        type: integer
+      title:
+        type: string
+    type: object
+  github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_assets.Response:
+    properties:
+      file_id:
+        type: string
+      file_type:
+        type: string
+      original_filename:
+        type: string
+    type: object
+  github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.LoginRequest:
     properties:
       email:
         type: string
@@ -73,26 +316,26 @@ definitions:
     - email
     - password
     type: object
-  auth.LogoutRequest:
+  github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.LogoutRequest:
     properties:
       refresh_token:
         type: string
     required:
     - refresh_token
     type: object
-  auth.MessageResponse:
+  github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.MessageResponse:
     properties:
       message:
         type: string
     type: object
-  auth.RefreshRequest:
+  github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.RefreshRequest:
     properties:
       refresh_token:
         type: string
     required:
     - refresh_token
     type: object
-  auth.RegisterRequest:
+  github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.RegisterRequest:
     properties:
       email:
         type: string
@@ -104,14 +347,21 @@ definitions:
     - email
     - password
     type: object
-  auth.ResendCodeRequest:
+  github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.RegisterResponse:
+    properties:
+      message:
+        type: string
+      requires_email_verification:
+        type: boolean
+    type: object
+  github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.ResendCodeRequest:
     properties:
       email:
         type: string
     required:
     - email
     type: object
-  auth.ResponseUser:
+  github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.ResponseUser:
     properties:
       email:
         type: string
@@ -128,7 +378,7 @@ definitions:
       role:
         type: string
     type: object
-  auth.TokenResponse:
+  github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.TokenResponse:
     properties:
       access_token:
         type: string
@@ -139,9 +389,9 @@ definitions:
       token_type:
         type: string
       user:
-        $ref: '#/definitions/auth.ResponseUser'
+        $ref: '#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.ResponseUser'
     type: object
-  auth.VerifyEmailRequest:
+  github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.VerifyEmailRequest:
     properties:
       code:
         type: string
@@ -151,113 +401,12 @@ definitions:
     - code
     - email
     type: object
-  auth.meResponse:
+  github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.meResponse:
     properties:
       user:
-        $ref: '#/definitions/auth.ResponseUser'
+        $ref: '#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.ResponseUser'
     type: object
-  candidates.Detail:
-    properties:
-      application_id:
-        type: string
-      decision:
-        type: string
-      email:
-        type: string
-      files:
-        items:
-          $ref: '#/definitions/candidates.DetailFile'
-        type: array
-      first_name:
-        type: string
-      last_name:
-        type: string
-      latest_scoring_run:
-        $ref: '#/definitions/candidates.ScoringResult'
-      phone_number:
-        type: string
-      program_name:
-        type: string
-      review_stage:
-        type: string
-      screening_error:
-        type: string
-      video_transcript:
-        type: string
-    type: object
-  candidates.DetailFile:
-    properties:
-      content_type:
-        type: string
-      file_type:
-        type: string
-      id:
-        type: string
-      original_filename:
-        type: string
-      size_bytes:
-        type: integer
-    type: object
-  candidates.ListItem:
-    properties:
-      application_id:
-        type: string
-      decision:
-        type: string
-      full_name:
-        type: string
-      program_name:
-        type: string
-      recommendation:
-        type: string
-      review_stage:
-        type: string
-    type: object
-  candidates.ListResponse:
-    properties:
-      items:
-        items:
-          $ref: '#/definitions/candidates.ListItem'
-        type: array
-    type: object
-  candidates.MessageResponse:
-    properties:
-      message:
-        type: string
-    type: object
-  candidates.ScoringResult:
-    properties:
-      created_at:
-        type: string
-      id:
-        type: string
-      model_name:
-        type: string
-      recommendation:
-        type: string
-      result_json:
-        items:
-          type: integer
-        type: array
-    type: object
-  candidates.UpdateStageRequest:
-    properties:
-      decision:
-        enum:
-        - pending
-        - accepted
-        - rejected
-        type: string
-      review_stage:
-        enum:
-        - initial_screening
-        - application_review
-        - decision
-        type: string
-    required:
-    - review_stage
-    type: object
-  healthcheck.CheckResult:
+  github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_healthcheck.CheckResult:
     properties:
       latency:
         type: string
@@ -266,87 +415,608 @@ definitions:
       status:
         type: string
     type: object
-  healthcheck.HealthCheckResponse:
+  github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_healthcheck.HealthCheckResponse:
     properties:
       checks:
         additionalProperties:
-          $ref: '#/definitions/healthcheck.CheckResult'
+          $ref: '#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_healthcheck.CheckResult'
         type: object
       status:
         type: string
       timestamp:
         type: string
     type: object
-  healthcheck.LivenessResponse:
+  github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_healthcheck.LivenessResponse:
     properties:
       status:
         type: string
     type: object
-  healthcheck.ReadinessResponse:
+  github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_healthcheck.ReadinessResponse:
     properties:
       status:
         type: string
     type: object
-  personalitytest.Option:
+  github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.AdminReview:
     properties:
+      decision:
+        type: string
+      expert_report_comment:
+        type: string
+      final_scorecard_id:
+        type: string
       id:
         type: string
-      key:
+      review_feedback:
         type: string
-      text:
+      review_submission_id:
+        type: string
+      reviewed_at:
+        type: string
+      reviewed_by_user_id:
         type: string
     type: object
-  personalitytest.Question:
+  github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.ChatMessage:
     properties:
+      chat_session_id:
+        type: string
+      content:
+        type: string
+      created_at:
+        type: string
       id:
         type: string
-      options:
+      metadata_json:
         items:
-          $ref: '#/definitions/personalitytest.Option'
+          type: integer
         type: array
-      order:
-        type: integer
-      text:
+      role:
         type: string
     type: object
-  personalitytest.Test:
+  github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.ChatSession:
     properties:
-      code:
+      analysis_run_id:
         type: string
-      questions:
-        items:
-          $ref: '#/definitions/personalitytest.Question'
-        type: array
-      test_id:
+      created_at:
+        type: string
+      created_by_user_id:
+        type: string
+      document_version_id:
+        type: string
+      id:
+        type: string
+      project_id:
         type: string
       title:
         type: string
     type: object
-  programs.ListResponse:
+  github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.CreateChatSessionRequest:
     properties:
-      items:
-        items:
-          $ref: '#/definitions/programs.Program'
-        type: array
+      title:
+        minLength: 2
+        type: string
+    required:
+    - title
     type: object
-  programs.Program:
+  github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.CreateProjectRequest:
     properties:
-      code:
+      organization_name:
+        type: string
+      title:
+        minLength: 2
+        type: string
+    required:
+    - title
+    type: object
+  github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.CreateReportExportRequest:
+    properties:
+      export_type:
+        type: string
+      review_submission_ids:
+        items:
+          type: string
+        minItems: 1
+        type: array
+    required:
+    - export_type
+    - review_submission_ids
+    type: object
+  github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.CreateVersionRequest:
+    properties:
+      file_id:
+        type: string
+    required:
+    - file_id
+    type: object
+  github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.DocumentVersion:
+    properties:
+      analysis_run_id:
+        type: string
+      analysis_status:
+        type: string
+      content_type:
+        type: string
+      created_at:
+        type: string
+      extraction_status:
+        type: string
+      file_size_bytes:
+        type: integer
+      id:
+        type: string
+      original_file_id:
+        type: string
+      original_filename:
+        type: string
+      project_id:
+        type: string
+      raw_text_preview:
+        type: string
+      uploaded_by_user_id:
+        type: string
+      version_number:
+        type: integer
+    type: object
+  github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.LatestAnalysisResponse:
+    properties:
+      analysis:
+        $ref: '#/definitions/ai.AnalyzeResponse'
+      analysis_run_id:
+        type: string
+    type: object
+  github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.Project:
+    properties:
+      active_version_id:
+        type: string
+      created_at:
+        type: string
+      final_version_id:
         type: string
       id:
-        type: integer
-      level:
         type: string
-      name:
+      organization_name:
+        type: string
+      owner_user_id:
+        type: string
+      status:
+        type: string
+      title:
+        type: string
+      updated_at:
         type: string
     type: object
-  uploads.Response:
+  github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.ReportExport:
+    properties:
+      completed_at:
+        type: string
+      created_at:
+        type: string
+      created_by_user_id:
+        type: string
+      export_type:
+        type: string
+      file_id:
+        type: string
+      id:
+        type: string
+      status:
+        type: string
+    type: object
+  github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.ReviewDecisionRequest:
+    properties:
+      decision:
+        enum:
+        - approved
+        - rejected
+        - needs_revision
+        type: string
+      expert_report_comment:
+        type: string
+      final_scorecard:
+        $ref: '#/definitions/ai.Scorecard'
+      review_feedback:
+        type: string
+    required:
+    - decision
+    type: object
+  github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.ReviewSubmission:
+    properties:
+      document_version_id:
+        type: string
+      id:
+        type: string
+      project_id:
+        type: string
+      status:
+        type: string
+      submitted_at:
+        type: string
+      submitted_by_user_id:
+        type: string
+    type: object
+  github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.SendChatMessageRequest:
+    properties:
+      user_message:
+        minLength: 1
+        type: string
+    required:
+    - user_message
+    type: object
+  github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.SendChatMessageResponse:
+    properties:
+      ai_response:
+        $ref: '#/definitions/ai.ChatResponse'
+      assistant_message:
+        $ref: '#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.ChatMessage'
+      session_id:
+        type: string
+      user_message:
+        $ref: '#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.ChatMessage'
+    type: object
+  github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.SubmitForReviewRequest:
+    properties:
+      document_version_id:
+        type: string
+    type: object
+  internal_assets.Response:
     properties:
       file_id:
         type: string
       file_type:
         type: string
       original_filename:
+        type: string
+    type: object
+  internal_auth.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        maxLength: 72
+        minLength: 8
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  internal_auth.LogoutRequest:
+    properties:
+      refresh_token:
+        type: string
+    required:
+    - refresh_token
+    type: object
+  internal_auth.MessageResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  internal_auth.RefreshRequest:
+    properties:
+      refresh_token:
+        type: string
+    required:
+    - refresh_token
+    type: object
+  internal_auth.RegisterRequest:
+    properties:
+      email:
+        type: string
+      password:
+        maxLength: 72
+        minLength: 8
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  internal_auth.RegisterResponse:
+    properties:
+      message:
+        type: string
+      requires_email_verification:
+        type: boolean
+    type: object
+  internal_auth.ResendCodeRequest:
+    properties:
+      email:
+        type: string
+    required:
+    - email
+    type: object
+  internal_auth.ResponseUser:
+    properties:
+      email:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: string
+      is_email_verified:
+        type: boolean
+      last_name:
+        type: string
+      phone_number:
+        type: string
+      role:
+        type: string
+    type: object
+  internal_auth.TokenResponse:
+    properties:
+      access_token:
+        type: string
+      expires_in_seconds:
+        type: integer
+      refresh_token:
+        type: string
+      token_type:
+        type: string
+      user:
+        $ref: '#/definitions/internal_auth.ResponseUser'
+    type: object
+  internal_auth.VerifyEmailRequest:
+    properties:
+      code:
+        type: string
+      email:
+        type: string
+    required:
+    - code
+    - email
+    type: object
+  internal_auth.meResponse:
+    properties:
+      user:
+        $ref: '#/definitions/internal_auth.ResponseUser'
+    type: object
+  internal_healthcheck.CheckResult:
+    properties:
+      latency:
+        type: string
+      message:
+        type: string
+      status:
+        type: string
+    type: object
+  internal_healthcheck.HealthCheckResponse:
+    properties:
+      checks:
+        additionalProperties:
+          $ref: '#/definitions/internal_healthcheck.CheckResult'
+        type: object
+      status:
+        type: string
+      timestamp:
+        type: string
+    type: object
+  internal_healthcheck.LivenessResponse:
+    properties:
+      status:
+        type: string
+    type: object
+  internal_healthcheck.ReadinessResponse:
+    properties:
+      status:
+        type: string
+    type: object
+  internal_tzworkflow.AdminReview:
+    properties:
+      decision:
+        type: string
+      expert_report_comment:
+        type: string
+      final_scorecard_id:
+        type: string
+      id:
+        type: string
+      review_feedback:
+        type: string
+      review_submission_id:
+        type: string
+      reviewed_at:
+        type: string
+      reviewed_by_user_id:
+        type: string
+    type: object
+  internal_tzworkflow.ChatMessage:
+    properties:
+      chat_session_id:
+        type: string
+      content:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: string
+      metadata_json:
+        items:
+          type: integer
+        type: array
+      role:
+        type: string
+    type: object
+  internal_tzworkflow.ChatSession:
+    properties:
+      analysis_run_id:
+        type: string
+      created_at:
+        type: string
+      created_by_user_id:
+        type: string
+      document_version_id:
+        type: string
+      id:
+        type: string
+      project_id:
+        type: string
+      title:
+        type: string
+    type: object
+  internal_tzworkflow.CreateChatSessionRequest:
+    properties:
+      title:
+        minLength: 2
+        type: string
+    required:
+    - title
+    type: object
+  internal_tzworkflow.CreateProjectRequest:
+    properties:
+      organization_name:
+        type: string
+      title:
+        minLength: 2
+        type: string
+    required:
+    - title
+    type: object
+  internal_tzworkflow.CreateReportExportRequest:
+    properties:
+      export_type:
+        type: string
+      review_submission_ids:
+        items:
+          type: string
+        minItems: 1
+        type: array
+    required:
+    - export_type
+    - review_submission_ids
+    type: object
+  internal_tzworkflow.CreateVersionRequest:
+    properties:
+      file_id:
+        type: string
+    required:
+    - file_id
+    type: object
+  internal_tzworkflow.DocumentVersion:
+    properties:
+      analysis_run_id:
+        type: string
+      analysis_status:
+        type: string
+      content_type:
+        type: string
+      created_at:
+        type: string
+      extraction_status:
+        type: string
+      file_size_bytes:
+        type: integer
+      id:
+        type: string
+      original_file_id:
+        type: string
+      original_filename:
+        type: string
+      project_id:
+        type: string
+      raw_text_preview:
+        type: string
+      uploaded_by_user_id:
+        type: string
+      version_number:
+        type: integer
+    type: object
+  internal_tzworkflow.LatestAnalysisResponse:
+    properties:
+      analysis:
+        $ref: '#/definitions/ai.AnalyzeResponse'
+      analysis_run_id:
+        type: string
+    type: object
+  internal_tzworkflow.Project:
+    properties:
+      active_version_id:
+        type: string
+      created_at:
+        type: string
+      final_version_id:
+        type: string
+      id:
+        type: string
+      organization_name:
+        type: string
+      owner_user_id:
+        type: string
+      status:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  internal_tzworkflow.ReportExport:
+    properties:
+      completed_at:
+        type: string
+      created_at:
+        type: string
+      created_by_user_id:
+        type: string
+      export_type:
+        type: string
+      file_id:
+        type: string
+      id:
+        type: string
+      status:
+        type: string
+    type: object
+  internal_tzworkflow.ReviewDecisionRequest:
+    properties:
+      decision:
+        enum:
+        - approved
+        - rejected
+        - needs_revision
+        type: string
+      expert_report_comment:
+        type: string
+      final_scorecard:
+        $ref: '#/definitions/ai.Scorecard'
+      review_feedback:
+        type: string
+    required:
+    - decision
+    type: object
+  internal_tzworkflow.ReviewSubmission:
+    properties:
+      document_version_id:
+        type: string
+      id:
+        type: string
+      project_id:
+        type: string
+      status:
+        type: string
+      submitted_at:
+        type: string
+      submitted_by_user_id:
+        type: string
+    type: object
+  internal_tzworkflow.SendChatMessageRequest:
+    properties:
+      user_message:
+        minLength: 1
+        type: string
+    required:
+    - user_message
+    type: object
+  internal_tzworkflow.SendChatMessageResponse:
+    properties:
+      ai_response:
+        $ref: '#/definitions/ai.ChatResponse'
+      assistant_message:
+        $ref: '#/definitions/internal_tzworkflow.ChatMessage'
+      session_id:
+        type: string
+      user_message:
+        $ref: '#/definitions/internal_tzworkflow.ChatMessage'
+    type: object
+  internal_tzworkflow.SubmitForReviewRequest:
+    properties:
+      document_version_id:
         type: string
     type: object
 host: localhost:8080
@@ -363,6 +1033,76 @@ info:
   title: Satpayev Science TZ Backend API
   version: "1.0"
 paths:
+  /api/v1/admin/reports/exports:
+    post:
+      consumes:
+      - application/json
+      description: Queue an export for approved submissions
+      parameters:
+      - description: Export payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.CreateReportExportRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.ReportExport'
+      security:
+      - BearerToken: []
+      summary: Create report export
+      tags:
+      - '@tzworkflow'
+  /api/v1/admin/review-submissions:
+    get:
+      description: List all pending and processed review submissions
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.ReviewSubmission'
+            type: array
+      security:
+      - BearerToken: []
+      summary: List review submissions
+      tags:
+      - '@tzworkflow'
+  /api/v1/admin/review-submissions/{submission_id}/decision:
+    post:
+      consumes:
+      - application/json
+      description: Save an admin decision and final scorecard for a submission
+      parameters:
+      - description: Submission ID
+        in: path
+        name: submission_id
+        required: true
+        type: string
+      - description: Decision payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.ReviewDecisionRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.AdminReview'
+      security:
+      - BearerToken: []
+      summary: Record review decision
+      tags:
+      - '@tzworkflow'
   /api/v1/healthcheck:
     get:
       description: Returns the application health status and dependency checks.
@@ -372,7 +1112,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/healthcheck.HealthCheckResponse'
+            $ref: '#/definitions/internal_healthcheck.HealthCheckResponse'
         "500":
           description: Internal Server Error
           schema:
@@ -382,7 +1122,7 @@ paths:
         "503":
           description: Service Unavailable
           schema:
-            $ref: '#/definitions/healthcheck.HealthCheckResponse'
+            $ref: '#/definitions/internal_healthcheck.HealthCheckResponse'
       summary: Health check
       tags:
       - '@healthcheck'
@@ -395,7 +1135,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/healthcheck.LivenessResponse'
+            $ref: '#/definitions/internal_healthcheck.LivenessResponse'
       summary: Liveness probe
       tags:
       - '@healthcheck'
@@ -408,7 +1148,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/healthcheck.ReadinessResponse'
+            $ref: '#/definitions/internal_healthcheck.ReadinessResponse'
         "503":
           description: Service Unavailable
           schema:
@@ -418,45 +1158,286 @@ paths:
       summary: Readiness probe
       tags:
       - '@healthcheck'
-  /api/v1/programs:
+  /api/v1/projects:
     get:
-      description: Returns active programs sorted for the applicant program selection
-        form.
+      description: List projects visible to the current user
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/programs.ListResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
-      summary: List active programs
+            items:
+              $ref: '#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.Project'
+            type: array
+      security:
+      - BearerToken: []
+      summary: List projects
       tags:
-      - '@programs'
-  /applications:
+      - '@tzworkflow'
     post:
       consumes:
       - application/json
-      description: Creates a new ATS application for the authenticated applicant and
-        publishes the submission event.
+      description: Create a new scientific TZ project
       parameters:
-      - description: Application submission payload
+      - description: Project payload
         in: body
         name: request
         required: true
         schema:
-          $ref: '#/definitions/applications.CreateRequest'
+          $ref: '#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.CreateProjectRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/applications.CreateResponse'
+            $ref: '#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.Project'
+      security:
+      - BearerToken: []
+      summary: Create project
+      tags:
+      - '@tzworkflow'
+  /api/v1/projects/{project_id}:
+    get:
+      description: Get project by id
+      parameters:
+      - description: Project ID
+        in: path
+        name: project_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.Project'
+      security:
+      - BearerToken: []
+      summary: Get project
+      tags:
+      - '@tzworkflow'
+  /api/v1/projects/{project_id}/chat-sessions:
+    post:
+      consumes:
+      - application/json
+      description: Create a project-bound chat session
+      parameters:
+      - description: Project ID
+        in: path
+        name: project_id
+        required: true
+        type: string
+      - description: Chat session payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.CreateChatSessionRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.ChatSession'
+      security:
+      - BearerToken: []
+      summary: Create chat session
+      tags:
+      - '@tzworkflow'
+  /api/v1/projects/{project_id}/chat-sessions/{session_id}/messages:
+    post:
+      consumes:
+      - application/json
+      description: Send a chat message and store the AI response
+      parameters:
+      - description: Project ID
+        in: path
+        name: project_id
+        required: true
+        type: string
+      - description: Session ID
+        in: path
+        name: session_id
+        required: true
+        type: string
+      - description: Chat message payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.SendChatMessageRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.SendChatMessageResponse'
+      security:
+      - BearerToken: []
+      summary: Send chat message
+      tags:
+      - '@tzworkflow'
+  /api/v1/projects/{project_id}/submit-for-review:
+    post:
+      consumes:
+      - application/json
+      description: Create a review submission for a project version
+      parameters:
+      - description: Project ID
+        in: path
+        name: project_id
+        required: true
+        type: string
+      - description: Review submission payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.SubmitForReviewRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.ReviewSubmission'
+      security:
+      - BearerToken: []
+      summary: Submit for review
+      tags:
+      - '@tzworkflow'
+  /api/v1/projects/{project_id}/versions:
+    get:
+      description: List document versions for a project
+      parameters:
+      - description: Project ID
+        in: path
+        name: project_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.DocumentVersion'
+            type: array
+      security:
+      - BearerToken: []
+      summary: List versions
+      tags:
+      - '@tzworkflow'
+    post:
+      consumes:
+      - application/json
+      description: Create a new document version from an uploaded file asset
+      parameters:
+      - description: Project ID
+        in: path
+        name: project_id
+        required: true
+        type: string
+      - description: Version payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.CreateVersionRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.DocumentVersion'
+      security:
+      - BearerToken: []
+      summary: Create version
+      tags:
+      - '@tzworkflow'
+  /api/v1/projects/{project_id}/versions/{version_id}/analysis/latest:
+    get:
+      description: Get the latest stored analysis for a document version
+      parameters:
+      - description: Project ID
+        in: path
+        name: project_id
+        required: true
+        type: string
+      - description: Version ID
+        in: path
+        name: version_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.LatestAnalysisResponse'
+      security:
+      - BearerToken: []
+      summary: Latest analysis
+      tags:
+      - '@tzworkflow'
+  /api/v1/projects/{project_id}/versions/{version_id}/analyze:
+    post:
+      description: Send a document version to AI-service and persist the analysis
+      parameters:
+      - description: Project ID
+        in: path
+        name: project_id
+        required: true
+        type: string
+      - description: Version ID
+        in: path
+        name: version_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_tzworkflow.LatestAnalysisResponse'
+      security:
+      - BearerToken: []
+      summary: Analyze version
+      tags:
+      - '@tzworkflow'
+  /assets:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Uploads a file for the authenticated applicant and creates an unattached
+        application file record.
+      parameters:
+      - description: File type
+        in: formData
+        name: file_type
+        required: true
+        type: string
+      - description: Binary file payload
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_assets.Response'
         "400":
           description: Bad Request
           schema:
@@ -469,21 +1450,38 @@ paths:
             type: object
       security:
       - BearerToken: []
-      summary: Submit application
+      summary: Upload asset
       tags:
-      - '@applications'
-  /applications/status:
+      - '@assets'
+  /assets/{id}:
     get:
-      description: Returns the latest application status for the authenticated applicant.
+      description: Returns the uploaded asset binary payload for the owning applicant
+        or admin reviewer.
+      parameters:
+      - description: Asset ID
+        in: path
+        name: id
+        required: true
+        type: string
       produces:
-      - application/json
+      - application/octet-stream
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/applications.StatusResponse'
+            type: file
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
         "401":
           description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "403":
+          description: Forbidden
           schema:
             additionalProperties: true
             type: object
@@ -492,35 +1490,31 @@ paths:
           schema:
             additionalProperties: true
             type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
       security:
       - BearerToken: []
-      summary: Get current application status
+      summary: Get uploaded asset by ID
       tags:
-      - '@applications'
+      - '@assets'
   /auth/login:
     post:
       consumes:
       - application/json
-      description: Authenticates a verified user and returns access and refresh tokens.
+      description: Authenticates a user and returns access and refresh tokens. When
+        email verification is enabled, the user must be verified.
       parameters:
       - description: Login payload
         in: body
         name: request
         required: true
         schema:
-          $ref: '#/definitions/auth.LoginRequest'
+          $ref: '#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.LoginRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/auth.TokenResponse'
+            $ref: '#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.TokenResponse'
         "401":
           description: Unauthorized
           schema:
@@ -540,14 +1534,14 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/auth.LogoutRequest'
+          $ref: '#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.LogoutRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/auth.MessageResponse'
+            $ref: '#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.MessageResponse'
         "400":
           description: Bad Request
           schema:
@@ -566,7 +1560,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/auth.meResponse'
+            $ref: '#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.meResponse'
         "401":
           description: Unauthorized
           schema:
@@ -594,14 +1588,14 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/auth.RefreshRequest'
+          $ref: '#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.RefreshRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/auth.TokenResponse'
+            $ref: '#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.TokenResponse'
         "401":
           description: Unauthorized
           schema:
@@ -614,21 +1608,22 @@ paths:
     post:
       consumes:
       - application/json
-      description: Creates a new user account and issues an email verification code.
+      description: Creates a new user account and conditionally issues an email verification
+        code.
       parameters:
       - description: Registration payload
         in: body
         name: request
         required: true
         schema:
-          $ref: '#/definitions/auth.RegisterRequest'
+          $ref: '#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.RegisterRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/auth.MessageResponse'
+            $ref: '#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.RegisterResponse'
         "400":
           description: Bad Request
           schema:
@@ -648,14 +1643,14 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/auth.ResendCodeRequest'
+          $ref: '#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.ResendCodeRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/auth.MessageResponse'
+            $ref: '#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.MessageResponse'
         "400":
           description: Bad Request
           schema:
@@ -676,14 +1671,14 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/auth.VerifyEmailRequest'
+          $ref: '#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.VerifyEmailRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/auth.MessageResponse'
+            $ref: '#/definitions/github.com_agentic-lab-club_Satpayev_science_tz_hackaton_backend_internal_auth.MessageResponse'
         "400":
           description: Bad Request
           schema:
@@ -692,129 +1687,6 @@ paths:
       summary: Verify email with code
       tags:
       - '@auth'
-  /candidates:
-    get:
-      description: Returns candidate applications with optional admin filters.
-      parameters:
-      - description: Filter by program code
-        in: query
-        name: program_code
-        type: string
-      - description: Filter by review stage
-        in: query
-        name: review_stage
-        type: string
-      - description: Filter by decision
-        in: query
-        name: decision
-        type: string
-      - description: Search by applicant name or email
-        in: query
-        name: search
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/candidates.ListResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
-      security:
-      - BearerToken: []
-      summary: List candidates for admin review
-      tags:
-      - '@candidates'
-  /candidates/{applicationId}:
-    get:
-      description: Returns the full admin review view for a candidate application.
-      parameters:
-      - description: Application ID
-        in: path
-        name: applicationId
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/candidates.Detail'
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties: true
-            type: object
-        "401":
-          description: Unauthorized
-          schema:
-            additionalProperties: true
-            type: object
-        "404":
-          description: Not Found
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
-      security:
-      - BearerToken: []
-      summary: Get candidate detail
-      tags:
-      - '@candidates'
-  /candidates/{applicationId}/stage:
-    patch:
-      consumes:
-      - application/json
-      description: Updates the admin review stage and optional decision for a candidate
-        application.
-      parameters:
-      - description: Application ID
-        in: path
-        name: applicationId
-        required: true
-        type: string
-      - description: Stage update payload
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/candidates.UpdateStageRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/candidates.MessageResponse'
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties: true
-            type: object
-        "401":
-          description: Unauthorized
-          schema:
-            additionalProperties: true
-            type: object
-      security:
-      - BearerToken: []
-      summary: Update candidate review stage
-      tags:
-      - '@candidates'
   /health:
     get:
       description: Returns the application health status and dependency checks.
@@ -824,7 +1696,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/healthcheck.HealthCheckResponse'
+            $ref: '#/definitions/internal_healthcheck.HealthCheckResponse'
         "500":
           description: Internal Server Error
           schema:
@@ -834,7 +1706,7 @@ paths:
         "503":
           description: Service Unavailable
           schema:
-            $ref: '#/definitions/healthcheck.HealthCheckResponse'
+            $ref: '#/definitions/internal_healthcheck.HealthCheckResponse'
       summary: Health check
       tags:
       - '@healthcheck'
@@ -847,7 +1719,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/healthcheck.LivenessResponse'
+            $ref: '#/definitions/internal_healthcheck.LivenessResponse'
       summary: Liveness probe
       tags:
       - '@healthcheck'
@@ -860,7 +1732,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/healthcheck.ReadinessResponse'
+            $ref: '#/definitions/internal_healthcheck.ReadinessResponse'
         "503":
           description: Service Unavailable
           schema:
@@ -870,69 +1742,6 @@ paths:
       summary: Readiness probe
       tags:
       - '@healthcheck'
-  /tests/personality/current:
-    get:
-      description: Returns the active personality test with questions and options
-        for the application form.
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/personalitytest.Test'
-        "404":
-          description: Not Found
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
-      summary: Get current active personality test
-      tags:
-      - '@personalitytest'
-  /uploads:
-    post:
-      consumes:
-      - multipart/form-data
-      description: Uploads a file for the authenticated applicant and creates an unattached
-        application file record.
-      parameters:
-      - description: File type
-        in: formData
-        name: file_type
-        required: true
-        type: string
-      - description: Binary file payload
-        in: formData
-        name: file
-        required: true
-        type: file
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/uploads.Response'
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties: true
-            type: object
-        "401":
-          description: Unauthorized
-          schema:
-            additionalProperties: true
-            type: object
-      security:
-      - BearerToken: []
-      summary: Upload application file
-      tags:
-      - '@uploads'
 schemes:
 - http
 - https

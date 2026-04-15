@@ -22,9 +22,9 @@ Person(admin, "Admin / Expert", "Reviews submitted projects, edits final evaluat
 System_Boundary(system, "Satpayev Science TZ") {
   Container(frontend, "Frontend", "Next.js / React", "Client and Admin UI for upload, analysis, chat, review, and report download")
 
-  Container(backend, "Core Backend", "Go / Fiber", "System of record: auth, projects, document versions, analysis persistence, scoring, chat, reviews, reports")
+  Container(backend, "Core Backend", "Go / Fiber", "System of record: auth, projects, document versions, analysis persistence, scoring, chat, reviews, reports, and the scientific TZ workflow module")
 
-  Container(ai, "AI Service", "Python / FastAPI", "Stateless intelligence engine for document analysis, score drafting, recommendations, rewrites, and chat responses")
+  Container(ai, "AI Service", "Python / FastAPI", "Stateless intelligence engine for notebook-shaped document analysis, novelty/relevance reasoning, score drafting, recommendations, rewrites, and chat responses")
 
   ContainerDb(postgres, "PostgreSQL", "PostgreSQL", "Users, projects, document versions, analysis runs, scorecards, chat, reviews, report exports")
 
@@ -56,11 +56,15 @@ note right of backend
 Backend is the only system of record.
 AI Service has no direct Core Postgres access.
 Frontend never talks directly to AI Service or object storage.
+Scientific TZ workflow lives in backend/internal/tzworkflow
+and calls AI Service over HTTP.
 end note
 
 note bottom of ai
 AI Service must support heuristic fallback
 for demos without external LLM keys.
+It should preserve the notebook output contract and
+use the novelty/relevance context as analysis reference.
 end note
 
 @enduml

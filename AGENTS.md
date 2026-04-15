@@ -375,6 +375,7 @@ For backend work, also read `backend/AGENTS.md`.
 
 For AI-service work, also read:
 - `NLP/README.md`
+- `novelty_and_relevance/README.md`
 - `docs/ТЗ_официальное (1).docx`
 - `docs/Шаблон для ТЗ рус.docx`
 - `docs/TZ_digital_polegon.docx`
