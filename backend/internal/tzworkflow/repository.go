@@ -180,7 +180,11 @@ func (r *Repository) ListChatMessages(sessionID uuid.UUID) ([]ChatMessage, error
 
 func (r *Repository) CreateChatMessage(sessionID uuid.UUID, role, content string, metadataJSON []byte) (*ChatMessage, error) {
 	var message ChatMessage
-	if err := r.db.TrackedGet(&message, r.db.Rebind(createChatMessageQuery), sessionID, role, content, metadataJSON); err != nil {
+	metadataValue := ""
+	if len(metadataJSON) > 0 {
+		metadataValue = string(metadataJSON)
+	}
+	if err := r.db.TrackedGet(&message, r.db.Rebind(createChatMessageQuery), sessionID, role, content, metadataValue); err != nil {
 		return nil, fmt.Errorf("failed to create chat message: %w", err)
 	}
 	return &message, nil

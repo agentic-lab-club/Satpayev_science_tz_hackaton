@@ -73,12 +73,46 @@ export default function ChatPage() {
         setProjectLoading(true);
         setError(null);
 
+        const projectList = await listProjects();
+        setProjects(projectList);
+
         if (!queryProjectId) {
-          const projectList = await listProjects();
-          setProjects(projectList);
-          setContext(null);
-          setMessages([INITIAL_ASSISTANT_MESSAGE]);
-          setChatSessionId(null);
+          const latestProject = [...projectList].sort((a, b) => {
+            const aTime = new Date(a.updated_at || a.created_at).getTime();
+            const bTime = new Date(b.updated_at || b.created_at).getTime();
+            return bTime - aTime;
+          })[0];
+
+          if (!latestProject) {
+            setContext(null);
+            setVersions([]);
+            setSelectedVersionId(null);
+            setMessages([INITIAL_ASSISTANT_MESSAGE]);
+            setChatSessionId(null);
+            setError("У вас пока нет проектов. Загрузите документ на dashboard, чтобы начать чат.");
+            return;
+          }
+
+          const versions = await listProjectVersions(latestProject.id);
+          const latestVersion =
+            versions.find((version) => version.id === latestProject.active_version_id) ||
+            versions[versions.length - 1];
+
+          if (!latestVersion) {
+            setContext(null);
+            setVersions([]);
+            setSelectedVersionId(null);
+            setMessages([
+              {
+                role: "assistant",
+                text: "У выбранного проекта пока нет версии для чата. Сначала загрузите и проанализируйте документ.",
+              },
+            ]);
+            setError("У выбранного проекта нет версии для чата.");
+            return;
+          }
+
+          router.replace(`/chat?projectId=${latestProject.id}&versionId=${latestVersion.id}`);
           return;
         }
 
@@ -199,11 +233,13 @@ export default function ChatPage() {
       setError(null);
     } catch (err) {
       console.error("Chat request failed", err);
+      const message = err instanceof Error ? err.message : "Не удалось получить ответ от backend.";
+      setError(message);
       setMessages((prev) => [
         ...prev,
         {
           role: "assistant",
-          text: "Не удалось получить ответ от backend. Попробуйте ещё раз.",
+          text: message,
         },
       ]);
     } finally {
@@ -293,7 +329,25 @@ export default function ChatPage() {
       )}
 
       <main className="relative z-10 flex-1 overflow-hidden">
-        {!queryProjectId ? (
+        {!queryProjectId && projectLoading ? (
+          <div className="max-w-6xl mx-auto px-4 py-8">
+            <div className={`rounded-3xl border p-6 md:p-8 ${isDark ? "bg-slate-900/40 border-slate-800" : "bg-white border-slate-200 shadow-sm"}`}>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                  <Bot className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold">Открываем последний проект</h2>
+                  <p className={`text-sm ${isDark ? "text-slate-400" : "text-slate-600"}`}>Подбираем самый свежий проанализированный документ и готовим чат.</p>
+                </div>
+              </div>
+              <div className={`flex items-center gap-3 text-sm ${isDark ? "text-slate-400" : "text-slate-600"}`}>
+                <span className="w-2.5 h-2.5 rounded-full bg-indigo-400 animate-pulse" />
+                Загружаем список проектов и последнюю версию...
+              </div>
+            </div>
+          </div>
+        ) : !queryProjectId ? (
           <div className="max-w-6xl mx-auto px-4 py-8">
             <div className={`rounded-3xl border p-6 md:p-8 ${isDark ? "bg-slate-900/40 border-slate-800" : "bg-white border-slate-200 shadow-sm"}`}>
               <div className="flex items-center gap-3 mb-6">
@@ -322,6 +376,11 @@ export default function ChatPage() {
                   </button>
                 ))}
               </div>
+              {projects.length === 0 && (
+                <div className={`mt-6 rounded-2xl border p-5 text-sm ${isDark ? "border-slate-800 bg-slate-950/40 text-slate-400" : "border-slate-200 bg-slate-50 text-slate-600"}`}>
+                  У вас пока нет проектов. Перейдите на dashboard, загрузите `.docx` или `.pdf`, затем вернитесь в чат.
+                </div>
+              )}
             </div>
           </div>
         ) : (
@@ -388,12 +447,12 @@ export default function ChatPage() {
                         }
                       }}
                       className={`rounded-xl border px-3 py-2 text-sm ${isDark ? "bg-slate-950/60 border-slate-800 text-slate-200" : "bg-white border-slate-200 text-slate-800"}`}
-                    >
-                      {versions.map((version) => (
-                        <option key={version.id} value={version.id}>
-                          Версия {version.version_number}
-                        </option>
-                      ))}
+                      >
+                        {versions.map((version) => (
+                          <option key={version.id} value={version.id}>
+                            Версия {version.version_number}
+                          </option>
+                        ))}
                     </select>
                   )}
                 </div>

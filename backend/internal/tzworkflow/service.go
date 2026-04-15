@@ -608,6 +608,9 @@ func convertScorecards(scorecards []Scorecard) []ai.Scorecard {
 				Explanation: item.Explanation,
 			})
 		}
+		if items == nil {
+			items = []ai.ScorecardItem{}
+		}
 		result = append(result, ai.Scorecard{
 			ScoreType:     scorecard.ScoreType,
 			TotalScore:    scorecard.TotalScore,
@@ -629,6 +632,9 @@ func cloneScorecard(scorecard Scorecard) ai.Scorecard {
 			MaxScore:    item.MaxScore,
 			Explanation: item.Explanation,
 		})
+	}
+	if items == nil {
+		items = []ai.ScorecardItem{}
 	}
 	return ai.Scorecard{
 		ScoreType:     scorecard.ScoreType,

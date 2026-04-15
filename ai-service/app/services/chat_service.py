@@ -15,8 +15,22 @@ class ChatService:
         suggested_next_actions: list[str] = []
 
         if context.scorecards:
-            diagnostic = next((scorecard for scorecard in context.scorecards if scorecard.score_type == "ai_document_analysis"), None)
-            preliminary = next((scorecard for scorecard in context.scorecards if scorecard.score_type == "ai_preliminary_evaluation"), None)
+            diagnostic = next(
+                (
+                    scorecard
+                    for scorecard in context.scorecards
+                    if self._is_scorecard_type(scorecard.score_type, "ai_document_analysis")
+                ),
+                None,
+            )
+            preliminary = next(
+                (
+                    scorecard
+                    for scorecard in context.scorecards
+                    if self._is_scorecard_type(scorecard.score_type, "ai_preliminary_evaluation")
+                ),
+                None,
+            )
             if diagnostic:
                 answers.append(f"Диагностическая оценка составляет {diagnostic.total_score:.0f}/100.")
             if preliminary:
@@ -69,6 +83,12 @@ class ChatService:
             referenced_findings=referenced_findings,
             suggested_next_actions=suggested_next_actions,
         )
+
+    @staticmethod
+    def _is_scorecard_type(actual: str, expected: str) -> bool:
+        normalized = actual.strip().lower()
+        expected = expected.strip().lower()
+        return normalized == expected or normalized == f"{expected}_scorecard"
 
 
 def get_chat_service() -> ChatService:

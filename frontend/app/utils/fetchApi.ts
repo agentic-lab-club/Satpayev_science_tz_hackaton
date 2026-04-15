@@ -104,7 +104,17 @@ export async function fetchApi(endpoint: string, options: FetchOptions = {}) {
   }
   
   if (!response.ok) {
-     throw new Error(data?.message || 'Произошла ошибка при выполнении запроса');
+    const backendMessage =
+      data?.message ||
+      data?.error?.message ||
+      (typeof data?.error === "string" ? data.error : null) ||
+      data?.error ||
+      null;
+
+    throw new Error(
+      backendMessage ||
+        `Произошла ошибка при выполнении запроса (${response.status})`,
+    );
   }
 
   return data;

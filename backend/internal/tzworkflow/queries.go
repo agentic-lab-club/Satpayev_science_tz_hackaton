@@ -153,7 +153,7 @@ const (
 
 	createChatMessageQuery = `
 		INSERT INTO chat_messages (chat_session_id, role, content, metadata_json)
-		VALUES ($1, $2, $3, $4)
+		VALUES ($1, $2, $3, NULLIF($4, '')::jsonb)
 		RETURNING id, chat_session_id, role, content, metadata_json, created_at
 	`
 
