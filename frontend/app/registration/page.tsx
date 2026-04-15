@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Zap, User, Mail, Lock, Eye, EyeOff, ArrowRight, CheckCircle, Bot } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useTheme } from "../providers/ThemeProvider";
+import { fetchApi } from "../utils/fetchApi";
 
 const ThemeToggle = dynamic(() => import("../components/ThemeToggle").then(mod => ({ default: mod.ThemeToggle })), {
   ssr: false,
@@ -34,18 +35,11 @@ export default function RegistrationPage() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`/api/backend/auth/register`, {
+      await fetchApi("/auth/register", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify({ email, password }),
+        requiresAuth: false,
       });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => null);
-        throw new Error(errorData?.message || "Ошибка регистрации");
-      }
 
       window.location.href = `/auth/verify-email?email=${encodeURIComponent(email)}`;
     } catch (error: any) {

@@ -22,6 +22,11 @@ export interface TZDocument {
   status: AnalysisStatus;
   score?: number;
   issuesFound?: number;
+  versionId?: string;
+  projectTitle?: string;
+  organizationName?: string;
+  versionNumber?: number;
+  analysisRunId?: string;
 }
 
 export interface ChatMessage {

@@ -1,27 +1,35 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { FileText, CheckCircle, Target, AlertTriangle, MessageCircle, X } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { FileText, CheckCircle, Target, AlertTriangle, MessageCircle } from "lucide-react";
 import { AnalysisStatus } from "./components/types";
 import { DashboardHeader } from "./components/DashboardHeader";
 import { StatCard } from "./components/StatCard";
 import { DocumentList } from "./components/DocumentList";
 import { QuickTips } from "./components/QuickTips";
-import { ChatWidget } from "./components/ChatWidget";
 import { UploadModal } from "./components/UploadModal";
-import { mockDocuments } from "./components/constants";
 import { useTheme } from "../providers/ThemeProvider";
-import { fetchApi } from "../utils/fetchApi";
 import { TZDocument } from "./components/types";
+import {
+  getLatestAnalysis,
+  getFileFormat,
+  getProjectPrimaryVersionId,
+  listProjectVersions,
+  listProjects,
+  BackendProject,
+} from "../lib/tz-api";
+import { formatBytes } from "./components/helpers";
 
 export default function Dashboard() {
-  const [chatOpen, setChatOpen] = useState(false);
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const [filterStatus, setFilterStatus] = useState<AnalysisStatus | "all">("all");
   const [search, setSearch] = useState("");
   const [documents, setDocuments] = useState<TZDocument[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
+  const router = useRouter();
   const { isDark } = useTheme();
 
   useEffect(() => {
@@ -31,49 +39,65 @@ export default function Dashboard() {
       return;
     }
 
-    const fetchCandidates = async () => {
+    const fetchProjects = async () => {
       try {
         setIsLoading(true);
-        // GET /applications requires fetching from API (since /candidates doesn't exist yet)
-        const data = await fetchApi("/candidates", { requiresAuth: true });
-        
-        // Map backend candidates API response to frontend TZDocument type
-        if (data && Array.isArray(data)) {
-          const mappedDocs: TZDocument[] = data.map((candidate: any) => ({
-            id: candidate.application_id || String(Math.random()),
-            name: `${candidate.first_name} ${candidate.last_name}`,
-            uploadedAt: new Date().toISOString(), // Assuming no date from backend API, replace if date exists
-            size: candidate.files?.length ? `${candidate.files.length} файлов` : "Нет файлов",
-            format: "PDF", // Defaulting, you might want to extract from files array
-            status: candidate.review_stage === "completed" ? "completed" : "processing",
-            score: candidate.latest_scoring_run?.total_score || undefined,
-            issuesFound: candidate.screening_error ? 1 : 0
-          }));
-          setDocuments(mappedDocs);
-        } else {
-          // If no data or different structure, fallback to empty
-          setDocuments(mockDocuments);
-        }
-      } catch (error) {
-        // Мы скрываем вывод этой ошибки в консоли (или выводим тихо) чтобы не пугать в DevTools
-        console.groupCollapsed("GET /candidates fetch info");
-        console.log("Failed to fetch /candidates. Reason: ", error);
-        console.groupEnd();
+        const projects = await listProjects();
+        const mappedDocs = await Promise.all(
+          projects.map(async (project: BackendProject) => {
+            const versions = await listProjectVersions(project.id).catch(() => []);
+            const versionId = getProjectPrimaryVersionId(project) || versions[versions.length - 1]?.id || null;
+            const latestVersion = versionId
+              ? versions.find((version) => version.id === versionId) || versions[versions.length - 1]
+              : versions[versions.length - 1];
 
-        // Let's stop using mock data for now
-        setDocuments(mockDocuments);
+            const analysis = versionId
+              ? await getLatestAnalysis(project.id, versionId).catch(() => null)
+              : null;
+
+            const analysisData = analysis?.analysis;
+            const score = analysisData?.ai_document_analysis_scorecard?.total_score ?? undefined;
+            const issuesFound = analysisData?.findings?.length ?? 0;
+            const analysisStatus = latestVersion?.analysis_status ?? (analysisData ? "completed" : "pending");
+
+            return {
+              id: project.id,
+              name: latestVersion?.original_filename || project.title,
+              uploadedAt: latestVersion?.created_at || project.created_at,
+              size: latestVersion ? formatBytes(latestVersion.file_size_bytes) : "—",
+              format: latestVersion ? getFileFormat(latestVersion.original_filename) : "TXT",
+              status: (analysisStatus === "completed" || analysisData) ? "completed" : analysisStatus === "error" ? "error" : "processing",
+              score,
+              issuesFound,
+              versionId: versionId || undefined,
+              projectTitle: project.title,
+              organizationName: project.organization_name || undefined,
+              versionNumber: latestVersion?.version_number,
+              analysisRunId: analysis?.analysis_run_id,
+            } satisfies TZDocument;
+          }),
+        );
+
+        mappedDocs.sort((a, b) => new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime());
+        setDocuments(mappedDocs);
+        setError(null);
+      } catch (error) {
+        console.error("Failed to fetch projects", error);
+        setError("Не удалось загрузить проекты. Проверьте подключение к backend.");
+        setDocuments([]);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchCandidates();
+    fetchProjects();
   }, []);
 
   const completed = documents.filter((d) => d.status === "completed");
   const avgScore = completed.length > 0 
     ? Math.round(completed.reduce((s, d) => s + (d.score ?? 0), 0) / completed.length)
     : 0;
+  const totalIssues = documents.reduce((sum, d) => sum + (d.issuesFound ?? 0), 0);
 
   const filtered = documents.filter((d) => {
     const matchStatus = filterStatus === "all" || d.status === filterStatus;
@@ -99,7 +123,7 @@ export default function Dashboard() {
           <StatCard icon={FileText} value={isLoading ? "-" : String(documents.length)} label="Всего документов" accent="bg-blue-400" />
           <StatCard icon={CheckCircle} value={isLoading ? "-" : String(completed.length)} label="Проанализировано" accent="bg-emerald-400" />
           <StatCard icon={Target} value={isLoading ? "-" : `${avgScore}%`} label="Средний балл" accent="bg-indigo-400" />
-          <StatCard icon={AlertTriangle} value={isLoading ? "-" : "12"} label="Критических ошибок" accent="bg-amber-400" />
+          <StatCard icon={AlertTriangle} value={isLoading ? "-" : String(totalIssues)} label="Найдено замечаний" accent="bg-amber-400" />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -115,32 +139,27 @@ export default function Dashboard() {
 
         </div>
           {/* ── Quick Tips ── */}
+          {error && (
+            <div className={`rounded-2xl border p-4 text-sm ${isDark ? "border-rose-500/20 bg-rose-500/10 text-rose-200" : "border-rose-200 bg-rose-50 text-rose-700"}`}>
+              {error}
+            </div>
+          )}
           <QuickTips />
       </div>
-
-      {/* ── Floating Chat Button ── */}
-      {chatOpen && <ChatWidget onClose={() => setChatOpen(false)} />}
 
       {/* ── Upload Modal ── */}
       <UploadModal isOpen={uploadModalOpen} onClose={() => setUploadModalOpen(false)} />
 
       <button
-        onClick={() => setChatOpen((o) => !o)}
+        onClick={() => router.push("/chat")}
         className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 active:scale-95 text-white shadow-xl shadow-blue-500/30 hover:shadow-lg hover:shadow-blue-500/50 flex items-center justify-center transition-all duration-150"
         aria-label="Открыть AI-ассистент"
       >
-        {chatOpen ? (
-          <X className="w-6 h-6" />
-        ) : (
-          <MessageCircle className="w-6 h-6" />
-        )}
+        <MessageCircle className="w-6 h-6" />
       </button>
 
       {/* Notification dot on chat button */}
-      {!chatOpen && (
-        <span className={`fixed bottom-[62px] right-5 z-50 w-3 h-3 rounded-full bg-emerald-400 border-2 animate-pulse transition-colors duration-300 ${isDark ? 'border-[#080d14]' : 'border-slate-50'}`} />
-      )}
+      <span className={`fixed bottom-[62px] right-5 z-50 w-3 h-3 rounded-full bg-emerald-400 border-2 animate-pulse transition-colors duration-300 ${isDark ? 'border-[#080d14]' : 'border-slate-50'}`} />
     </div>
   );
 }
-

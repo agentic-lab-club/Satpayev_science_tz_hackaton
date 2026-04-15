@@ -81,7 +81,7 @@ export function DocumentList({
         )}
         {documents.map((doc) => (
           <Link
-            href={`/projects/${doc.id}`}
+            href={doc.versionId ? `/projects/${doc.id}?versionId=${doc.versionId}` : `/projects/${doc.id}`}
             key={doc.id}
             className={`group/item relative flex flex-col sm:flex-row sm:items-center gap-4 rounded-xl border transition-all duration-300 p-4 sm:px-5 sm:py-4 cursor-pointer overflow-hidden backdrop-blur-sm ${isDark ? 'border-slate-800/50 bg-slate-950/30 hover:bg-slate-800/40 hover:border-slate-700/80' : 'border-slate-200/70 bg-white hover:bg-slate-50 hover:border-slate-300 shadow-sm hover:shadow'}`}
           >

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Zap, Mail, Lock, Eye, EyeOff, ArrowRight, Bot } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useTheme } from "../providers/ThemeProvider";
+import { fetchApi } from "../utils/fetchApi";
 
 const ThemeToggle = dynamic(() => import("../components/ThemeToggle").then(mod => ({ default: mod.ThemeToggle })), {
   ssr: false,
@@ -22,19 +23,11 @@ export default function LoginPage() {
     setIsLoading(true);
     
     try {
-      const response = await fetch(`/api/backend/auth/login`, {
+      const data = await fetchApi("/auth/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify({ email, password }),
+        requiresAuth: false,
       });
-
-      if (!response.ok) {
-        throw new Error("Ошибка авторизации");
-      }
-
-      const data = await response.json();
       
       localStorage.setItem("access_token", data.access_token);
       localStorage.setItem("refresh_token", data.refresh_token);

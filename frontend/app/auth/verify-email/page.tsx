@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { Zap, Mail, ArrowRight, Bot } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useTheme } from "../../providers/ThemeProvider";
+import { fetchApi } from "../../utils/fetchApi";
 
 const ThemeToggle = dynamic(() => import("../../components/ThemeToggle").then(mod => ({ default: mod.ThemeToggle })), {
   ssr: false,
@@ -27,17 +28,11 @@ function VerifyEmailContent() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`/api/backend/auth/verify-email`, {
+      await fetchApi("/auth/verify-email", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify({ email, code }),
+        requiresAuth: false,
       });
-
-      if (!response.ok) {
-        throw new Error("Неверный код");
-      }
 
       alert("Email успешно подтвержден!");
       window.location.href = "/login";
@@ -52,17 +47,11 @@ function VerifyEmailContent() {
   const handleResend = async () => {
     setIsResending(true);
     try {
-      const response = await fetch(`/api/backend/auth/resend-code`, {
+      await fetchApi("/auth/resend-code", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify({ email }),
+        requiresAuth: false,
       });
-
-      if (!response.ok) {
-        throw new Error("Ошибка при отправке");
-      }
       alert("Новый код отправлен на вашу почту");
     } catch (error) {
       console.error(error);
