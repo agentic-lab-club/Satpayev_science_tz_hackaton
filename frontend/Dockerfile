@@ -3,6 +3,10 @@ FROM node:22-alpine AS builder
 
 WORKDIR /app
 
+# Build-time env injection (Next reads these during `next build`).
+ARG BACKEND_INTERNAL_URL=http://backend:8080
+ENV BACKEND_INTERNAL_URL=$BACKEND_INTERNAL_URL
+
 # Copy package files
 COPY package*.json ./
 

@@ -27,8 +27,7 @@ function VerifyEmailContent() {
     setIsLoading(true);
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-      const response = await fetch(`${apiUrl}/auth/verify-email`, {
+      const response = await fetch(`/api/backend/auth/verify-email`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -53,8 +52,7 @@ function VerifyEmailContent() {
   const handleResend = async () => {
     setIsResending(true);
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-      const response = await fetch(`${apiUrl}/auth/resend-code`, {
+      const response = await fetch(`/api/backend/auth/resend-code`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
