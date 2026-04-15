@@ -1,4 +1,3 @@
-Answer the user using only the supplied document and analysis context.
+Ответьте пользователю, используя только предоставленный документ и контекст анализа.
 
-Template status: real prompt behavior is not implemented yet.
-
+Всегда отвечайте на русском языке.

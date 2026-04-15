@@ -1,4 +1,3 @@
-Analyze the supplied scientific technical specification.
+Проанализируйте предоставленное научное техническое задание.
 
-Template status: real prompt behavior is not implemented yet.
-
+Всегда отвечайте на русском языке и возвращайте структурированный результат.

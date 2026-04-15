@@ -24,14 +24,14 @@ class GenerationService:
         )
 
     def build_suggested_structure(self, missing_sections: list[str], weak_sections: list[str]) -> str:
-        lines = ["Recommended TZ structure:"]
+        lines = ["Рекомендуемая структура ТЗ:"]
         for index, key in enumerate(REQUIRED_SECTIONS, start=1):
             label = SECTION_LABELS.get(key, key)
             note = ""
             if key in missing_sections:
-                note = " [missing]"
+                note = " [отсутствует]"
             elif key in weak_sections:
-                note = " [weak]"
+                note = " [слабый]"
             lines.append(f"{index}. {label}{note}")
         return "\n".join(lines)
 
@@ -82,64 +82,64 @@ class GenerationService:
     def _summary(self, findings: list[Finding], missing_sections: list[str], weak_sections: list[str]) -> list[str]:
         summary: list[str] = []
         if missing_sections:
-            summary.append(f"Added missing sections: {', '.join(SECTION_LABELS.get(key, key) for key in missing_sections[:4])}.")
+            summary.append(f"Добавлены отсутствующие разделы: {', '.join(SECTION_LABELS.get(key, key) for key in missing_sections[:4])}.")
         if weak_sections:
-            summary.append(f"Strengthened weak sections: {', '.join(SECTION_LABELS.get(key, key) for key in weak_sections[:4])}.")
+            summary.append(f"Усилены слабые разделы: {', '.join(SECTION_LABELS.get(key, key) for key in weak_sections[:4])}.")
         if any(finding.finding_type == "vague_statement" for finding in findings):
-            summary.append("Clarified vague wording and replaced subjective qualifiers with measurable phrasing.")
+            summary.append("Уточнены размытые формулировки и заменены субъективные слова на измеримые критерии.")
         if any(finding.finding_type == "missing_kpi" for finding in findings):
-            summary.append("Added measurable KPI placeholders.")
+            summary.append("Добавлены измеримые заглушки для KPI.")
         if any(finding.finding_type == "missing_expected_result" for finding in findings):
-            summary.append("Added expected-result placeholders tied to measurable outcomes.")
+            summary.append("Добавлены заглушки ожидаемых результатов, привязанные к измеримым итогам.")
         if any(finding.finding_type == "inconsistency" for finding in findings):
-            summary.append("Separated contradictory phases into a clearer sequence.")
-        return summary or ["Prepared a cleaner, more structured draft."]
+            summary.append("Противоречивые этапы разделены на более понятную последовательность.")
+        return summary or ["Подготовлен более чистый и структурированный черновик."]
 
     def _section_draft(self, focus_section: str, text: str, findings: list[Finding]) -> str:
         focus_label = SECTION_LABELS.get(focus_section, focus_section.replace("_", " ").title())
         lines = [
             f"{focus_label}",
-            "- Rewrite the section so it has measurable inputs, outputs, and verification criteria.",
-            "- State the owner, timeline, and acceptance condition.",
+            "- Перепишите раздел так, чтобы в нём были измеримые входы, выходы и критерии проверки.",
+            "- Укажите ответственного, сроки и условие приёмки.",
         ]
         if any(finding.finding_type == "vague_statement" for finding in findings):
-            lines.append("- Replace subjective wording with numeric thresholds or explicit conditions.")
+            lines.append("- Замените субъективные формулировки числовыми порогами или явными условиями.")
         if text.strip():
             lines.append("")
-            lines.append("Original context excerpt:")
+            lines.append("Фрагмент исходного контекста:")
             lines.append(text[:800].strip())
         return "\n".join(lines).strip()
 
     def _full_tz_draft(self, text: str, findings: list[Finding], missing_sections: list[str], weak_sections: list[str]) -> str:
-        lines = ["Improved technical specification draft", ""]
-        lines.append("1. General information")
-        lines.append("Describe the project purpose, scope, and stakeholders.")
+        lines = ["Улучшенный черновик технического задания", ""]
+        lines.append("1. Общие сведения")
+        lines.append("Опишите цель проекта, область применения и заинтересованные стороны.")
         lines.append("")
         for index, key in enumerate(REQUIRED_SECTIONS[1:], start=2):
             label = SECTION_LABELS.get(key, key)
             lines.append(f"{index}. {label}")
             if key in missing_sections:
-                lines.append(f"- Add concrete content for {label}.")
-                lines.append("- Include measurable acceptance criteria.")
+                lines.append(f"- Добавьте конкретное содержание для раздела «{label}».")
+                lines.append("- Укажите измеримые критерии приёмки.")
             elif key in weak_sections:
-                lines.append(f"- Expand {label} with more specific details and numeric targets.")
+                lines.append(f"- Расширьте раздел «{label}» более конкретными деталями и числовыми целями.")
             else:
-                lines.append(f"- Preserve the existing intent for {label} and add measurable detail.")
+                lines.append(f"- Сохраните существующий смысл раздела «{label}» и добавьте измеримую детализацию.")
             lines.append("")
         if text.strip():
-            lines.append("Source excerpt used for rewrite:")
+            lines.append("Фрагмент исходного текста, использованный для переработки:")
             lines.append(text[:1200].strip())
         if any(finding.finding_type == "inconsistency" for finding in findings):
             lines.append("")
-            lines.append("Note: contradictory pilot/production statements were separated into sequential phases.")
+            lines.append("Примечание: противоречивые заявления о пилотной и промышленной стадиях разделены на последовательные этапы.")
         return "\n".join(lines).strip()
 
     def _title_for_mode(self, mode: str, focus_section: str | None) -> str:
         if mode == "structure":
-            return "Suggested TZ structure"
+            return "Рекомендуемая структура ТЗ"
         if mode == "section" and focus_section:
-            return f"Improved {SECTION_LABELS.get(focus_section, focus_section)}"
-        return "Improved TZ draft"
+            return f"Улучшенный раздел «{SECTION_LABELS.get(focus_section, focus_section)}»"
+        return "Улучшенный черновик ТЗ"
 
 
 def get_generation_service() -> GenerationService:

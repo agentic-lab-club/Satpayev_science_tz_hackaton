@@ -19,16 +19,16 @@ OFFICIAL_EVALUATION_RUBRIC: dict[str, int] = {
 }
 
 RUBRIC_LABELS: dict[str, str] = {
-    "structure": "Structure",
-    "completeness": "Completeness",
-    "clarity": "Clarity",
-    "kpi_results": "KPI / Results",
-    "consistency": "Consistency",
-    "strategic_relevance": "Strategic relevance",
-    "goals_and_tasks": "Goals and tasks",
-    "scientific_novelty": "Scientific novelty",
-    "practical_applicability": "Practical applicability",
-    "expected_results": "Expected results",
-    "socio_economic_effect": "Socio-economic effect",
-    "feasibility": "Feasibility",
+    "structure": "Структура",
+    "completeness": "Полнота",
+    "clarity": "Ясность",
+    "kpi_results": "KPI / результаты",
+    "consistency": "Согласованность",
+    "strategic_relevance": "Стратегическая значимость",
+    "goals_and_tasks": "Цели и задачи",
+    "scientific_novelty": "Научная новизна",
+    "practical_applicability": "Практическая применимость",
+    "expected_results": "Ожидаемые результаты",
+    "socio_economic_effect": "Социально-экономический эффект",
+    "feasibility": "Реализуемость",
 }

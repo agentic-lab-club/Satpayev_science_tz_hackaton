@@ -27,11 +27,11 @@ class ScoringService:
         consistency = self._clamp(100 - contradictions * 25 - sections_missing * 2)
 
         items = [
-            self._item("structure", "Structure", structure),
-            self._item("completeness", "Completeness", completeness),
-            self._item("clarity", "Clarity", clarity),
-            self._item("kpi_results", "KPI / Results", kpi_results),
-            self._item("consistency", "Consistency", consistency),
+            self._item("structure", "Структура", structure),
+            self._item("completeness", "Полнота", completeness),
+            self._item("clarity", "Ясность", clarity),
+            self._item("kpi_results", "KPI / результаты", kpi_results),
+            self._item("consistency", "Согласованность", consistency),
         ]
         total = round(sum(item.score for item in items) / len(items), 2)
         return Scorecard(
@@ -112,13 +112,13 @@ class ScoringService:
             practical_applicability = self._clamp(practical_applicability + result_bonus)
 
         items = [
-            self._item("strategic_relevance", "Strategic relevance", strategic_relevance, OFFICIAL_EVALUATION_RUBRIC["strategic_relevance"]),
-            self._item("goals_and_tasks", "Goals and tasks", goals_and_tasks, OFFICIAL_EVALUATION_RUBRIC["goals_and_tasks"]),
-            self._item("scientific_novelty", "Scientific novelty", scientific_novelty, OFFICIAL_EVALUATION_RUBRIC["scientific_novelty"]),
-            self._item("practical_applicability", "Practical applicability", practical_applicability, OFFICIAL_EVALUATION_RUBRIC["practical_applicability"]),
-            self._item("expected_results", "Expected results", expected_results, OFFICIAL_EVALUATION_RUBRIC["expected_results"]),
-            self._item("socio_economic_effect", "Socio-economic effect", socio_economic_effect, OFFICIAL_EVALUATION_RUBRIC["socio_economic_effect"]),
-            self._item("feasibility", "Feasibility", feasibility, OFFICIAL_EVALUATION_RUBRIC["feasibility"]),
+            self._item("strategic_relevance", "Стратегическая значимость", strategic_relevance, OFFICIAL_EVALUATION_RUBRIC["strategic_relevance"]),
+            self._item("goals_and_tasks", "Цели и задачи", goals_and_tasks, OFFICIAL_EVALUATION_RUBRIC["goals_and_tasks"]),
+            self._item("scientific_novelty", "Научная новизна", scientific_novelty, OFFICIAL_EVALUATION_RUBRIC["scientific_novelty"]),
+            self._item("practical_applicability", "Практическая применимость", practical_applicability, OFFICIAL_EVALUATION_RUBRIC["practical_applicability"]),
+            self._item("expected_results", "Ожидаемые результаты", expected_results, OFFICIAL_EVALUATION_RUBRIC["expected_results"]),
+            self._item("socio_economic_effect", "Социально-экономический эффект", socio_economic_effect, OFFICIAL_EVALUATION_RUBRIC["socio_economic_effect"]),
+            self._item("feasibility", "Реализуемость", feasibility, OFFICIAL_EVALUATION_RUBRIC["feasibility"]),
         ]
         total = round(
             sum(item.score for item in items)
@@ -148,7 +148,7 @@ class ScoringService:
                 label=RUBRIC_LABELS.get(key, key),
                 score=0,
                 max_score=max_score,
-                explanation="Template placeholder. Real scoring is not implemented yet.",
+                explanation="Шаблонная заглушка. Реальная оценка пока не выполнена.",
             )
             for key, max_score in rubric.items()
         ]
@@ -171,10 +171,10 @@ class ScoringService:
 
     def _score_explanation(self, key: str, score: float, max_score: int) -> str:
         if score >= max_score * 0.8:
-            return f"Strong coverage for {RUBRIC_LABELS.get(key, key)}."
+            return f"Хорошее покрытие для показателя «{RUBRIC_LABELS.get(key, key)}»."
         if score >= max_score * 0.5:
-            return f"Moderate coverage for {RUBRIC_LABELS.get(key, key)}."
-        return f"Needs improvement for {RUBRIC_LABELS.get(key, key)}."
+            return f"Среднее покрытие для показателя «{RUBRIC_LABELS.get(key, key)}»."
+        return f"Требует доработки по показателю «{RUBRIC_LABELS.get(key, key)}»."
 
     def _coverage_score(self, found: int, missing: int) -> float:
         total = found + missing

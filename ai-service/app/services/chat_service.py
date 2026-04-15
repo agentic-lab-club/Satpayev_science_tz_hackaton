@@ -18,48 +18,48 @@ class ChatService:
             diagnostic = next((scorecard for scorecard in context.scorecards if scorecard.score_type == "ai_document_analysis"), None)
             preliminary = next((scorecard for scorecard in context.scorecards if scorecard.score_type == "ai_preliminary_evaluation"), None)
             if diagnostic:
-                answers.append(f"Diagnostic score is {diagnostic.total_score:.0f}/100.")
+                answers.append(f"Диагностическая оценка составляет {diagnostic.total_score:.0f}/100.")
             if preliminary:
-                answers.append(f"Preliminary official-rubric score is {preliminary.total_score:.0f}/100.")
+                answers.append(f"Предварительная оценка по официальной рубрике составляет {preliminary.total_score:.0f}/100.")
 
         if context.findings:
             top_findings = context.findings[:3]
             referenced_findings = [finding.finding_type for finding in top_findings]
             if any(finding.finding_type == "missing_kpi" for finding in top_findings):
-                answers.append("The document is missing measurable KPI statements.")
-                suggested_next_actions.append("Add 2-3 numeric KPIs with units and target thresholds.")
+                answers.append("В документе не хватает измеримых KPI.")
+                suggested_next_actions.append("Добавьте 2-3 числовых KPI с единицами измерения и целевыми порогами.")
             if any(finding.finding_type == "missing_expected_result" for finding in top_findings):
-                answers.append("The expected results need to be written in measurable form.")
-                suggested_next_actions.append("Rewrite the expected results section with verifiable deliverables.")
+                answers.append("Ожидаемые результаты нужно сформулировать в измеримом виде.")
+                suggested_next_actions.append("Перепишите раздел ожидаемых результатов через проверяемые поставляемые результаты.")
             if any(finding.finding_type == "vague_statement" for finding in top_findings):
-                answers.append("Some statements are still vague or subjective.")
-                suggested_next_actions.append("Replace vague wording with numeric criteria and clear ownership.")
+                answers.append("Часть формулировок остаётся слишком общей или субъективной.")
+                suggested_next_actions.append("Замените размытые формулировки на числовые критерии и явное распределение ответственности.")
             if any(finding.finding_type == "inconsistency" for finding in top_findings):
-                answers.append("There is at least one contradiction that should be split into separate phases.")
-                suggested_next_actions.append("Separate pilot validation from production rollout.")
+                answers.append("Есть как минимум одно противоречие, которое нужно разнести по отдельным этапам.")
+                suggested_next_actions.append("Разделите пилотную проверку и промышленный запуск на разные этапы.")
 
         if context.detected_sections:
             referenced_sections = [section.key for section in context.detected_sections[:5]]
 
         if "почему" in message or "why" in message:
-            answers.append("I can explain the score drivers from the current document context.")
+            answers.append("Могу объяснить, какие факторы повлияли на оценку по текущему контексту документа.")
         if "kpi" in message or "показател" in message:
-            answers.append("KPI improvement should focus on numeric targets, units, and verification conditions.")
+            answers.append("Для KPI лучше указывать числовые значения, единицы измерения и условия проверки.")
         if "перепиши" in message or "rewrite" in message:
-            answers.append("I can draft a cleaner section if you specify which section to rewrite.")
+            answers.append("Я могу переписать раздел, если вы укажете, какой именно раздел нужно изменить.")
         if "срок" in message or "deadline" in message:
-            answers.append("Deadlines should be expressed as explicit durations or calendar dates.")
+            answers.append("Сроки нужно задавать в явном виде: через длительность или календарную дату.")
 
         if context.admin_feedback:
-            answers.append(f"Admin feedback context: {context.admin_feedback}")
+            answers.append(f"Контекст от администратора: {context.admin_feedback}")
 
         if not answers:
-            answers.append("Use the findings and recommendations to rewrite the weak sections and add measurable targets.")
+            answers.append("Используйте найденные замечания и рекомендации, чтобы переписать слабые разделы и добавить измеримые цели.")
         if not suggested_next_actions:
             suggested_next_actions = [
-                "Add measurable KPI values.",
-                "Rewrite vague statements with explicit criteria.",
-                "Fill any missing required sections.",
+                "Добавьте измеримые значения KPI.",
+                "Перепишите размытые формулировки через явные критерии.",
+                "Заполните все отсутствующие обязательные разделы.",
             ]
 
         return ChatResponse(

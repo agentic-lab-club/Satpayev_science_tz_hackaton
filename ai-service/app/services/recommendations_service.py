@@ -14,8 +14,8 @@ class RecommendationsService:
             recommendations.append(
                 Recommendation(
                     category="structure",
-                    title=f"Add {SECTION_LABELS.get(section_key, section_key)}",
-                    description=f"Insert a dedicated '{SECTION_LABELS.get(section_key, section_key)}' section with concrete content and measurable criteria.",
+                    title=f"Добавить раздел «{SECTION_LABELS.get(section_key, section_key)}»",
+                    description=f"Добавьте отдельный раздел «{SECTION_LABELS.get(section_key, section_key)}» с конкретным содержанием и измеримыми критериями.",
                     priority=5,
                 )
             )
@@ -25,8 +25,8 @@ class RecommendationsService:
                 recommendations.append(
                     Recommendation(
                         category="clarity",
-                        title="Replace vague wording",
-                        description=f"Rewrite the cited fragment: {finding.explanation}",
+                        title="Заменить размытые формулировки",
+                        description=f"Перепишите указанный фрагмент: {finding.explanation}",
                         priority=4,
                     )
                 )
@@ -34,7 +34,7 @@ class RecommendationsService:
                 recommendations.append(
                     Recommendation(
                         category="kpi",
-                        title="Add measurable KPIs and results",
+                        title="Добавить измеримые KPI и результаты",
                         description=f"{finding.explanation} {finding.recommendation}",
                         priority=5,
                     )
@@ -43,7 +43,7 @@ class RecommendationsService:
                 recommendations.append(
                     Recommendation(
                         category="consistency",
-                        title="Resolve the contradiction",
+                        title="Устранить противоречие",
                         description=finding.recommendation,
                         priority=5,
                     )
@@ -52,7 +52,7 @@ class RecommendationsService:
                 recommendations.append(
                     Recommendation(
                         category="structure",
-                        title=f"Populate {finding.section_key or 'the missing section'}",
+                        title=f"Заполнить раздел {finding.section_key or 'без названия'}",
                         description=finding.recommendation,
                         priority=5,
                     )
@@ -64,14 +64,14 @@ class RecommendationsService:
         return [
             Recommendation(
                 category="structure",
-                title="Add missing required sections",
-                description="Fill the scientific TZ structure with the required sections and measurable content.",
+                title="Добавить обязательные разделы",
+                description="Заполните структуру научного ТЗ обязательными разделами и измеримым содержанием.",
                 priority=5,
             ),
             Recommendation(
                 category="clarity",
-                title="Replace vague wording",
-                description="Use numeric targets, deadlines, and clear acceptance criteria instead of subjective wording.",
+                title="Заменить размытые формулировки",
+                description="Используйте числовые цели, сроки и ясные критерии приёмки вместо субъективных формулировок.",
                 priority=4,
             ),
         ]

@@ -18,6 +18,10 @@ from app.schemas.common import (
 class AnalyzeRequest(BaseModel):
     text: str | None = Field(default=None, description="Plain extracted document text.")
     file_base64: str | None = Field(default=None, description="Base64 encoded document bytes.")
+    file_url: str | None = Field(
+        default=None,
+        description="HTTP(S) URL, file:// URL, or local path to a document file for demo/testing use.",
+    )
     filename: str = "document.txt"
     content_type: str = "text/plain"
     project_title: str | None = None
@@ -25,8 +29,8 @@ class AnalyzeRequest(BaseModel):
 
     @model_validator(mode="after")
     def validate_input(self) -> "AnalyzeRequest":
-        if not (self.text and self.text.strip()) and not (self.file_base64 and self.file_base64.strip()):
-            raise ValueError("Either text or file_base64 is required")
+        if not (self.text and self.text.strip()) and not (self.file_base64 and self.file_base64.strip()) and not (self.file_url and self.file_url.strip()):
+            raise ValueError("Either text, file_base64, or file_url is required")
         return self
 
 

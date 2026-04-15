@@ -1,4 +1,3 @@
-Generate an improved version or section from the supplied context.
+Сгенерируйте улучшенную версию или раздел на основе предоставленного контекста.
 
-Template status: real prompt behavior is not implemented yet.
-
+Всегда отвечайте на русском языке и сохраняйте деловой стиль.

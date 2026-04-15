@@ -25,7 +25,7 @@ def test_schema_payloads_validate() -> None:
 
 def test_analyze_returns_real_analysis() -> None:
     client = TestClient(app)
-    sample_text = Path("/workspaces/Satpayev_science_tz_hackaton/docs/spikes/demo_tz_problematic.txt").read_text(encoding="utf-8")
+    sample_text = Path("/workspaces/Satpayev_science_tz_hackaton/docs/demo_tz_problematic.txt").read_text(encoding="utf-8")
 
     response = client.post(
         "/v1/analyze",
@@ -47,7 +47,7 @@ def test_analyze_returns_real_analysis() -> None:
     assert data["findings"]
     assert data["recommendations"]
     assert data["generate_improved_tz"]["summary_of_changes"]
-    assert "Improved" in data["improved_tz"] or "Improved" in data["generate_improved_tz"]["improved_text"]
+    assert "Улучш" in data["improved_tz"] or "Улучш" in data["generate_improved_tz"]["improved_text"]
 
 
 def test_generate_returns_completed_draft() -> None:
@@ -69,6 +69,7 @@ def test_generate_returns_completed_draft() -> None:
     assert data["generation_status"] == "completed"
     assert data["content"]
     assert data["summary_of_changes"]
+    assert "Улучш" in data["title"] or "Рекомендуем" in data["title"]
 
 
 def test_chat_returns_contextual_response() -> None:
@@ -110,6 +111,6 @@ def test_chat_returns_contextual_response() -> None:
 
     assert body["status"] == "ok"
     assert data["response_status"] == "completed"
-    assert "Diagnostic score" in data["answer"]
+    assert "оценка" in data["answer"].lower()
     assert data["referenced_findings"]
     assert data["suggested_next_actions"]

@@ -42,8 +42,8 @@ class FindingsService:
                 issue_type="requirement",
                 section=self._section_for_line(line, sections),
                 quote=line,
-                explanation="Requirement extracted from the document.",
-                recommendation="Keep the requirement measurable and tied to a concrete deliverable.",
+                explanation="Требование извлечено из документа.",
+                recommendation="Сделайте требование измеримым и привяжите его к конкретному результату.",
             )
             for line in requirement_lines
         ]
@@ -52,8 +52,8 @@ class FindingsService:
                 issue_type="deadline",
                 section=self._section_for_line(line, sections),
                 quote=line,
-                explanation="Deadline or duration extracted from the document.",
-                recommendation="Keep deadlines explicit and tied to deliverables.",
+                explanation="Срок или длительность извлечены из документа.",
+                recommendation="Формулируйте сроки явно и привязывайте их к результатам.",
             )
             for line in deadline_lines
         ]
@@ -62,8 +62,8 @@ class FindingsService:
                 issue_type="kpi",
                 section=self._section_for_line(line, sections),
                 quote=line,
-                explanation="Quantitative indicator extracted from the document.",
-                recommendation="Make the KPI measurable and verifiable.",
+                explanation="Количественный показатель извлечён из документа.",
+                recommendation="Сделайте KPI измеримым и проверяемым.",
             )
             for line in kpi_lines
         ]
@@ -72,8 +72,8 @@ class FindingsService:
                 issue_type="expected_result",
                 section=self._section_for_line(line, sections),
                 quote=line,
-                explanation="Expected result extracted from the document.",
-                recommendation="Describe the expected result in a verifiable form.",
+                explanation="Ожидаемый результат извлечён из документа.",
+                recommendation="Опишите ожидаемый результат в проверяемой форме.",
             )
             for line in expected_lines
         ]
@@ -104,8 +104,8 @@ class FindingsService:
                 severity="medium",
                 section_key="quantitative_indicators",
                 quote="KPI",
-                explanation="Quantitative indicators are required for a usable scientific TZ analysis.",
-                recommendation="Add measurable KPIs with units and acceptance thresholds.",
+                explanation="Для полезного анализа научного ТЗ нужны количественные показатели.",
+                recommendation="Добавьте измеримые KPI с единицами измерения и порогами приёмки.",
             )
         ]
 
@@ -121,43 +121,43 @@ class FindingsService:
                         issue_type="ambiguity",
                         section=self._section_for_phrase(phrase, sections),
                         quote=self._quote_for_phrase(text, phrase),
-                        explanation=f"Vague wording detected: {phrase}.",
+                        explanation=f"Обнаружена размытая формулировка: {phrase}.",
                         recommendation=recommendation,
                     )
                 )
         if "достаточно" in lowered and "метрик" in lowered:
             issues.append(
                 NotebookSemanticIssue(
-                    issue_type="ambiguity",
-                    section=self._section_for_phrase("метрик", sections),
-                    quote=self._quote_for_phrase(text, "достаточно"),
-                    explanation="Quantitative criteria are still subjective.",
-                    recommendation="Replace the qualifier with a numeric target.",
+                        issue_type="ambiguity",
+                        section=self._section_for_phrase("метрик", sections),
+                        quote=self._quote_for_phrase(text, "достаточно"),
+                        explanation="Количественные критерии остаются субъективными.",
+                        recommendation="Замените оценочное слово на числовой целевой показатель.",
+                    )
                 )
-            )
         return issues
 
     def _build_contradictions(self, text: str) -> list[NotebookSemanticIssue]:
         lowered = text.lower()
         issues: list[NotebookSemanticIssue] = []
         if "пилот" in lowered and "промышлен" in lowered and ("без отдельного этапа" in lowered or "одновременно" in lowered):
-            issues.append(
-                NotebookSemanticIssue(
-                    issue_type="contradiction",
-                    section="goals",
-                    quote=self._quote_for_phrase(text, "пилот"),
-                    explanation="The document mixes pilot and production rollout in the same step.",
-                    recommendation="Split pilot validation and production rollout into separate phases.",
+                issues.append(
+                    NotebookSemanticIssue(
+                        issue_type="contradiction",
+                        section="goals",
+                        quote=self._quote_for_phrase(text, "пилот"),
+                        explanation="Документ смешивает пилотную и промышленную стадии в одном шаге.",
+                        recommendation="Разнесите пилотную проверку и промышленный запуск по отдельным этапам.",
+                    )
                 )
-            )
         if "как можно скорее" in lowered and any(token in lowered for token in ("14 дней", "14 календарных дней", "2 недели")):
             issues.append(
                 NotebookSemanticIssue(
                     issue_type="contradiction",
                     section="deadlines",
                     quote=self._quote_for_phrase(text, "как можно скорее"),
-                    explanation="An open-ended deadline conflicts with an explicit duration.",
-                    recommendation="Keep one concrete deadline and remove the vague expression.",
+                    explanation="Размытый срок противоречит указанной длительности.",
+                    recommendation="Оставьте один конкретный срок и уберите расплывчатое выражение.",
                 )
             )
         return issues
@@ -176,8 +176,8 @@ class FindingsService:
                         issue_type="missing_section",
                         section=key,
                         quote=SECTION_LABELS.get(key, key),
-                        explanation=f"Missing required section: {SECTION_LABELS.get(key, key)}.",
-                        recommendation="Add the missing section with concrete content and measurable criteria.",
+                        explanation=f"Отсутствует обязательный раздел: {SECTION_LABELS.get(key, key)}.",
+                        recommendation="Добавьте отсутствующий раздел с конкретным содержанием и измеримыми критериями.",
                     )
                 )
         if not kpi_lines:
@@ -186,8 +186,8 @@ class FindingsService:
                     issue_type="missing_kpi",
                     section="quantitative_indicators",
                     quote="KPI",
-                    explanation="No quantitative indicators were detected.",
-                    recommendation="Add numeric indicators with thresholds, units, and expected target values.",
+                    explanation="Количественные показатели не обнаружены.",
+                    recommendation="Добавьте числовые показатели с порогами, единицами и целевыми значениями.",
                 )
             )
         if not expected_lines:
@@ -196,8 +196,8 @@ class FindingsService:
                     issue_type="missing_expected_result",
                     section="final_result",
                     quote="expected results",
-                    explanation="No expected results were detected.",
-                    recommendation="Describe the final deliverable and the outcome in measurable terms.",
+                    explanation="Ожидаемые результаты не обнаружены.",
+                    recommendation="Опишите конечный результат и итог в измеримом виде.",
                 )
             )
         return issues

@@ -7,6 +7,7 @@ import httpx
 
 from app.core.config import get_settings
 from app.core.errors import AIServiceError
+from app.prompts.policy import get_default_system_prompt
 
 
 class LLMClient:
@@ -23,13 +24,17 @@ class LLMClient:
         if not self.enabled:
             raise AIServiceError(
                 code="llm_disabled",
-                message="LLM integration is disabled. Heuristic fallback should be used instead.",
+                message="Интеграция с LLM отключена. Используйте эвристический fallback.",
                 status_code=503,
             )
 
+        effective_system_prompt = get_default_system_prompt()
+        if system_prompt:
+            effective_system_prompt = f"{effective_system_prompt}\n\n{system_prompt.strip()}"
+
         payload: dict[str, Any] = {
             "model": self.settings.llm_model,
-            "messages": self._messages(prompt=prompt, system_prompt=system_prompt),
+            "messages": self._messages(prompt=prompt, system_prompt=effective_system_prompt),
             "temperature": 0.0,
         }
         url = f"{self.settings.llm_base_url.rstrip('/')}/v1/chat/completions"
@@ -46,7 +51,7 @@ class LLMClient:
         try:
             return data["choices"][0]["message"]["content"]
         except (KeyError, IndexError, TypeError) as exc:  # pragma: no cover - defensive remote shape handling
-            raise AIServiceError(code="llm_response_invalid", message="LLM provider returned an invalid payload") from exc
+            raise AIServiceError(code="llm_response_invalid", message="LLM-провайдер вернул некорректный ответ") from exc
 
     def _messages(self, prompt: str, system_prompt: str | None) -> list[dict[str, str]]:
         messages = []

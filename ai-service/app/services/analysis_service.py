@@ -140,16 +140,16 @@ class AnalysisService:
         diagnostic_score,
     ) -> list[str]:
         explanation = [
-            f"Found {len(completeness.found_sections)} of {len(completeness.found_sections) + len(completeness.missing_sections)} required sections.",
-            f"Detected {len(semantic.ambiguities)} vague statements and {len(semantic.contradictions)} contradictions.",
-            f"Extracted {len(semantic.kpis)} KPI lines and {len(semantic.expected_results)} expected-result lines.",
+            f"Найдено {len(completeness.found_sections)} из {len(completeness.found_sections) + len(completeness.missing_sections)} обязательных разделов.",
+            f"Обнаружено {len(semantic.ambiguities)} размытых формулировок и {len(semantic.contradictions)} противоречий.",
+            f"Извлечено {len(semantic.kpis)} строк KPI и {len(semantic.expected_results)} строк ожидаемых результатов.",
         ]
         if completeness.weak_sections:
-            explanation.append(f"Weak sections: {', '.join(completeness.weak_sections[:5])}.")
+            explanation.append(f"Слабые разделы: {', '.join(completeness.weak_sections[:5])}.")
         if diagnostic_score.total_score < 60:
-            explanation.append("The document still needs structural and measurable-detail improvements.")
+            explanation.append("Документу всё ещё нужны улучшения структуры и измеримой детализации.")
         else:
-            explanation.append("The document has a usable structure but still benefits from additional precision.")
+            explanation.append("У документа уже есть рабочая структура, но ему всё ещё полезна дополнительная точность.")
         return explanation
 
 

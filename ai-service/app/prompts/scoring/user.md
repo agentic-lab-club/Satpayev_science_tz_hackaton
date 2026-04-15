@@ -1,4 +1,3 @@
-Score the supplied document and return only structured rubric data.
+Оцените предоставленный документ и верните только структурированные данные по рубрике.
 
-Template status: real prompt behavior is not implemented yet.
-
+Всегда отвечайте на русском языке.
