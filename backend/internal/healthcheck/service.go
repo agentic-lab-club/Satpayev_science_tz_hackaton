@@ -3,6 +3,8 @@ package healthcheck
 import (
 	"context"
 	"fmt"
+	"net/http"
+	"strings"
 	"time"
 
 	"github.com/agentic-lab-club/Satpayev_science_tz_hackaton/backend/pkg/config"
@@ -11,14 +13,20 @@ import (
 )
 
 type Service struct {
-	repo *Repository
-	cfg  *config.Config
+	repo     *Repository
+	cfg      *config.Config
+	aiClient *http.Client
 }
 
 func NewService(db *database.TrackedDB, cfg *config.Config) *Service {
+	timeout := cfg.AIService.RequestTimeoutSeconds
+	if timeout <= 0 {
+		timeout = 5
+	}
 	return &Service{
-		repo: NewRepository(db),
-		cfg:  cfg,
+		repo:     NewRepository(db),
+		cfg:      cfg,
+		aiClient: &http.Client{Timeout: time.Duration(timeout) * time.Second},
 	}
 }
 
@@ -73,6 +81,22 @@ func (s *Service) PerformHealthCheck(ctx context.Context) (*HealthCheckResponse,
 		}
 	}
 
+	aiLatency, aiErr := s.checkAIService(ctx)
+	if aiErr != nil {
+		checks["ai_service"] = CheckResult{
+			Status:  HealthStatusUnhealthy,
+			Message: aiErr.Error(),
+			Latency: aiLatency.String(),
+		}
+		overallStatus = HealthStatusUnhealthy
+	} else if aiLatency > 0 {
+		checks["ai_service"] = CheckResult{
+			Status:  HealthStatusHealthy,
+			Message: "AI service is reachable",
+			Latency: aiLatency.String(),
+		}
+	}
+
 	return &HealthCheckResponse{
 		Status:    overallStatus,
 		Timestamp: timekit.NowUTC(),
@@ -97,5 +121,42 @@ func (s *Service) CheckReadiness(ctx context.Context) (*ReadinessResponse, error
 	if err != nil {
 		return nil, fmt.Errorf("readiness check failed: %w", err)
 	}
+
+	if _, err := s.checkAIService(ctx); err != nil {
+		return nil, fmt.Errorf("readiness ai service check failed: %w", err)
+	}
+
 	return &ReadinessResponse{Status: "ready"}, nil
+}
+
+func (s *Service) checkAIService(ctx context.Context) (time.Duration, error) {
+	baseURL := strings.TrimSpace(s.cfg.AIService.URL)
+	if baseURL == "" {
+		return 0, nil
+	}
+
+	healthPath := strings.TrimSpace(s.cfg.AIService.HealthPath)
+	if healthPath == "" {
+		healthPath = "/health"
+	}
+	healthPath = "/" + strings.TrimLeft(healthPath, "/")
+
+	start := time.Now()
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, strings.TrimRight(baseURL, "/")+healthPath, nil)
+	if err != nil {
+		return time.Since(start), fmt.Errorf("AI service request build failed: %w", err)
+	}
+
+	resp, err := s.aiClient.Do(req)
+	latency := time.Since(start)
+	if err != nil {
+		return latency, fmt.Errorf("AI service ping failed: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode >= 400 {
+		return latency, fmt.Errorf("AI service unhealthy: http status %d", resp.StatusCode)
+	}
+
+	return latency, nil
 }

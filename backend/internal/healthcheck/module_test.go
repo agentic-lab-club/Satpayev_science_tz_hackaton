@@ -119,7 +119,56 @@ func TestRegisterRoutesReadinessProbeUnhealthy(t *testing.T) {
 	}
 }
 
+func TestRegisterRoutesIncludesAIServiceHealthWhenConfigured(t *testing.T) {
+	aiServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/health" {
+			t.Fatalf("AI health path = %q; want %q", r.URL.Path, "/health")
+		}
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte(`{"status":"ok"}`))
+	}))
+	t.Cleanup(aiServer.Close)
+
+	cfg := &config.Config{
+		AIService: config.AIServiceConfig{
+			URL:                   aiServer.URL,
+			HealthPath:            "/health",
+			RequestTimeoutSeconds: 2,
+		},
+	}
+
+	app, cleanup := newTestAppWithConfig(t, func(mock sqlmock.Sqlmock) {
+		mock.ExpectPing()
+		mock.ExpectQuery("SELECT 1").
+			WillReturnRows(sqlmock.NewRows([]string{"value"}).AddRow(1))
+		mock.ExpectPing()
+	}, cfg)
+	t.Cleanup(cleanup)
+
+	resp := performRequest(t, app, http.MethodGet, "/health")
+	if resp.StatusCode != http.StatusOK {
+		t.Fatalf("GET /health status = %d; want %d", resp.StatusCode, http.StatusOK)
+	}
+
+	var body HealthCheckResponse
+	decodeResponse(t, resp, &body)
+
+	if got := body.Checks["ai_service"].Status; got != HealthStatusHealthy {
+		t.Fatalf("GET /health ai_service = %q; want %q", got, HealthStatusHealthy)
+	}
+
+	readinessResp := performRequest(t, app, http.MethodGet, "/health/readiness")
+	if readinessResp.StatusCode != http.StatusOK {
+		t.Fatalf("GET /health/readiness status = %d; want %d", readinessResp.StatusCode, http.StatusOK)
+	}
+}
+
 func newTestApp(t *testing.T, prepare func(sqlmock.Sqlmock)) (*fiber.App, func()) {
+	t.Helper()
+	return newTestAppWithConfig(t, prepare, &config.Config{})
+}
+
+func newTestAppWithConfig(t *testing.T, prepare func(sqlmock.Sqlmock), cfg *config.Config) (*fiber.App, func()) {
 	t.Helper()
 
 	sqlDB, mock, err := sqlmock.New(sqlmock.MonitorPingsOption(true))
@@ -141,7 +190,7 @@ func newTestApp(t *testing.T, prepare func(sqlmock.Sqlmock)) (*fiber.App, func()
 		return c.Next()
 	})
 
-	RegisterRoutes(app, trackedDB, &config.Config{})
+	RegisterRoutes(app, trackedDB, cfg)
 
 	cleanup := func() {
 		mock.ExpectClose()

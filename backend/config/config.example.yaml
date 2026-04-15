@@ -67,6 +67,11 @@ email:
   smtp_user: "your_email"
   smtp_pass: "your_password"
 
+ai_service:
+  url: "http://ai-service:8000"
+  health_path: "/health"
+  request_timeout_seconds: 5
+
 # =========================
 # Modules and Services on internal/
 # =========================

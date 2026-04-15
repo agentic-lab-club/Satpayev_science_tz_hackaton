@@ -122,6 +122,12 @@ type AssessmentConfig struct {
 	TimeoutMinutes int `mapstructure:"timeout_minutes"`
 }
 
+type AIServiceConfig struct {
+	URL                   string `mapstructure:"url"`
+	HealthPath            string `mapstructure:"health_path"`
+	RequestTimeoutSeconds int    `mapstructure:"request_timeout_seconds"`
+}
+
 type ScreeningConfig struct {
 	STTBaseURL         string `mapstructure:"stt_base_url"`
 	LLMBaseURL         string `mapstructure:"llm_base_url"`
@@ -153,6 +159,7 @@ type Config struct {
 	LLM           LLMConfig           `mapstructure:"llm"`
 	LLMAssessment LLMAssessmentConfig `mapstructure:"llm_assessment"`
 	Assessment    AssessmentConfig    `mapstructure:"assessment"`
+	AIService     AIServiceConfig     `mapstructure:"ai_service"`
 	Screening     ScreeningConfig     `mapstructure:"screening"`
 	TalentParser  TalentParserConfig  `mapstructure:"talent_parser"`
 }
@@ -269,6 +276,12 @@ func Load() (cfg *Config, err error) {
 	if cfg.Assessment.TimeoutMinutes == 0 {
 		cfg.Assessment.TimeoutMinutes = 15
 	}
+	if cfg.AIService.HealthPath == "" {
+		cfg.AIService.HealthPath = "/health"
+	}
+	if cfg.AIService.RequestTimeoutSeconds == 0 {
+		cfg.AIService.RequestTimeoutSeconds = 5
+	}
 	if cfg.Screening.STTBaseURL == "" {
 		cfg.Screening.STTBaseURL = "http://sttwhisper:9095"
 	}
@@ -349,6 +362,17 @@ func overrideFromEnv(cfg *Config) {
 	if value := os.Getenv("SCREENING_REQUEST_TIMEOUT_SECONDS"); value != "" {
 		if parsed, err := strconv.Atoi(value); err == nil {
 			cfg.Screening.RequestTimeoutSecs = parsed
+		}
+	}
+	if value := os.Getenv("AI_SERVICE_URL"); value != "" {
+		cfg.AIService.URL = value
+	}
+	if value := os.Getenv("AI_SERVICE_HEALTH_PATH"); value != "" {
+		cfg.AIService.HealthPath = value
+	}
+	if value := os.Getenv("AI_SERVICE_REQUEST_TIMEOUT_SECONDS"); value != "" {
+		if parsed, err := strconv.Atoi(value); err == nil {
+			cfg.AIService.RequestTimeoutSeconds = parsed
 		}
 	}
 	if value := os.Getenv("SCREENING_PRESIGN_TTL_SECONDS"); value != "" {

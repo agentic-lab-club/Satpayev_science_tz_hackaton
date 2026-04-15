@@ -32,8 +32,10 @@ import (
 	"github.com/agentic-lab-club/Satpayev_science_tz_hackaton/backend/internal/assets"
 	"github.com/agentic-lab-club/Satpayev_science_tz_hackaton/backend/internal/auth"
 	"github.com/agentic-lab-club/Satpayev_science_tz_hackaton/backend/internal/healthcheck"
+	"github.com/agentic-lab-club/Satpayev_science_tz_hackaton/backend/internal/platform/ai"
 	platformEmail "github.com/agentic-lab-club/Satpayev_science_tz_hackaton/backend/internal/platform/email"
 	platformStorage "github.com/agentic-lab-club/Satpayev_science_tz_hackaton/backend/internal/platform/storage"
+	"github.com/agentic-lab-club/Satpayev_science_tz_hackaton/backend/internal/tzworkflow"
 	"github.com/agentic-lab-club/Satpayev_science_tz_hackaton/backend/pkg/config"
 	"github.com/agentic-lab-club/Satpayev_science_tz_hackaton/backend/pkg/database"
 	md "github.com/agentic-lab-club/Satpayev_science_tz_hackaton/backend/pkg/http/middlewares"
@@ -66,6 +68,7 @@ func main() {
 	if err != nil {
 		log.Fatal().Err(err).Str("event", "init_object_storage_failed").Msg("failed to init object storage")
 	}
+	aiClient := ai.NewClient(cfg.AIService)
 	bucketCtx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	if err := objectStorage.EnsureBucket(bucketCtx); err != nil {
@@ -120,6 +123,7 @@ func main() {
 	healthcheck.Init(server, trackedDB, cfg)
 	accessManager := auth.Init(server, trackedDB, cfg, emailSender)
 	assets.Init(server, trackedDB, accessManager, objectStorage)
+	tzworkflow.Init(server, trackedDB, cfg, accessManager, objectStorage, aiClient)
 	log.Info().Str("event", "init_http_server_success").Int("port", cfg.Server.Port).Msg("HTTP server initialized successfully")
 
 	if err := server.Listen(fmt.Sprintf(":%d", cfg.Server.Port)); err != nil {
