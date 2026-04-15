@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
         destination: `${backendInternalUrl}/docs/:path*`,
       },
       {
-        source: '/backend/:path*',
+        source: '/api/backend/:path*',
         destination: `${backendInternalUrl}/:path*`,
       },
     ];
@@ -22,3 +22,5 @@ const nextConfig: NextConfig = {
     middlewareClientMaxBodySize: 50 * 1024 * 1024, // 50MB
   },
 };
+
+export default nextConfig;

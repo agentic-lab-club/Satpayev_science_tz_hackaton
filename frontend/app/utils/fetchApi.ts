@@ -1,4 +1,5 @@
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+// Browser calls go through Next.js rewrite: /api/backend/* -> BACKEND_INTERNAL_URL/* (in docker network).
+export const API_BASE_URL = "/api/backend";
 
 type FetchOptions = RequestInit & {
   requiresAuth?: boolean;

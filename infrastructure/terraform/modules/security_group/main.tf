@@ -12,6 +12,14 @@ resource "aws_security_group" "this" {
   }
 
   ingress {
+    description = "Public backend API"
+    from_port   = var.backend_port
+    to_port     = var.backend_port
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
     description = "Public frontend app / CloudFront origin"
     from_port   = var.frontend_port
     to_port     = var.frontend_port
