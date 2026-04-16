@@ -4,6 +4,13 @@
 
 ---
 
+ToDo:
+
+- [] исправить NLP результат и корректировка в /ai-service or /backend, он выдает ошибочную рекомендацию на /frontend
+- [] чат на стороне /frontend не работает
+
+---
+
 ## Содержание
 
 - [Satpayev Science TZ (AI System For Analyzing and Improving Technical Specifications for Scientific Projects)](#satpayev-science-tz-ai-system-for-analyzing-and-improving-technical-specifications-for-scientific-projects)
