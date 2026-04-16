@@ -4,13 +4,6 @@
 
 ---
 
-ToDo:
-
-- [] исправить NLP результат и корректировка в /ai-service or /backend, он выдает ошибочную рекомендацию на /frontend
-- [] чат на стороне /frontend не работает
-
----
-
 ## Содержание
 
 - [Satpayev Science TZ (AI System For Analyzing and Improving Technical Specifications for Scientific Projects)](#satpayev-science-tz-ai-system-for-analyzing-and-improving-technical-specifications-for-scientific-projects)
@@ -33,6 +26,22 @@ ToDo:
 - Шаблон Научного ТЗ для обработки: [/docs/Шаблон_для_ТЗ_рус.docx](/docs/Шаблон_для_ТЗ_рус.docx)
 - Пример Научного ТЗ для обработки: [/docs/TZ_digital_polegon.docx](/docs/TZ_digital_polegon.docx)
 - Шаблон Итоговая Таблица Оценки Научных ТЗ: [/docs/Оценка_ТЗ_шаблон.xlsx](/docs/Оценка_ТЗ_шаблон.xlsx)
+
+---
+
+## Todo
+
+- [] исправить NLP результат и корректировка в /ai-service or /backend, он выдает ошибочную рекомендацию на /frontend
+- [] чат на стороне /frontend не работает
+- [] and etc
+
+---
+
+## Demo
+
+> for full check the /docs/images/demo directory and demo1 and demo2 videos.
+
+![](/docs/images/demo/satpayev-sciencetz-demo.gif)
 
 ---
 
