@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import type { RefObject } from "react";
 import { ChatMessage } from "../../dashboard/components/types";
 
 // Компонент для печати текста посимвольно
@@ -31,9 +32,10 @@ interface MessageListProps {
   isLoading?: boolean;
   isDark?: boolean;
   isHistoryLoading?: boolean;
+  bottomRef?: RefObject<HTMLDivElement | null>;
 }
 
-export function MessageList({ messages, isLoading, isDark = true, isHistoryLoading = false }: MessageListProps) {
+export function MessageList({ messages, isLoading, isDark = true, isHistoryLoading = false, bottomRef }: MessageListProps) {
   return (
     <div className="flex-1 overflow-y-auto px-4 py-6 space-y-4">
       <div className="space-y-8 max-w-4xl mx-auto">
@@ -85,6 +87,8 @@ export function MessageList({ messages, isLoading, isDark = true, isHistoryLoadi
             </div>
           </div>
         )}
+
+        <div ref={bottomRef} aria-hidden="true" />
       </div>
     </div>
   );

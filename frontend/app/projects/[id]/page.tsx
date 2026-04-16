@@ -200,7 +200,7 @@ export default function ProjectPage() {
           </div>
           <div className="flex-1">
             <h2 className="text-2xl font-bold mb-2">
-              {loading ? "Загружаем проект..." : analysisLoading ? "Загружаем анализ..." : "Backend уже хранит анализ и scorecards"}
+              {loading ? "Загружаем проект..." : analysisLoading ? "Загружаем анализ..." : "ИИ анализ и scorecards"}
             </h2>
             <p className={`mb-4 ${isDark ? "text-slate-400" : "text-slate-600"}`}>
               Диагностический score: {diagnosticScore}%. Предварительный официальный score: {preliminaryScore}%.

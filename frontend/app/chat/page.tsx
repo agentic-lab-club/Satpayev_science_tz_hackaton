@@ -466,6 +466,7 @@ export default function ChatPage() {
                 isLoading={isLoading}
                 isDark={isDark}
                 isHistoryLoading={isHistoryLoading}
+                bottomRef={messagesEndRef}
               />
             </div>
 
@@ -487,7 +488,6 @@ export default function ChatPage() {
           </div>
         )}
       </main>
-      <div ref={messagesEndRef} />
     </div>
   );
 }
