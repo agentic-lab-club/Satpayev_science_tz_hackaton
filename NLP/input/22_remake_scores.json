@@ -1,0 +1,38 @@
+{
+  "strategic_relevance": {
+    "score": 17,
+    "max": 20,
+    "reasoning": "Есть сильная связь с модернизацией производства и ИИ."
+  },
+  "goals_and_tasks": {
+    "score": 9,
+    "max": 10,
+    "reasoning": "Цель четкая и измеримая."
+  },
+  "scientific_novelty": {
+    "score": 12,
+    "max": 15,
+    "reasoning": "Агентная координация и цифровой стенд добавляют новизну."
+  },
+  "practical_applicability": {
+    "score": 13,
+    "max": 20,
+    "reasoning": "Пока внедрение ограничено виртуальным стендом и TRL-5."
+  },
+  "expected_results": {
+    "score": 12,
+    "max": 15,
+    "reasoning": "Результаты количественные и понятные."
+  },
+  "socio_economic_effect": {
+    "score": 7,
+    "max": 10,
+    "reasoning": "Эффект на производительность очевиден, но не полностью просчитан."
+  },
+  "feasibility": {
+    "score": 7,
+    "max": 10,
+    "reasoning": "Требует доступа к данным и моделей линии, что создает риск."
+  },
+  "overall_quality": "Medium"
+}

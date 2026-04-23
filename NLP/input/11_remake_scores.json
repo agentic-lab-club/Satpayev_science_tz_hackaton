@@ -1,0 +1,38 @@
+{
+  "strategic_relevance": {
+    "score": 16,
+    "max": 20,
+    "reasoning": "Социальная значимость высокая, но привязка к спросу системы здравоохранения умеренная."
+  },
+  "goals_and_tasks": {
+    "score": 8,
+    "max": 10,
+    "reasoning": "Цель измерима, задачи логичны."
+  },
+  "scientific_novelty": {
+    "score": 12,
+    "max": 15,
+    "reasoning": "Есть реальный исследовательский компонент в сравнении подходов и explainability."
+  },
+  "practical_applicability": {
+    "score": 11,
+    "max": 20,
+    "reasoning": "TRL-4 и зависимость от регуляторного пути снижают внедренческий балл."
+  },
+  "expected_results": {
+    "score": 11,
+    "max": 15,
+    "reasoning": "Часть KPI четкая, но конечные внедренческие показатели ограничены."
+  },
+  "socio_economic_effect": {
+    "score": 8,
+    "max": 10,
+    "reasoning": "Потенциальный социальный эффект высокий."
+  },
+  "feasibility": {
+    "score": 7,
+    "max": 10,
+    "reasoning": "Исследование выполнимо, но внедрение сложное."
+  },
+  "overall_quality": "Medium"
+}

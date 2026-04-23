@@ -1,0 +1,38 @@
+{
+  "strategic_relevance": {
+    "score": 8,
+    "max": 20,
+    "reasoning": "Есть только общая связь с цифровизацией без конкретных пунктов и отраслевого запроса."
+  },
+  "goals_and_tasks": {
+    "score": 4,
+    "max": 10,
+    "reasoning": "Цель размыта, задачи сформулированы широко."
+  },
+  "scientific_novelty": {
+    "score": 5,
+    "max": 15,
+    "reasoning": "Новизна фактически не раскрыта."
+  },
+  "practical_applicability": {
+    "score": 7,
+    "max": 20,
+    "reasoning": "Неясно, кто заказчик и каков путь внедрения."
+  },
+  "expected_results": {
+    "score": 5,
+    "max": 15,
+    "reasoning": "Результаты текстовые и без жестких KPI."
+  },
+  "socio_economic_effect": {
+    "score": 4,
+    "max": 10,
+    "reasoning": "Эффект описан декларативно и без расчетов."
+  },
+  "feasibility": {
+    "score": 5,
+    "max": 10,
+    "reasoning": "Широкий замысел плохо ограничен и слабо обоснован."
+  },
+  "overall_quality": "Low"
+}
