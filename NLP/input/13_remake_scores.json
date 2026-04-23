@@ -1,0 +1,38 @@
+{
+  "strategic_relevance": {
+    "score": 15,
+    "max": 20,
+    "reasoning": "Связь с АПК и ресурсосбережением есть, но стратегическая часть не очень глубокая."
+  },
+  "goals_and_tasks": {
+    "score": 8,
+    "max": 10,
+    "reasoning": "Цель измерима, задачи понятны."
+  },
+  "scientific_novelty": {
+    "score": 8,
+    "max": 15,
+    "reasoning": "Новизна умеренная, проект ближе к прикладной автоматизации."
+  },
+  "practical_applicability": {
+    "score": 15,
+    "max": 20,
+    "reasoning": "Пилоты и понятный потребитель присутствуют."
+  },
+  "expected_results": {
+    "score": 11,
+    "max": 15,
+    "reasoning": "Есть KPI, но масштаб результатов ограничен."
+  },
+  "socio_economic_effect": {
+    "score": 7,
+    "max": 10,
+    "reasoning": "Польза понятна, но экономический масштаб не раскрыт."
+  },
+  "feasibility": {
+    "score": 9,
+    "max": 10,
+    "reasoning": "Технически реалистичный проект."
+  },
+  "overall_quality": "Medium"
+}

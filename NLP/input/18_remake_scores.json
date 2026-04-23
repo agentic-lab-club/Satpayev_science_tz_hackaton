@@ -1,0 +1,38 @@
+{
+  "strategic_relevance": {
+    "score": 10,
+    "max": 20,
+    "reasoning": "Есть общая экологическая актуальность, но слабая привязка к конкретным документам."
+  },
+  "goals_and_tasks": {
+    "score": 4,
+    "max": 10,
+    "reasoning": "Цель расплывчата и почти не измерима."
+  },
+  "scientific_novelty": {
+    "score": 7,
+    "max": 15,
+    "reasoning": "Новизна не конкретизирована."
+  },
+  "practical_applicability": {
+    "score": 8,
+    "max": 20,
+    "reasoning": "Путь к внедрению не описан."
+  },
+  "expected_results": {
+    "score": 5,
+    "max": 15,
+    "reasoning": "Результаты в основном декларативные и без числовых KPI."
+  },
+  "socio_economic_effect": {
+    "score": 5,
+    "max": 10,
+    "reasoning": "Эффект описан общими словами."
+  },
+  "feasibility": {
+    "score": 7,
+    "max": 10,
+    "reasoning": "Базовое исследование провести можно, но ценность не раскрыта."
+  },
+  "overall_quality": "Low"
+}

@@ -1,0 +1,38 @@
+{
+  "strategic_relevance": {
+    "score": 6,
+    "max": 20,
+    "reasoning": "Связь с госдокументами и реальным запросом практически не раскрыта."
+  },
+  "goals_and_tasks": {
+    "score": 3,
+    "max": 10,
+    "reasoning": "Цель не измерима и слишком общая."
+  },
+  "scientific_novelty": {
+    "score": 3,
+    "max": 15,
+    "reasoning": "Новизна отсутствует."
+  },
+  "practical_applicability": {
+    "score": 7,
+    "max": 20,
+    "reasoning": "Непонятно, для кого конкретно и как внедрять."
+  },
+  "expected_results": {
+    "score": 4,
+    "max": 15,
+    "reasoning": "KPI и конкретные результаты почти не заданы."
+  },
+  "socio_economic_effect": {
+    "score": 4,
+    "max": 10,
+    "reasoning": "Эффект описан декларативно."
+  },
+  "feasibility": {
+    "score": 6,
+    "max": 10,
+    "reasoning": "Сделать некий прототип можно, но проект плохо определен."
+  },
+  "overall_quality": "Low"
+}

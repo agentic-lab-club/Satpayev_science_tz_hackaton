@@ -1,0 +1,38 @@
+{
+  "strategic_relevance": {
+    "score": 19,
+    "max": 20,
+    "reasoning": "Есть точная привязка к электроэнергетике, зеленой экономике и ИИ."
+  },
+  "goals_and_tasks": {
+    "score": 10,
+    "max": 10,
+    "reasoning": "Цель измерима, задачи детализированы и связаны с KPI."
+  },
+  "scientific_novelty": {
+    "score": 13,
+    "max": 15,
+    "reasoning": "Новизна связана с цифровым двойником микросети и гибридной оптимизацией ВИЭ и накопителей."
+  },
+  "practical_applicability": {
+    "score": 18,
+    "max": 20,
+    "reasoning": "Есть TRL-6, пилотные сценарии и понятный путь внедрения."
+  },
+  "expected_results": {
+    "score": 14,
+    "max": 15,
+    "reasoning": "Заданы числовые метрики, публикации и объекты ИС."
+  },
+  "socio_economic_effect": {
+    "score": 9,
+    "max": 10,
+    "reasoning": "Описаны снижение потерь, надежность и кадровый эффект."
+  },
+  "feasibility": {
+    "score": 8,
+    "max": 10,
+    "reasoning": "Амбициозно, но реалистично для трехлетнего проекта."
+  },
+  "overall_quality": "High"
+}

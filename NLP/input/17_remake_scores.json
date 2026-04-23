@@ -1,0 +1,38 @@
+{
+  "strategic_relevance": {
+    "score": 16,
+    "max": 20,
+    "reasoning": "Тематика хорошо соответствует цифровизации сетевого хозяйства."
+  },
+  "goals_and_tasks": {
+    "score": 8,
+    "max": 10,
+    "reasoning": "Есть измеримая полнота обнаружения."
+  },
+  "scientific_novelty": {
+    "score": 9,
+    "max": 15,
+    "reasoning": "Методы CV типовые, новизна в отраслевой адаптации."
+  },
+  "practical_applicability": {
+    "score": 16,
+    "max": 20,
+    "reasoning": "Путь к использованию в инспекции понятен."
+  },
+  "expected_results": {
+    "score": 12,
+    "max": 15,
+    "reasoning": "Результаты поддаются валидации и описаны в цифрах."
+  },
+  "socio_economic_effect": {
+    "score": 7,
+    "max": 10,
+    "reasoning": "Экономия труда и ускорение диагностики описаны, но без детальной модели выгод."
+  },
+  "feasibility": {
+    "score": 8,
+    "max": 10,
+    "reasoning": "Прикладной и выполнимый проект."
+  },
+  "overall_quality": "Medium"
+}

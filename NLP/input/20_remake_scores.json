@@ -1,0 +1,38 @@
+{
+  "strategic_relevance": {
+    "score": 15,
+    "max": 20,
+    "reasoning": "Кадровая задача важна, но слабее связана с отраслевым рынком, чем промышленные проекты."
+  },
+  "goals_and_tasks": {
+    "score": 8,
+    "max": 10,
+    "reasoning": "Цель проверяема через образовательный эксперимент."
+  },
+  "scientific_novelty": {
+    "score": 9,
+    "max": 15,
+    "reasoning": "Новизна умеренная и связана с адаптивной персонализацией."
+  },
+  "practical_applicability": {
+    "score": 14,
+    "max": 20,
+    "reasoning": "Есть понятное внедрение в вузах, но не в реальном секторе напрямую."
+  },
+  "expected_results": {
+    "score": 11,
+    "max": 15,
+    "reasoning": "KPI есть, но часть результатов образовательные и косвенные."
+  },
+  "socio_economic_effect": {
+    "score": 7,
+    "max": 10,
+    "reasoning": "Кадровый эффект есть, но он не мгновенный."
+  },
+  "feasibility": {
+    "score": 9,
+    "max": 10,
+    "reasoning": "Проект организационно и технически выполним."
+  },
+  "overall_quality": "Medium"
+}

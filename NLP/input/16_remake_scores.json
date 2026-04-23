@@ -1,0 +1,38 @@
+{
+  "strategic_relevance": {
+    "score": 18,
+    "max": 20,
+    "reasoning": "Сильная связь с цифровой экономикой и транспортной модернизацией."
+  },
+  "goals_and_tasks": {
+    "score": 9,
+    "max": 10,
+    "reasoning": "Цель конкретна, задачи связаны с измеримым эффектом."
+  },
+  "scientific_novelty": {
+    "score": 11,
+    "max": 15,
+    "reasoning": "Есть новизна в V2X-аналитике и цифровом двойнике."
+  },
+  "practical_applicability": {
+    "score": 17,
+    "max": 20,
+    "reasoning": "Есть понятный пилотный коридор и потребитель результатов."
+  },
+  "expected_results": {
+    "score": 13,
+    "max": 15,
+    "reasoning": "KPI заданы четко."
+  },
+  "socio_economic_effect": {
+    "score": 8,
+    "max": 10,
+    "reasoning": "Положительное влияние на время поездки, выбросы и безопасность."
+  },
+  "feasibility": {
+    "score": 8,
+    "max": 10,
+    "reasoning": "Технически выполнимо при наличии данных."
+  },
+  "overall_quality": "High"
+}

@@ -1,0 +1,862 @@
+[
+  {
+    "file": "5_remake.docx",
+    "scores_file": "5_remake_scores.json",
+    "topic": "Создание цифрового двойника микросетей с ВИЭ и накопителями энергии",
+    "labels": {
+      "strategic_relevance": {
+        "score": 19,
+        "max": 20,
+        "reasoning": "Есть точная привязка к электроэнергетике, зеленой экономике и ИИ."
+      },
+      "goals_and_tasks": {
+        "score": 10,
+        "max": 10,
+        "reasoning": "Цель измерима, задачи детализированы и связаны с KPI."
+      },
+      "scientific_novelty": {
+        "score": 13,
+        "max": 15,
+        "reasoning": "Новизна связана с цифровым двойником микросети и гибридной оптимизацией ВИЭ и накопителей."
+      },
+      "practical_applicability": {
+        "score": 18,
+        "max": 20,
+        "reasoning": "Есть TRL-6, пилотные сценарии и понятный путь внедрения."
+      },
+      "expected_results": {
+        "score": 14,
+        "max": 15,
+        "reasoning": "Заданы числовые метрики, публикации и объекты ИС."
+      },
+      "socio_economic_effect": {
+        "score": 9,
+        "max": 10,
+        "reasoning": "Описаны снижение потерь, надежность и кадровый эффект."
+      },
+      "feasibility": {
+        "score": 8,
+        "max": 10,
+        "reasoning": "Амбициозно, но реалистично для трехлетнего проекта."
+      },
+      "overall_quality": "High"
+    }
+  },
+  {
+    "file": "6_remake.docx",
+    "scores_file": "6_remake_scores.json",
+    "topic": "Система предиктивной диагностики силовых трансформаторов на базе IoT и машинного обучения",
+    "labels": {
+      "strategic_relevance": {
+        "score": 17,
+        "max": 20,
+        "reasoning": "Хорошо увязано с модернизацией инфраструктуры и энергоэффективностью."
+      },
+      "goals_and_tasks": {
+        "score": 8,
+        "max": 10,
+        "reasoning": "Цель и задачи конкретны, но часть эффектов измеряется только на пилоте."
+      },
+      "scientific_novelty": {
+        "score": 9,
+        "max": 15,
+        "reasoning": "Основу составляют известные методы, адаптированные к отраслевым данным."
+      },
+      "practical_applicability": {
+        "score": 17,
+        "max": 20,
+        "reasoning": "Есть конкретный сценарий внедрения в эксплуатационные службы."
+      },
+      "expected_results": {
+        "score": 12,
+        "max": 15,
+        "reasoning": "Присутствуют технические KPI, но научные результаты умеренные."
+      },
+      "socio_economic_effect": {
+        "score": 7,
+        "max": 10,
+        "reasoning": "Эффект понятен, но расчет выгоды ограничен."
+      },
+      "feasibility": {
+        "score": 8,
+        "max": 10,
+        "reasoning": "Проект прикладной и реалистичный по срокам."
+      },
+      "overall_quality": "High"
+    }
+  },
+  {
+    "file": "7_remake.docx",
+    "scores_file": "7_remake_scores.json",
+    "topic": "Оптимизация водородных накопителей и распределенной генерации с использованием обучения с подкреплением",
+    "labels": {
+      "strategic_relevance": {
+        "score": 15,
+        "max": 20,
+        "reasoning": "Есть связь с зеленой экономикой и ИИ, но отраслевой спрос описан шире, чем нужно."
+      },
+      "goals_and_tasks": {
+        "score": 7,
+        "max": 10,
+        "reasoning": "Задачи логичны, но часть формулировок исследовательская и менее измеримая."
+      },
+      "scientific_novelty": {
+        "score": 14,
+        "max": 15,
+        "reasoning": "Сильная новизна за счет RL и многокритериальной оптимизации."
+      },
+      "practical_applicability": {
+        "score": 10,
+        "max": 20,
+        "reasoning": "Пока только виртуальный стенд и TRL-4 без заказчика."
+      },
+      "expected_results": {
+        "score": 9,
+        "max": 15,
+        "reasoning": "Часть результатов измерима, но внедренческие KPI ограничены."
+      },
+      "socio_economic_effect": {
+        "score": 6,
+        "max": 10,
+        "reasoning": "Эффект скорее потенциальный и отложенный."
+      },
+      "feasibility": {
+        "score": 5,
+        "max": 10,
+        "reasoning": "Для заявленного масштаба проект рискованный."
+      },
+      "overall_quality": "Medium"
+    }
+  },
+  {
+    "file": "8_remake.docx",
+    "scores_file": "8_remake_scores.json",
+    "topic": "Киберполигон для тестирования защищенности цифровых подстанций и протоколов Smart Grid",
+    "labels": {
+      "strategic_relevance": {
+        "score": 18,
+        "max": 20,
+        "reasoning": "Сильная связь с цифровизацией критической инфраструктуры."
+      },
+      "goals_and_tasks": {
+        "score": 9,
+        "max": 10,
+        "reasoning": "Цель и задачи хорошо структурированы и поддаются проверке."
+      },
+      "scientific_novelty": {
+        "score": 11,
+        "max": 15,
+        "reasoning": "Есть новизна в отраслевой интеграции, но часть методов типовая для ИБ."
+      },
+      "practical_applicability": {
+        "score": 17,
+        "max": 20,
+        "reasoning": "Полигон и методики легко использовать для обучения и аудита."
+      },
+      "expected_results": {
+        "score": 13,
+        "max": 15,
+        "reasoning": "Показатели и результаты заданы в количественной форме."
+      },
+      "socio_economic_effect": {
+        "score": 8,
+        "max": 10,
+        "reasoning": "Эффект выражен через снижение риска простоев и повышение кадровой готовности."
+      },
+      "feasibility": {
+        "score": 8,
+        "max": 10,
+        "reasoning": "Реалистичный прикладной проект."
+      },
+      "overall_quality": "High"
+    }
+  },
+  {
+    "file": "9_remake.docx",
+    "scores_file": "9_remake_scores.json",
+    "topic": "Платформа интеллектуального управления тепловыми сетями городского уровня",
+    "labels": {
+      "strategic_relevance": {
+        "score": 16,
+        "max": 20,
+        "reasoning": "Проект хорошо ложится на повестку энергоэффективности городов."
+      },
+      "goals_and_tasks": {
+        "score": 8,
+        "max": 10,
+        "reasoning": "Есть измеримая цель и прикладные задачи."
+      },
+      "scientific_novelty": {
+        "score": 8,
+        "max": 15,
+        "reasoning": "Основной вклад инженерный, научная новизна умеренная."
+      },
+      "practical_applicability": {
+        "score": 15,
+        "max": 20,
+        "reasoning": "Пилот реалистичен, но масштабирование зависит от инфраструктуры города."
+      },
+      "expected_results": {
+        "score": 11,
+        "max": 15,
+        "reasoning": "Есть KPI пилота, но публикационная часть и TRL ограничены."
+      },
+      "socio_economic_effect": {
+        "score": 7,
+        "max": 10,
+        "reasoning": "Экономический эффект понятен, но без детального расчета."
+      },
+      "feasibility": {
+        "score": 8,
+        "max": 10,
+        "reasoning": "По объему работ проект реалистичен."
+      },
+      "overall_quality": "Medium"
+    }
+  },
+  {
+    "file": "10_remake.docx",
+    "scores_file": "10_remake_scores.json",
+    "topic": "ИИ-платформа телемедицинского триажа для удаленных регионов",
+    "labels": {
+      "strategic_relevance": {
+        "score": 18,
+        "max": 20,
+        "reasoning": "Проект адресует цифровизацию госуслуг и социальную значимость."
+      },
+      "goals_and_tasks": {
+        "score": 9,
+        "max": 10,
+        "reasoning": "Заданы четкие клинические и временные показатели."
+      },
+      "scientific_novelty": {
+        "score": 10,
+        "max": 15,
+        "reasoning": "Есть адаптация ИИ к маршрутизации, но методы в целом известны."
+      },
+      "practical_applicability": {
+        "score": 17,
+        "max": 20,
+        "reasoning": "Путь к пилоту и интеграции понятен."
+      },
+      "expected_results": {
+        "score": 13,
+        "max": 15,
+        "reasoning": "Метрики и outputs заданы конкретно."
+      },
+      "socio_economic_effect": {
+        "score": 9,
+        "max": 10,
+        "reasoning": "Высокий социальный эффект для удаленных регионов."
+      },
+      "feasibility": {
+        "score": 8,
+        "max": 10,
+        "reasoning": "Реализуемо при наличии партнеров из системы здравоохранения."
+      },
+      "overall_quality": "High"
+    }
+  },
+  {
+    "file": "11_remake.docx",
+    "scores_file": "11_remake_scores.json",
+    "topic": "Радиомическая система раннего выявления рисков рака легкого по КТ-данным",
+    "labels": {
+      "strategic_relevance": {
+        "score": 16,
+        "max": 20,
+        "reasoning": "Социальная значимость высокая, но привязка к спросу системы здравоохранения умеренная."
+      },
+      "goals_and_tasks": {
+        "score": 8,
+        "max": 10,
+        "reasoning": "Цель измерима, задачи логичны."
+      },
+      "scientific_novelty": {
+        "score": 12,
+        "max": 15,
+        "reasoning": "Есть реальный исследовательский компонент в сравнении подходов и explainability."
+      },
+      "practical_applicability": {
+        "score": 11,
+        "max": 20,
+        "reasoning": "TRL-4 и зависимость от регуляторного пути снижают внедренческий балл."
+      },
+      "expected_results": {
+        "score": 11,
+        "max": 15,
+        "reasoning": "Часть KPI четкая, но конечные внедренческие показатели ограничены."
+      },
+      "socio_economic_effect": {
+        "score": 8,
+        "max": 10,
+        "reasoning": "Потенциальный социальный эффект высокий."
+      },
+      "feasibility": {
+        "score": 7,
+        "max": 10,
+        "reasoning": "Исследование выполнимо, но внедрение сложное."
+      },
+      "overall_quality": "Medium"
+    }
+  },
+  {
+    "file": "12_remake.docx",
+    "scores_file": "12_remake_scores.json",
+    "topic": "Система прогнозирования засухи и планирования орошения на основе спутниковых и метеоданных",
+    "labels": {
+      "strategic_relevance": {
+        "score": 18,
+        "max": 20,
+        "reasoning": "Проект отвечает задачам адаптации АПК и водосбережения."
+      },
+      "goals_and_tasks": {
+        "score": 9,
+        "max": 10,
+        "reasoning": "Есть четкие показатели точности и экономии воды."
+      },
+      "scientific_novelty": {
+        "score": 10,
+        "max": 15,
+        "reasoning": "Интеграция данных полезна, но методически не радикально новая."
+      },
+      "practical_applicability": {
+        "score": 17,
+        "max": 20,
+        "reasoning": "Есть хозяйства-пилоты и понятный целевой пользователь."
+      },
+      "expected_results": {
+        "score": 13,
+        "max": 15,
+        "reasoning": "Результаты заданы количественно и привязаны к хозяйствам."
+      },
+      "socio_economic_effect": {
+        "score": 9,
+        "max": 10,
+        "reasoning": "Высокий эффект через экономию воды и устойчивость урожая."
+      },
+      "feasibility": {
+        "score": 8,
+        "max": 10,
+        "reasoning": "При правильном data engineering проект выполним."
+      },
+      "overall_quality": "High"
+    }
+  },
+  {
+    "file": "13_remake.docx",
+    "scores_file": "13_remake_scores.json",
+    "topic": "Интеллектуальная система точного внесения удобрений и полива в тепличных комплексах",
+    "labels": {
+      "strategic_relevance": {
+        "score": 15,
+        "max": 20,
+        "reasoning": "Связь с АПК и ресурсосбережением есть, но стратегическая часть не очень глубокая."
+      },
+      "goals_and_tasks": {
+        "score": 8,
+        "max": 10,
+        "reasoning": "Цель измерима, задачи понятны."
+      },
+      "scientific_novelty": {
+        "score": 8,
+        "max": 15,
+        "reasoning": "Новизна умеренная, проект ближе к прикладной автоматизации."
+      },
+      "practical_applicability": {
+        "score": 15,
+        "max": 20,
+        "reasoning": "Пилоты и понятный потребитель присутствуют."
+      },
+      "expected_results": {
+        "score": 11,
+        "max": 15,
+        "reasoning": "Есть KPI, но масштаб результатов ограничен."
+      },
+      "socio_economic_effect": {
+        "score": 7,
+        "max": 10,
+        "reasoning": "Польза понятна, но экономический масштаб не раскрыт."
+      },
+      "feasibility": {
+        "score": 9,
+        "max": 10,
+        "reasoning": "Технически реалистичный проект."
+      },
+      "overall_quality": "Medium"
+    }
+  },
+  {
+    "file": "14_remake.docx",
+    "scores_file": "14_remake_scores.json",
+    "topic": "Наноструктурированные покрытия для защиты магистральных трубопроводов от коррозии",
+    "labels": {
+      "strategic_relevance": {
+        "score": 17,
+        "max": 20,
+        "reasoning": "Есть четкая связь с промышленной модернизацией и экологической безопасностью."
+      },
+      "goals_and_tasks": {
+        "score": 9,
+        "max": 10,
+        "reasoning": "Цель измерима, задачи последовательны."
+      },
+      "scientific_novelty": {
+        "score": 12,
+        "max": 15,
+        "reasoning": "Новизна связана с составом покрытия и режимом нанесения."
+      },
+      "practical_applicability": {
+        "score": 16,
+        "max": 20,
+        "reasoning": "Путь к опытно-промышленной партии просматривается."
+      },
+      "expected_results": {
+        "score": 13,
+        "max": 15,
+        "reasoning": "KPI четкие и верифицируемые."
+      },
+      "socio_economic_effect": {
+        "score": 8,
+        "max": 10,
+        "reasoning": "Снижение аварийности и импортозамещение имеют заметный эффект."
+      },
+      "feasibility": {
+        "score": 8,
+        "max": 10,
+        "reasoning": "Хорошо сбалансированный проект."
+      },
+      "overall_quality": "High"
+    }
+  },
+  {
+    "file": "15_remake.docx",
+    "scores_file": "15_remake_scores.json",
+    "topic": "Композиционные фрикционные материалы для железнодорожных тормозных систем",
+    "labels": {
+      "strategic_relevance": {
+        "score": 14,
+        "max": 20,
+        "reasoning": "Тематика соответствует транспортной и производственной политике, но стратегическая часть умеренно раскрыта."
+      },
+      "goals_and_tasks": {
+        "score": 8,
+        "max": 10,
+        "reasoning": "Формулировки в целом измеримы и логичны."
+      },
+      "scientific_novelty": {
+        "score": 10,
+        "max": 15,
+        "reasoning": "Есть материаловедческий вклад, но без радикального прорыва."
+      },
+      "practical_applicability": {
+        "score": 12,
+        "max": 20,
+        "reasoning": "Проект ограничен лабораторным уровнем и требованиями к последующим испытаниям."
+      },
+      "expected_results": {
+        "score": 10,
+        "max": 15,
+        "reasoning": "Часть результатов конкретна, но внедренческие KPI отсутствуют."
+      },
+      "socio_economic_effect": {
+        "score": 7,
+        "max": 10,
+        "reasoning": "Польза есть, но масштаб эффекта не количефицирован."
+      },
+      "feasibility": {
+        "score": 8,
+        "max": 10,
+        "reasoning": "Лабораторная часть реалистична."
+      },
+      "overall_quality": "Medium"
+    }
+  },
+  {
+    "file": "16_remake.docx",
+    "scores_file": "16_remake_scores.json",
+    "topic": "Городской цифровой двойник транспортных потоков с V2X-аналитикой",
+    "labels": {
+      "strategic_relevance": {
+        "score": 18,
+        "max": 20,
+        "reasoning": "Сильная связь с цифровой экономикой и транспортной модернизацией."
+      },
+      "goals_and_tasks": {
+        "score": 9,
+        "max": 10,
+        "reasoning": "Цель конкретна, задачи связаны с измеримым эффектом."
+      },
+      "scientific_novelty": {
+        "score": 11,
+        "max": 15,
+        "reasoning": "Есть новизна в V2X-аналитике и цифровом двойнике."
+      },
+      "practical_applicability": {
+        "score": 17,
+        "max": 20,
+        "reasoning": "Есть понятный пилотный коридор и потребитель результатов."
+      },
+      "expected_results": {
+        "score": 13,
+        "max": 15,
+        "reasoning": "KPI заданы четко."
+      },
+      "socio_economic_effect": {
+        "score": 8,
+        "max": 10,
+        "reasoning": "Положительное влияние на время поездки, выбросы и безопасность."
+      },
+      "feasibility": {
+        "score": 8,
+        "max": 10,
+        "reasoning": "Технически выполнимо при наличии данных."
+      },
+      "overall_quality": "High"
+    }
+  },
+  {
+    "file": "17_remake.docx",
+    "scores_file": "17_remake_scores.json",
+    "topic": "Дроны и компьютерное зрение для мониторинга линий электропередачи",
+    "labels": {
+      "strategic_relevance": {
+        "score": 16,
+        "max": 20,
+        "reasoning": "Тематика хорошо соответствует цифровизации сетевого хозяйства."
+      },
+      "goals_and_tasks": {
+        "score": 8,
+        "max": 10,
+        "reasoning": "Есть измеримая полнота обнаружения."
+      },
+      "scientific_novelty": {
+        "score": 9,
+        "max": 15,
+        "reasoning": "Методы CV типовые, новизна в отраслевой адаптации."
+      },
+      "practical_applicability": {
+        "score": 16,
+        "max": 20,
+        "reasoning": "Путь к использованию в инспекции понятен."
+      },
+      "expected_results": {
+        "score": 12,
+        "max": 15,
+        "reasoning": "Результаты поддаются валидации и описаны в цифрах."
+      },
+      "socio_economic_effect": {
+        "score": 7,
+        "max": 10,
+        "reasoning": "Экономия труда и ускорение диагностики описаны, но без детальной модели выгод."
+      },
+      "feasibility": {
+        "score": 8,
+        "max": 10,
+        "reasoning": "Прикладной и выполнимый проект."
+      },
+      "overall_quality": "Medium"
+    }
+  },
+  {
+    "file": "18_remake.docx",
+    "scores_file": "18_remake_scores.json",
+    "topic": "Мембранные материалы для очистки промышленной воды с пониженным энергопотреблением",
+    "labels": {
+      "strategic_relevance": {
+        "score": 10,
+        "max": 20,
+        "reasoning": "Есть общая экологическая актуальность, но слабая привязка к конкретным документам."
+      },
+      "goals_and_tasks": {
+        "score": 4,
+        "max": 10,
+        "reasoning": "Цель расплывчата и почти не измерима."
+      },
+      "scientific_novelty": {
+        "score": 7,
+        "max": 15,
+        "reasoning": "Новизна не конкретизирована."
+      },
+      "practical_applicability": {
+        "score": 8,
+        "max": 20,
+        "reasoning": "Путь к внедрению не описан."
+      },
+      "expected_results": {
+        "score": 5,
+        "max": 15,
+        "reasoning": "Результаты в основном декларативные и без числовых KPI."
+      },
+      "socio_economic_effect": {
+        "score": 5,
+        "max": 10,
+        "reasoning": "Эффект описан общими словами."
+      },
+      "feasibility": {
+        "score": 7,
+        "max": 10,
+        "reasoning": "Базовое исследование провести можно, но ценность не раскрыта."
+      },
+      "overall_quality": "Low"
+    }
+  },
+  {
+    "file": "19_remake.docx",
+    "scores_file": "19_remake_scores.json",
+    "topic": "Платформа учета и снижения углеродного следа для металлургических предприятий",
+    "labels": {
+      "strategic_relevance": {
+        "score": 18,
+        "max": 20,
+        "reasoning": "Сильная связь с экологической и промышленной повесткой."
+      },
+      "goals_and_tasks": {
+        "score": 9,
+        "max": 10,
+        "reasoning": "Цель и задачи четко измеримы."
+      },
+      "scientific_novelty": {
+        "score": 10,
+        "max": 15,
+        "reasoning": "Основной вклад прикладной, но с элементами новой аналитики."
+      },
+      "practical_applicability": {
+        "score": 17,
+        "max": 20,
+        "reasoning": "Есть понятный потребитель и пилотный контур."
+      },
+      "expected_results": {
+        "score": 13,
+        "max": 15,
+        "reasoning": "Результаты формализованы в цифрах и документах."
+      },
+      "socio_economic_effect": {
+        "score": 9,
+        "max": 10,
+        "reasoning": "Экологический и экономический эффект выражены достаточно ясно."
+      },
+      "feasibility": {
+        "score": 8,
+        "max": 10,
+        "reasoning": "Реализация реалистична при наличии индустриального партнера."
+      },
+      "overall_quality": "High"
+    }
+  },
+  {
+    "file": "20_remake.docx",
+    "scores_file": "20_remake_scores.json",
+    "topic": "ИИ-платформа адаптивного обучения инженеров новой энергетики",
+    "labels": {
+      "strategic_relevance": {
+        "score": 15,
+        "max": 20,
+        "reasoning": "Кадровая задача важна, но слабее связана с отраслевым рынком, чем промышленные проекты."
+      },
+      "goals_and_tasks": {
+        "score": 8,
+        "max": 10,
+        "reasoning": "Цель проверяема через образовательный эксперимент."
+      },
+      "scientific_novelty": {
+        "score": 9,
+        "max": 15,
+        "reasoning": "Новизна умеренная и связана с адаптивной персонализацией."
+      },
+      "practical_applicability": {
+        "score": 14,
+        "max": 20,
+        "reasoning": "Есть понятное внедрение в вузах, но не в реальном секторе напрямую."
+      },
+      "expected_results": {
+        "score": 11,
+        "max": 15,
+        "reasoning": "KPI есть, но часть результатов образовательные и косвенные."
+      },
+      "socio_economic_effect": {
+        "score": 7,
+        "max": 10,
+        "reasoning": "Кадровый эффект есть, но он не мгновенный."
+      },
+      "feasibility": {
+        "score": 9,
+        "max": 10,
+        "reasoning": "Проект организационно и технически выполним."
+      },
+      "overall_quality": "Medium"
+    }
+  },
+  {
+    "file": "21_remake.docx",
+    "scores_file": "21_remake_scores.json",
+    "topic": "Разработка универсальной программы автоматизации предприятий",
+    "labels": {
+      "strategic_relevance": {
+        "score": 6,
+        "max": 20,
+        "reasoning": "Связь с госдокументами и реальным запросом практически не раскрыта."
+      },
+      "goals_and_tasks": {
+        "score": 3,
+        "max": 10,
+        "reasoning": "Цель не измерима и слишком общая."
+      },
+      "scientific_novelty": {
+        "score": 3,
+        "max": 15,
+        "reasoning": "Новизна отсутствует."
+      },
+      "practical_applicability": {
+        "score": 7,
+        "max": 20,
+        "reasoning": "Непонятно, для кого конкретно и как внедрять."
+      },
+      "expected_results": {
+        "score": 4,
+        "max": 15,
+        "reasoning": "KPI и конкретные результаты почти не заданы."
+      },
+      "socio_economic_effect": {
+        "score": 4,
+        "max": 10,
+        "reasoning": "Эффект описан декларативно."
+      },
+      "feasibility": {
+        "score": 6,
+        "max": 10,
+        "reasoning": "Сделать некий прототип можно, но проект плохо определен."
+      },
+      "overall_quality": "Low"
+    }
+  },
+  {
+    "file": "22_remake.docx",
+    "scores_file": "22_remake_scores.json",
+    "topic": "Мультиагентная платформа координации промышленных роботов на сборочной линии",
+    "labels": {
+      "strategic_relevance": {
+        "score": 17,
+        "max": 20,
+        "reasoning": "Есть сильная связь с модернизацией производства и ИИ."
+      },
+      "goals_and_tasks": {
+        "score": 9,
+        "max": 10,
+        "reasoning": "Цель четкая и измеримая."
+      },
+      "scientific_novelty": {
+        "score": 12,
+        "max": 15,
+        "reasoning": "Агентная координация и цифровой стенд добавляют новизну."
+      },
+      "practical_applicability": {
+        "score": 13,
+        "max": 20,
+        "reasoning": "Пока внедрение ограничено виртуальным стендом и TRL-5."
+      },
+      "expected_results": {
+        "score": 12,
+        "max": 15,
+        "reasoning": "Результаты количественные и понятные."
+      },
+      "socio_economic_effect": {
+        "score": 7,
+        "max": 10,
+        "reasoning": "Эффект на производительность очевиден, но не полностью просчитан."
+      },
+      "feasibility": {
+        "score": 7,
+        "max": 10,
+        "reasoning": "Требует доступа к данным и моделей линии, что создает риск."
+      },
+      "overall_quality": "Medium"
+    }
+  },
+  {
+    "file": "23_remake.docx",
+    "scores_file": "23_remake_scores.json",
+    "topic": "Роботизированная система сортировки твердых бытовых отходов с компьютерным зрением",
+    "labels": {
+      "strategic_relevance": {
+        "score": 17,
+        "max": 20,
+        "reasoning": "Проект соответствует зеленой экономике и технологической модернизации."
+      },
+      "goals_and_tasks": {
+        "score": 9,
+        "max": 10,
+        "reasoning": "Заданы четкие показатели по распознаванию и доле ручного труда."
+      },
+      "scientific_novelty": {
+        "score": 11,
+        "max": 15,
+        "reasoning": "Есть новизна в адаптации CV и робототехники к локальному потоку отходов."
+      },
+      "practical_applicability": {
+        "score": 15,
+        "max": 20,
+        "reasoning": "Есть пилотный узел и расчет окупаемости, но масштабирование еще ограничено."
+      },
+      "expected_results": {
+        "score": 13,
+        "max": 15,
+        "reasoning": "Результаты измеримы и многокомпонентны."
+      },
+      "socio_economic_effect": {
+        "score": 8,
+        "max": 10,
+        "reasoning": "Экологический и трудовой эффект выражены ясно."
+      },
+      "feasibility": {
+        "score": 8,
+        "max": 10,
+        "reasoning": "При наличии инженерной команды проект выполним."
+      },
+      "overall_quality": "High"
+    }
+  },
+  {
+    "file": "24_remake.docx",
+    "scores_file": "24_remake_scores.json",
+    "topic": "Универсальная цифровая экосистема для комплексного развития отраслей",
+    "labels": {
+      "strategic_relevance": {
+        "score": 8,
+        "max": 20,
+        "reasoning": "Есть только общая связь с цифровизацией без конкретных пунктов и отраслевого запроса."
+      },
+      "goals_and_tasks": {
+        "score": 4,
+        "max": 10,
+        "reasoning": "Цель размыта, задачи сформулированы широко."
+      },
+      "scientific_novelty": {
+        "score": 5,
+        "max": 15,
+        "reasoning": "Новизна фактически не раскрыта."
+      },
+      "practical_applicability": {
+        "score": 7,
+        "max": 20,
+        "reasoning": "Неясно, кто заказчик и каков путь внедрения."
+      },
+      "expected_results": {
+        "score": 5,
+        "max": 15,
+        "reasoning": "Результаты текстовые и без жестких KPI."
+      },
+      "socio_economic_effect": {
+        "score": 4,
+        "max": 10,
+        "reasoning": "Эффект описан декларативно и без расчетов."
+      },
+      "feasibility": {
+        "score": 5,
+        "max": 10,
+        "reasoning": "Широкий замысел плохо ограничен и слабо обоснован."
+      },
+      "overall_quality": "Low"
+    }
+  }
+]

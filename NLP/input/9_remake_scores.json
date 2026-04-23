@@ -1,0 +1,38 @@
+{
+  "strategic_relevance": {
+    "score": 16,
+    "max": 20,
+    "reasoning": "Проект хорошо ложится на повестку энергоэффективности городов."
+  },
+  "goals_and_tasks": {
+    "score": 8,
+    "max": 10,
+    "reasoning": "Есть измеримая цель и прикладные задачи."
+  },
+  "scientific_novelty": {
+    "score": 8,
+    "max": 15,
+    "reasoning": "Основной вклад инженерный, научная новизна умеренная."
+  },
+  "practical_applicability": {
+    "score": 15,
+    "max": 20,
+    "reasoning": "Пилот реалистичен, но масштабирование зависит от инфраструктуры города."
+  },
+  "expected_results": {
+    "score": 11,
+    "max": 15,
+    "reasoning": "Есть KPI пилота, но публикационная часть и TRL ограничены."
+  },
+  "socio_economic_effect": {
+    "score": 7,
+    "max": 10,
+    "reasoning": "Экономический эффект понятен, но без детального расчета."
+  },
+  "feasibility": {
+    "score": 8,
+    "max": 10,
+    "reasoning": "По объему работ проект реалистичен."
+  },
+  "overall_quality": "Medium"
+}
