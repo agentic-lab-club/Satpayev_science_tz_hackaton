@@ -1,0 +1,38 @@
+{
+  "strategic_relevance": {
+    "score": 17,
+    "max": 20,
+    "reasoning": "Проект соответствует зеленой экономике и технологической модернизации."
+  },
+  "goals_and_tasks": {
+    "score": 9,
+    "max": 10,
+    "reasoning": "Заданы четкие показатели по распознаванию и доле ручного труда."
+  },
+  "scientific_novelty": {
+    "score": 11,
+    "max": 15,
+    "reasoning": "Есть новизна в адаптации CV и робототехники к локальному потоку отходов."
+  },
+  "practical_applicability": {
+    "score": 15,
+    "max": 20,
+    "reasoning": "Есть пилотный узел и расчет окупаемости, но масштабирование еще ограничено."
+  },
+  "expected_results": {
+    "score": 13,
+    "max": 15,
+    "reasoning": "Результаты измеримы и многокомпонентны."
+  },
+  "socio_economic_effect": {
+    "score": 8,
+    "max": 10,
+    "reasoning": "Экологический и трудовой эффект выражены ясно."
+  },
+  "feasibility": {
+    "score": 8,
+    "max": 10,
+    "reasoning": "При наличии инженерной команды проект выполним."
+  },
+  "overall_quality": "High"
+}
